@@ -14,13 +14,21 @@ gulp.task('two', function(done) {
 
 
 // Usage of pug.
-function pugToHtml(){
+gulp.task('pugIndexToHtml', function (){
    return gulp.src('client/index.pug')
   .pipe(pug({
      pretty: true
   }))
   .pipe(gulp.dest('./dest'));
-}
-gulp.task('pugToHtml', pugToHtml)
+});
 
-gulp.task('default', gulp.series('one', 'two', 'pugToHtml'));
+gulp.task('pugToHtml', function(){
+    return gulp.src('client/**/*.pug')
+    .pipe(pug({
+        pretty: true
+    }))
+    .pipe(gulp.dest('client'))
+});
+
+gulp.task('default', 
+    gulp.series('one', 'two', 'pugIndexToHtml', 'pugToHtml'));
