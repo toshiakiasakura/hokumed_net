@@ -1,0 +1,27 @@
+{
+  "name": "hokui_net_ver2",
+  "version": "0.1.1",
+  "description": "none",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toshiakiasakura/hokui_ver2.net.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/toshiakiasakura/hokui_ver2.net/issues"
+  },
+  "homepage": "https://github.com/toshiakiasakura/hokui_ver2.net#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  },
+  "dependencies": {
+    "gulp-pug": "^4.0.1",
+    "package.json": "^2.0.1",
+    "pug": "^3.0.0"
+  }
+}
