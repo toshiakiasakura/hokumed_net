@@ -2,7 +2,9 @@
 Our aim is to construct simple website.   
 Follow the rule of KISS! 
 
-This site is accessible via http://akitoshi.xsrv.jp/hokui_net_ver2/
+This site is accessible via http://akitoshi.xsrv.jp/hokui_net_ver2/dest
+Note that we have to redistribute those files.
+
 
 # Versions 
 - node : v8.9.4
