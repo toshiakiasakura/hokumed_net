@@ -1,34 +1,23 @@
-// This is a learning purpose. 
 var gulp = require('gulp');
 var pug = require('gulp-pug');
 
-gulp.task('one', function(done) {
-    console.log('task one');
-    done();
-});
-
-gulp.task('two', function(done) {
-    console.log('task two');
-    done();
-});
-
-
-// Usage of pug.
-gulp.task('pugIndexToHtml', function (){
-   return gulp.src('client/index.pug')
-  .pipe(pug({
-     pretty: true
-  }))
-  .pipe(gulp.dest('./dest'));
-});
-
 gulp.task('pugToHtml', function(){
-    return gulp.src('client/**/*.pug')
+    return gulp.src('views/**/*.pug')
     .pipe(pug({
         pretty: true
     }))
-    .pipe(gulp.dest('client'))
+    .pipe(gulp.dest('views'))
 });
 
+function test(){
+    return gulp.src('views/write.pug')
+    .pipe(pug({
+        pretty: true
+    }))
+    .pipe(gulp.dest('views'))
+};
+exports.test = test;
+
 gulp.task('default', 
-    gulp.series('one', 'two', 'pugIndexToHtml', 'pugToHtml'));
+    gulp.series('pugToHtml'));
+
