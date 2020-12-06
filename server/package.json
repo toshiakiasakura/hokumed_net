@@ -14,6 +14,7 @@
     "gulp-pug": "^4.0.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "package-lock.json": "^1.0.0",
     "pug": "2.0.0-beta11",
     "sqlite3": "^5.0.0"
   },
