@@ -8,7 +8,7 @@ import Home from './pages/home'
 import NotFound from './pages/404'
 
 
-export default function RouterFunc(props: any):any {
+function RouterFunc(props: {}) {
   return (
   <Router>
     <Switch>
@@ -17,3 +17,5 @@ export default function RouterFunc(props: any):any {
     </Switch>
   </Router>
 )}
+
+export default RouterFunc
