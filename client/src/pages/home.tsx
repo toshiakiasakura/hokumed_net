@@ -1,7 +1,7 @@
 import React from 'react'
 import '../style/_home.sass';
 import NavBar from '../components/nav_bar'
-
+import axios from 'axios'
 
 class Home extends React.Component {
   state = {
@@ -11,29 +11,25 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
+    axios.get('/api/hello')
+    .then(response => {
+      this.setState({response:response.data.express})
+    })
+    .catch(err => console.log(err))
   }
-
-  callApi = async () => {
-    const response = await fetch('/api/hello');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    return body;
-  };
 
   handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    const response = await fetch('/api/world', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ post: this.state.post }),
+    axios.post('/api/world',{
+      post: this.state.post
     })
-    const body = await response.text();
-    this.setState({ responseToPost: body })
+    .then(response =>{
+      console.log(response.data)
+        this.setState({responseToPost: response.data})
+    } )
+    .catch(err => (
+      console.error(new Error(err))
+    ))
   }
 
   render () {
@@ -55,14 +51,17 @@ class Home extends React.Component {
               </table>
             </div>
             <h2> テスト </h2>
-            <button
-              onClick={e => {
-                e.stopPropagation()
-                this.componentDidMount()
-              }} >Get method! </button>
+            <button onClick={() => this.componentDidMount()} >
+              Get method!
+            </button>
             <p> {this.state.response}</p>
             <form name="login-form" onSubmit={this.handleSubmit}> <br/>
-              <input type="text" value={this.state.post} onChange={e =>this.setState({post: e.target.value})} /><br/>
+              <input
+                type="text"
+                value={this.state.post}
+                onChange={e =>this.setState({post: e.target.value})}
+              />
+                <br/>
               <button type="submit"> Submit!!! </button>
             </form>
             <p> {this.state.responseToPost}</p>
