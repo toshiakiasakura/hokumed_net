@@ -55,7 +55,11 @@ class Home extends React.Component {
               </table>
             </div>
             <h2> テスト </h2>
-            <button onClick={() => this.componentDidMount() } >Get method! </button>
+            <button
+              onClick={e => {
+                e.stopPropagation()
+                this.componentDidMount()
+              }} >Get method! </button>
             <p> {this.state.response}</p>
             <form name="login-form" onSubmit={this.handleSubmit}> <br/>
               <input type="text" value={this.state.post} onChange={e =>this.setState({post: e.target.value})} /><br/>
