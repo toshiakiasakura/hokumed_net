@@ -4,8 +4,8 @@ import { BrowserRouter as Router,
   Switch } from 'react-router-dom';
 
 
-import Home from './components/Home'
-import NotFound from './components/404'
+import Home from './pages/home'
+import NotFound from './pages/404'
 
 
 export default function RouterFunc(props: any):any {
