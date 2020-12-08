@@ -1,18 +1,17 @@
 import React from 'react'
 import logo from '../img/hokui_logo.png'
-import '../style/_navbar.sass'
 import { Link } from 'react-router-dom';
 
-type Props = {
+type PathSet = {
   name: string
   path: string
 }
 /** Function creating navigation item with link.
 */
-const NavItem = (Props:Props) =>{
+const NavItem = (props:PathSet) =>{
     return (
     <div className="navbar__items__item">
-      <Link to={Props.path}>{Props.name}</Link>
+      <Link to={props.path}>{props.name}</Link>
     </div>
   )
 }
@@ -20,7 +19,7 @@ const NavItem = (Props:Props) =>{
 /** Navigation bar for login page
  TO DO: Authentification branching should be implemented.
 */
-class Navbar extends React.Component {
+class NavBar extends React.Component {
   render() {
     return(
       <div className="navbar">
@@ -35,11 +34,12 @@ class Navbar extends React.Component {
 
         {/*TO DO: Make page site for each link.*/}
         <div className="navbar__items">
-          <NavItem name="Home" path="/" />
+          <NavItem name="HOME" path="/" />
           <NavItem name="STUDY" path="/study" />
           <NavItem name="MAILLIST" path="/maillist" />
           <NavItem name="PROFILE" path="/profile" />
           <NavItem name="ADMIN" path="/admin" />
+          <NavItem name="LOGIN" path="/login" />
           <NavItem name="Error" path="/error" />
         </div>
       </div>
@@ -47,5 +47,4 @@ class Navbar extends React.Component {
   }
 }
 
-export {}
-export default Navbar
+export {NavBar}

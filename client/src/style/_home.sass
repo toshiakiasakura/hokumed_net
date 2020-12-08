@@ -43,22 +43,19 @@
         width: 90%
 
 .hero__login
-    position: relative
-    top: calc(50% + 20px)
-    transform: translateY(-50%)
+    +centering
 
     max-width: 400px
-    @media (max-width: $screen-xs-max)
-        max-width: 86%
-
-    margin-left: auto
-    margin-right: auto
-
     padding: 30px 30px 10px
-
     border-radius: $border-radius-base
     background-color: rgba(#fff, .85)
 
+//    @media (max-width: $screen-xs-max)
+//        max-width: 86%
+//    max-width: 400px
+//    position: relative
+//   top: calc(50% + 20px)
+//    transform: translateY(-50%)
 
 
 @keyframes pulse

@@ -1,5 +1,8 @@
 # This .gitignore was obtained from https://github.com/github/gitignore/blob/master/Node.gitignore
 
+# Since typescript development, js should be ignored. 
+.js
+
 # Logs
 logs
 *.log

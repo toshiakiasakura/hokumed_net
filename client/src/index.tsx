@@ -1,14 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import RouterFunc from './routes'
-
-import './index.css';
+import { Provider }  from 'react-redux'
+import {store} from './store'
+import App from './App'
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <RouterFunc />,
-  </React.StrictMode>,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('root')
 );
 
