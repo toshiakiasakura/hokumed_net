@@ -1,31 +1,37 @@
+/*This moduel works as router for backend.
+  If the address is not /api/*, this router passes the connection
+  to react application.
+ */
 import express from 'express'
 import { Request, Response, NextFunction } from "express";
 import path from 'path';
 import bodyParser from 'body-parser'
-const app = express();
+import { testRouter } from './routes/tests'
+import { userRouter } from './routes/users'
+import { contentRouter } from './routes/contents'
+const app = express()
 
+// axios post problem
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*") // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  next()
+})
 // Serve the static files from the React app
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, '../client/build')))
 
 // body parser for json
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-// An api endpoint that returns a short list of items
-app.get('/api/hello', (req, res) => {
-    console.log("Hello, Get method ")
-  res.send({ express: 'Hello From Express' });
-});
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
-app.post('/api/world', (req:Request ,res:Response) => {
-    console.log(req.body)
-    res.send(`I received your POST request. ${req.body.post}`)
-    console.log('Hello world!!! ');
-});
+app.use('/api/test', testRouter )
+app.use('/api/user', userRouter)
+app.use('/api/content', contentRouter)
 
 // Handles any requests that don't match the ones above
 app.get('*', (req:Request,res:Response) =>{
     res.sendFile(path.join(__dirname+'../client/build/index.html'));
-});
+})
 
 //const port = process.env.PORT || 3000;
 const port = 3000

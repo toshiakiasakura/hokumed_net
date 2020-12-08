@@ -1,5 +1,5 @@
 export function authHeader() {
-  const user = JSON.parse(localStorage.getItem("user") || '{}');
+  const user = JSON.parse(localStorage.getItem("email") || '{}');
 
   if (user && user.accessToken) {
     // For Spring Boot back-end

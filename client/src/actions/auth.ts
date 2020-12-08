@@ -6,15 +6,19 @@ import {
   LOGOUT,
   SET_MESSAGE,
 } from "./types";
-import {Dispatch} from 'redux'
+import { Dispatch } from 'redux'
 import AuthService from "../services/auth.service";
 
 type String = string | null
 
-export const register = (username: String,
-                        email: String,
+/* React-redux uses a curried function.
+   See "What do multiple arrow functions mean in javascript?"
+   https://stackoverflow.com/questions/32782922/what-do-multiple-arrow-functions-mean-in-javascript
+
+ */
+export const register = ( email: String,
                         password: String) => (dispatch: Dispatch) => {
-  return AuthService.register(username, email, password).then(
+  return AuthService.register(email, password).then(
     (response) => {
       dispatch({
         type: REGISTER_SUCCESS,
@@ -49,11 +53,14 @@ export const register = (username: String,
   )
 }
 
+/* login function. This calles AuthService login
+ */
 export const login = (username: String, password: String) =>
   (dispatch: Dispatch) =>
 {
   return AuthService.login(username, password)
   .then(
+
       (data) => {
         dispatch({
           type: LOGIN_SUCCESS,
@@ -70,6 +77,7 @@ export const login = (username: String, password: String) =>
           error.message ||
           error.toString();
 
+        console.log('auth.ts: login failure flag. ')
         dispatch({
           type: LOGIN_FAIL,
         })

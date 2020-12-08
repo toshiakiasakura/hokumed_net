@@ -10,7 +10,7 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
-    axios.get('/api/hello')
+    axios.get('/api/test/hello')
     .then(response => {
       this.setState({response:response.data.express})
     })
@@ -19,7 +19,7 @@ class Home extends React.Component {
 
   handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    axios.post('/api/world',{
+    axios.post('/api/test/world',{
       post: this.state.post
     })
     .then(response =>{

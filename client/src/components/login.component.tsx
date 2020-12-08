@@ -1,9 +1,10 @@
-import React, { Component } from "react"
+import React, { Component } from 'react'
+import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { useHistory } from "react-router-dom"
 import '../style/_temp.sass'
 // import { connect } from "react-redux"
-// import { login } from "../actions/auth"
+import { login } from "../actions/auth"
 
 type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 type State = {
@@ -17,6 +18,9 @@ type FormData ={
   password: string
 }
 
+/* This is hook function for form.
+   In this function, input  validation is done.
+ */
 const LoginForm = (
   props:{
     state:State,
@@ -24,9 +28,16 @@ const LoginForm = (
 ) => {
   //const state = {email:"", password:""}
   const { register, handleSubmit, errors, formState } = useForm<FormData>({mode:'onBlur'})
-  const onSubmit = () => console.log(formState)
+  const dispatch = useDispatch()
+  const handleLogin = (data: FormData) => {
+    /* This login calls auth in actions and subsequenstly call
+       auth.service.ts. Then, axios.post method is called.
+     */
+    dispatch(login(data.email, data.password))
+
+  }
   return(
-    <form name="form_2" onSubmit={handleSubmit(onSubmit)}>
+    <form name="form_2" onSubmit={handleSubmit(handleLogin)}>
       <div className="panel__body">
         <div className="form__group">
           <input
@@ -79,33 +90,35 @@ const LoginForm = (
   )
 }
 
+/* Register button function.
+To apply useHitory function, it should be function.
+*/
+const RegisterButton =  () =>{
+  const history = useHistory()
+  const handleClick= () =>{
+    history.push('/register')
+  }
+  return(
+    <button
+      className="btn btn--primary btn--block btn--ghost"
+      onClick={handleClick}
+    >
+      ユーザー登録する
+    </button>
+  )
+}
+
 class Login extends Component {
   state : State
 
   constructor(props:{}){
     super(props)
-    this.onChangePassword= this.onChangePassword.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
 
     this.state = {
       email:"",
       password:"",
       loading: false
-    }
-  }
-
-
-  onChangePassword(e: ChangeEvent) {
-    this.setState({
-      password: e.target.value,
-    });
-  }
-
-  validateForm(){
-    if (this.state.email.substr(-5) === "hokui"){
-      return(true)
-    } else {
-      return(false)
     }
   }
 
@@ -143,23 +156,6 @@ class Login extends Component {
   )}
 }
 
-/* Register button function.
-To apply useHitory function, it should be function.
-*/
-const RegisterButton =  () =>{
-  const history = useHistory()
-  const handleClick= () =>{
-    history.push('/register')
-  }
-  return(
-    <button
-      className="btn btn--primary btn--block btn--ghost"
-      onClick={handleClick}
-    >
-      ユーザー登録する
-    </button>
-  )
-}
 
 // function mapStateToProps(state}) {
 //   const { isLoggedIn } = state.auth

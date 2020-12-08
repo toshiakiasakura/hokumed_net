@@ -1,28 +1,35 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/auth/";
+const API_URL = '/api/user/'
 
 type String = string | null
 class AuthService {
-  login(username: String, password: String) {
+  login(email: String, password: String) {
     return axios
-      .post(API_URL + "signin", { username, password })
+      .post(API_URL + "login", { email, password })
       .then((response) => {
+        console.log("autho.service.ts: post method succeded!!")
+        console.log(response)
         if (response.data.accessToken) {
-          localStorage.setItem("user", JSON.stringify(response.data));
+          localStorage.setItem("user", JSON.stringify(response.data))
         }
 
         return response.data;
-      });
+      })
+      .catch((err) => {
+          // later delete log
+          console.log(API_URL+'login')
+          console.log('axios post method failure in auth.service.ts')
+          console.log(err)
+      })
   }
 
   logout() {
-    localStorage.removeItem("user");
+    localStorage.removeItem("email");
   }
 
-  register(username: String, email: String, password: String) {
+  register(email: String, password: String) {
     return axios.post(API_URL + "signup", {
-      username,
       email,
       password,
     });
