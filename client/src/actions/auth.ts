@@ -48,7 +48,7 @@ export const register = ( email: String,
         payload: message,
       })
 
-      return Promise.reject();
+      return Promise.reject()
     }
   )
 }

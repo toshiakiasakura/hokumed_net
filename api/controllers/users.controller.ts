@@ -7,5 +7,5 @@ export const login = (req:Request, res:Response) => {
   // later delete log
   console.log('access to /api/signin')
   console.log(req)
-  res.json({data:{accessToken:'abcdefg', email:req.body.email   }})
+  res.json({accessToken:'abcdefg', email:req.body.email   })
 }

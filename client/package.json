@@ -23,6 +23,7 @@
     "node-sass": "4.14.1",
     "nodeman": "^1.1.2",
     "react": "^17.0.1",
+    "react-cookie": "^4.0.3",
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.12.2",
     "react-redux": "^7.2.2",
@@ -42,7 +43,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently \"yarn start\" \"cd .. && yarn start\" "
+    "dev": "concurrently \"yarn start\" \"cd .. && yarn start\" ",
+    "test": "cd ../test && python test_dev.py"
   },
   "eslintConfig": {
     "extends": [
@@ -63,5 +65,4 @@
     ]
   },
   "proxy": "http://localhost:3000"
-
 }

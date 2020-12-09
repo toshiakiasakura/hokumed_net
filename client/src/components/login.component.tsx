@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import { useHistory } from "react-router-dom"
+import { useHistory } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
 import '../style/_temp.sass'
 // import { connect } from "react-redux"
 import { login } from "../actions/auth"
@@ -27,7 +28,7 @@ const LoginForm = (
   }
 ) => {
   //const state = {email:"", password:""}
-  const { register, handleSubmit, errors, formState } = useForm<FormData>({mode:'onBlur'})
+  const { register, handleSubmit, errors, formState } = useForm<FormData>({mode:'onChange'})
   const dispatch = useDispatch()
   const handleLogin = (data: FormData) => {
     /* This login calls auth in actions and subsequenstly call
@@ -81,6 +82,7 @@ const LoginForm = (
             type="submit"
             className="btn btn--primary btn--block"
             disabled={!formState.isValid}
+            id="loginButton"
           >
             ログイン
           </button>

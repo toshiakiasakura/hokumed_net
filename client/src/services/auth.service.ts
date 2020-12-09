@@ -11,6 +11,7 @@ class AuthService {
         console.log("autho.service.ts: post method succeded!!")
         console.log(response)
         if (response.data.accessToken) {
+          console.log("setItem")
           localStorage.setItem("user", JSON.stringify(response.data))
         }
 
