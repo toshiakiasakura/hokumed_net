@@ -10,7 +10,7 @@ type PathSet = {
 */
 const NavItem = (props:PathSet) =>{
     return (
-    <div className="navbar__items__item">
+    <div className="navbar__items__item" id={props.name}>
       <Link to={props.path}>{props.name}</Link>
     </div>
   )
@@ -34,13 +34,13 @@ class NavBar extends React.Component {
 
         {/*TO DO: Make page site for each link.*/}
         <div className="navbar__items">
-          <NavItem name="HOME" path="/" />
+          <NavItem name="HOME" path="/home" />
           <NavItem name="STUDY" path="/study" />
           <NavItem name="MAILLIST" path="/maillist" />
           <NavItem name="PROFILE" path="/profile" />
           <NavItem name="ADMIN" path="/admin" />
-          <NavItem name="LOGIN" path="/login" />
-          <NavItem name="Error" path="/error" />
+          <NavItem name="LOGIN" path="/" />
+          <NavItem name="ERROR" path="/error" />
         </div>
       </div>
     )

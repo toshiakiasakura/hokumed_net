@@ -16,7 +16,8 @@ class App extends Component{
     <Router>
       <NavBar />
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Login} />
+        {/*This login page will be bad access without authentication.*/}
         <Route exact path="/login" component={Login} />
         <Route path="/home" component={Home} />
         <Route exact path="/error" component={NotFound} />

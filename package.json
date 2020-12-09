@@ -13,7 +13,8 @@
   },
   "scripts": {
     "start": "tsc && node dist/index.js",
-    "dev": "cd client && yarn dev"
+    "dev": "cd client && yarn dev",
+    "test":"cd client && yarn test"
   },
   "name": "2_hokui_net_ver2",
   "description": "Our aim is to construct simple website.  Follow the rule of KISS!",

@@ -1,4 +1,11 @@
 """
+To use this module,
+- start first `yarn dev` and type `yarn test` in another window.
+
+Also you need to first set the environmental path for geckodriver.
+For mac or linux users, `which geckodriver` will tell you
+the path for it.
+
 - selenium with Python, official document
 https://selenium-python.readthedocs.io/
 
@@ -50,6 +57,22 @@ class TestSite(unittest.TestCase):
         self.login("test", "test", False)
         btn_state = self.browser.find_element_by_id("loginButton").is_enabled()
         self.assertFalse(btn_state)
+
+    def test_nav_bar(self):
+        """Test navigation bars are correctly controls the links.
+        If you make prototype of pages, write the name and path
+        for that page.
+        """
+        # keys are id tag name, values are links.
+        check_dic = {"HOME":"/home",
+                     "LOGIN":"/",
+                     "ERROR":"/error",
+                     #"STUDY":"/study"
+                     }
+        self.browser.get(self.url + "/")
+        for k,v in check_dic.items():
+            self.browser.find_element_by_id(k).click()
+            self.assertEqual(self.current_url(), v)
 
 
 
