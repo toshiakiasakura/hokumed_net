@@ -1,12 +1,14 @@
 """
-- selenium with Python, official document 
+- selenium with Python, official document
 https://selenium-python.readthedocs.io/
 
+- unittest, official document
+https://docs.python.org/3/library/unittest.html
 """
 import unittest
 import time
 from selenium import webdriver
-
+from selenium.webdriver.common.alert import Alert
 
 class TestSite(unittest.TestCase):
     @classmethod
@@ -20,23 +22,36 @@ class TestSite(unittest.TestCase):
         cls.browser.quit()
         super().tearDownClass()
 
-    def test_login(self):
+    def login(self,email: str,password: str, click: bool = True) -> None:
         self.browser.get(self.url + "/login")
 
         email_input = self.browser.find_element_by_name("email")
-        email_input.send_keys("ak_redtiger@eis.hokudai.ac.jp") 
+        email_input.send_keys(email)
         password_input = self.browser.find_element_by_name("password")
-        password_input.send_keys("abcdefg")
-        self.browser.find_element_by_id("loginButton").click()
+        password_input.send_keys(password)
+        if click:
+            self.browser.find_element_by_id("loginButton").click()
+
+    def current_url(self) -> str:
+        return( self.browser.current_url[len(self.url):])
+
+    def test_login_success(self):
+        self.login("ak_redtiger@eis.hokudai.ac.jp", "abcdefg")
         local_storage = self.browser.execute_script("return window.localStorage;")
         print("# localStorage :\n",local_storage)
+        self.assertEqual(self.current_url(), "/home")
 
-    def test_exmple(self):
-        print("test_example")
-        self.assertTrue(True)
+    def test_login_failure(self):
+        self.login("ak_redtiger@eis.hokudai.ac.jp", "error")
+        Alert(self.browser).accept()
+        self.assertEqual(self.current_url(), "/login")
 
-    def test2(self):
-        self.assertFalse(False)
+    def test_login_disabled(self):
+        self.login("test", "test", False)
+        btn_state = self.browser.find_element_by_id("loginButton").is_enabled()
+        self.assertFalse(btn_state)
+
+
 
 
 if __name__ == "__main__":

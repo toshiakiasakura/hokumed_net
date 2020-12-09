@@ -7,10 +7,11 @@ import { Request, Response, NextFunction } from "express";
 import path from 'path';
 import bodyParser from 'body-parser'
 import { testRouter } from './routes/tests'
-import { userRouter } from './routes/users'
-import { contentRouter } from './routes/contents'
+import { userRouter } from './routes/user.route'
+import { studyRouter } from './routes/study.route'
 const app = express()
 
+app.set("secretKey", "hogehoge")
 // axios post problem
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*") // update to match the domain you will make the request from
@@ -26,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/api/test', testRouter )
 app.use('/api/user', userRouter)
-app.use('/api/content', contentRouter)
+app.use('/api/study', studyRouter)
 
 // Handles any requests that don't match the ones above
 app.get('*', (req:Request,res:Response) =>{

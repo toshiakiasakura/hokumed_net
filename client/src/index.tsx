@@ -1,17 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider }  from 'react-redux'
 import { CookiesProvider } from 'react-cookie'
-import {store} from './store'
 import App from './App'
+import { Provider as AlertProvider} from 'react-alert'
 import reportWebVitals from './reportWebVitals';
 
+// optional cofiguration
+const options = {
+  position: 'bottom center',
+  timeout: 5000,
+  offset: '30px',
+  transition: 'scale'
+}
+
 ReactDOM.render(
-  <Provider store={store}>
-    <CookiesProvider>
+  <CookiesProvider>
       <App />
-    </CookiesProvider>
-  </Provider>,
+  </CookiesProvider>,
   document.getElementById('root')
 );
 

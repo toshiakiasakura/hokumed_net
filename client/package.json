@@ -10,7 +10,9 @@
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^16.14.2",
+    "@types/react-alert": "^5.2.0",
     "@types/react-dom": "^16.9.8",
+    "@types/react-notification-system": "^0.2.40",
     "@types/react-redux": "^7.1.11",
     "@types/react-router-dom": "^5.1.6",
     "@types/redux": "^3.6.0",
@@ -23,9 +25,13 @@
     "node-sass": "4.14.1",
     "nodeman": "^1.1.2",
     "react": "^17.0.1",
+    "react-alert": "^7.0.2",
+    "react-alert-template-basic": "^1.0.0",
     "react-cookie": "^4.0.3",
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.12.2",
+    "react-notification-system": "^0.4.0",
+    "react-notifications": "^1.7.2",
     "react-redux": "^7.2.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
@@ -41,10 +47,9 @@
   "scripts": {
     "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "cd ../test && python test_dev.py",
     "eject": "react-scripts eject",
-    "dev": "concurrently \"yarn start\" \"cd .. && yarn start\" ",
-    "test": "cd ../test && python test_dev.py"
+    "dev": "concurrently \"yarn start\" \"cd .. && yarn start\" "
   },
   "eslintConfig": {
     "extends": [

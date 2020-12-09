@@ -1,18 +1,13 @@
 import React, { Component } from 'react'
-import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import { useHistory } from 'react-router-dom'
-import { useCookies } from 'react-cookie'
+import { useHistory, Link } from 'react-router-dom'
+import AuthService from '../services/auth.service'
+// import { useCookies } from 'react-cookie'
 import '../style/_temp.sass'
-// import { connect } from "react-redux"
-import { login } from "../actions/auth"
+import 'react-notifications/lib/notifications.css'
+// This type for onClick
+// type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 
-type ChangeEvent = React.ChangeEvent<HTMLInputElement>
-type State = {
-  email: string,
-  password: string,
-  loading : boolean
-}
 
 type FormData ={
   email: string
@@ -22,20 +17,28 @@ type FormData ={
 /* This is hook function for form.
    In this function, input  validation is done.
  */
-const LoginForm = (
-  props:{
-    state:State,
-  }
-) => {
+const LoginForm = () => {
   //const state = {email:"", password:""}
   const { register, handleSubmit, errors, formState } = useForm<FormData>({mode:'onChange'})
-  const dispatch = useDispatch()
+  const history = useHistory()
   const handleLogin = (data: FormData) => {
     /* This login calls auth in actions and subsequenstly call
        auth.service.ts. Then, axios.post method is called.
      */
-    dispatch(login(data.email, data.password))
+    AuthService.login(data.email, data.password)
+    .then( (res_data) => {
+      console.log(res_data)
+      if (res_data.status === 200){
+        history.push("/home")
+      } else if (res_data.status === 403) {
+        // TO DO: Become more elegant one. .
+        alert("Login Failure")
+        //history.push("/error")
 
+      } else (
+        history.push("/error")
+      )
+    })
   }
   return(
     <form name="form_2" onSubmit={handleSubmit(handleLogin)}>
@@ -103,7 +106,7 @@ const RegisterButton =  () =>{
   return(
     <button
       className="btn btn--primary btn--block btn--ghost"
-      onClick={handleClick}
+      onClick={() => handleClick()}
     >
       ユーザー登録する
     </button>
@@ -111,27 +114,9 @@ const RegisterButton =  () =>{
 }
 
 class Login extends Component {
-  state : State
 
   constructor(props:{}){
     super(props)
-    this.handleLogin = this.handleLogin.bind(this)
-
-    this.state = {
-      email:"",
-      password:"",
-      loading: false
-    }
-  }
-
-  handleLogin(e: ChangeEvent) {
-    e.preventDefault();
-
-    this.setState({
-      loading: true,
-    });
-    console.log(this.state)
-
   }
 
   render() {
@@ -141,10 +126,10 @@ class Login extends Component {
       <div className="hero__bg"/>
       <div className="hero__login">
         <h2> ログイン画面 </h2>
-        <LoginForm state={this.state} />
+        <LoginForm />
         <div className="test-muted text-small">
           {/* TO DO: Resend the confirmation mail.*/}
-          <a>認証メールの再送信(未実装)</a>
+          <Link to="/error">認証メールの再送信(未実装)</Link>
         </div>
         <hr/>
         <div className="panel__foot">
