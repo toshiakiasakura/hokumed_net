@@ -1,7 +1,8 @@
 # This .gitignore was obtained from https://github.com/github/gitignore/blob/master/Node.gitignore
 
-# Since typescript development, js should be ignored. 
-.js
+# custom
+*.js
+*.sqlite
 
 # Logs
 logs
@@ -119,4 +120,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-

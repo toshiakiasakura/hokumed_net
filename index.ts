@@ -4,6 +4,7 @@
  */
 import express from 'express'
 import { Request, Response, NextFunction } from "express";
+import 'reflect-metadata'
 import path from 'path';
 import bodyParser from 'body-parser'
 import { testRouter } from './routes/tests'
