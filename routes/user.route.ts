@@ -9,8 +9,7 @@ router.post('/login', login)
 
 
 // For test
-import { addSampleUser,
-  removeSampleUser } from '../api/controllers/sample_user'
+import { addSampleUser, removeSampleUser } from '../api/controllers/sample_user'
 router.get('/add_sample', addSampleUser )
 router.get('/remove_sample', removeSampleUser)
 

@@ -14,15 +14,17 @@ https://docs.python.org/3/library/unittest.html
 """
 import unittest
 import time
+import subprocess
 from selenium import webdriver
 from selenium.webdriver.common.alert import Alert
 
+test_url = "http://localhost:3001"
 class TestSite(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.browser = webdriver.Firefox()
-        cls.url = "http://localhost:3001"
+        cls.url = test_url
 
     @classmethod
     def tearDownClass(cls):
@@ -43,15 +45,24 @@ class TestSite(unittest.TestCase):
         return( self.browser.current_url[len(self.url):])
 
     def test_login_success(self):
-        self.login("ak_redtiger@eis.hokudai.ac.jp", "abcdefg")
+        self.login("test@eis.hokudai.ac.jp", "test")
         local_storage = self.browser.execute_script("return window.localStorage;")
         print("# localStorage :\n",local_storage)
         self.assertEqual(self.current_url(), "/home")
 
-    def test_login_failure(self):
-        self.login("ak_redtiger@eis.hokudai.ac.jp", "error")
-        Alert(self.browser).accept()
-        self.assertEqual(self.current_url(), "/login")
+    def test_login_user_not_found(self):
+        self.login("not_found@eis.hokudai.ac.jp", "hogehoge")
+        alert = self.browser.switch_to.alert
+        self.assertEqual(alert.text,'Login failure. User is not found' )
+        alert.accept()
+        self.assertEqual(self.current_url(), "/")
+
+    def test_login_user_password_error(self):
+        self.login("test@eis.hokudai.ac.jp", "hogehoge")
+        alert = self.browser.switch_to.alert
+        self.assertEqual(alert.text, 'Login failure. Password is not correct')
+        alert.accept()
+        self.assertEqual(self.current_url(), "/")
 
     def test_login_disabled(self):
         self.login("test", "test", False)
@@ -78,4 +89,6 @@ class TestSite(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    subprocess.check_call(["curl",f"{test_url}/api/user/add_sample"])
     unittest.main()
+    subprocess.check_call(["curl",f"{test_url}/api/user/remove_sample"])

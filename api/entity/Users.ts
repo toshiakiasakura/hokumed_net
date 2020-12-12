@@ -3,8 +3,9 @@ import { Entity, PrimaryGeneratedColumn, Column,
 
 
 const NULL = {nullable: true}
+
 @Entity()
-export class User {
+export class Users {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -13,19 +14,19 @@ export class User {
     email: string
 
     // Check this NULL is valid or not.
-    @Column(NULL)
+    @Column()
     crypted_password: string
 
-    @Column(NULL)
+    @Column()
     salt: string
 
-    @Column(NULL)
-    created_at: number
-
     @Column({type:'datetime', default: () => 'CURRENT_TIMESTAMP'})
+    created_at: Date
+
+    @Column(NULL)
     updated_at: Date
 
-    @Column(NULL)
+    @Column({default: 'pending'})
     activation_state: string
 
     @Column(NULL)

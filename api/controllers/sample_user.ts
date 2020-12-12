@@ -1,46 +1,34 @@
 import { Request, Response, NextFunction } from "express";
-import { createConnection } from 'typeorm'
-import { User } from '../entity/User'
+import { getManager } from 'typeorm'
+import { Users } from '../entity/Users'
+import { newBCryptPassword } from '../helpers/bcrypt.helper'
 
-export const addSampleUser = (req:Request, res:Response) => {
-  createConnection()
-    .then(async connection => {
+export async function addSampleUser(req:Request, res:Response){
 
-      console.log("Inserting sample users into the database")
-      let user = new User()
-      user.email = "test@test.com"
-      user.crypted_password = "not_crypted"
-      user.salt = "test"
-      user.activation_state = "admin"
-      user.family_name = "family"
-      user.handle_name = "handle"
+    console.log('Inserting sample users into the database')
+    let user = new Users()
+    user.email = 'test@eis.hokudai.ac.jp'
+    const password = "test"
+    const [salt, crypted_password] = newBCryptPassword(password)
+    user.crypted_password = crypted_password
+    user.salt = salt
+    user.activation_state = 'test'
+    user.family_name = 'family'
+    user.handle_name = 'handle'
 
-      let userRepository = connection.getRepository(User)
-      await userRepository.save(user)
-      console.log("finish inserting")
-      res.json({status:200})
-    })
-    .catch(error => {
-      console.log(error)
-      res.json({status:404})
-    })
-}
-
-export const removeSampleUser = (req:Request, res:Response) => {
-  createConnection()
-  .then(async connection => {
-    console.log("Removing sample users")
-    let userRepository = connection.getRepository(User)
-
-    let users = await userRepository.find()
-    for (const user of users){
-      await userRepository.remove(user)
-    }
-    console.log("finish removing")
+    let userRepository = getManager().getRepository(Users)
+    await userRepository.save(user)
+    console.log('finish inserting')
     res.json({status:200})
-  })
-  .catch(error => {
-    console.log(error)
-    res.json({status:404})
-  })
+}
+export async function removeSampleUser(req:Request, res:Response){
+  console.log('Removing sample users')
+  let userRepository = getManager().getRepository(Users)
+
+  let users = await userRepository.find({activation_state:'test'})
+  for (const user of users){
+    await userRepository.remove(user)
+  }
+  console.log('finish removing')
+  res.json({status:200})
 }

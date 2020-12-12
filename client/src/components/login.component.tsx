@@ -4,7 +4,6 @@ import { useHistory, Link } from 'react-router-dom'
 import AuthService from '../services/auth.service'
 // import { useCookies } from 'react-cookie'
 import '../style/_temp.sass'
-import 'react-notifications/lib/notifications.css'
 // This type for onClick
 // type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 
@@ -22,23 +21,23 @@ const LoginForm = () => {
   const { register, handleSubmit, errors, formState } = useForm<FormData>({mode:'onChange'})
   const history = useHistory()
   const handleLogin = (data: FormData) => {
-    /* This login calls auth in actions and subsequenstly call
-       auth.service.ts. Then, axios.post method is called.
-     */
+    /*login procedures. This should be written in other places.
+    */
     AuthService.login(data.email, data.password)
     .then( (res_data) => {
+      console.log('login process started.')
       console.log(res_data)
       if (res_data.status === 200){
         history.push("/home")
-      } else if (res_data.status === 403) {
+      } else if (res_data.status === 401) {
         // TO DO: Become more elegant one. .
-        alert("Login Failure")
+        alert(res_data.msg)
         //history.push("/error")
-
       } else (
         history.push("/error")
       )
     })
+    .catch(err => console.log(err))
   }
   return(
     <form name="form_2" onSubmit={handleSubmit(handleLogin)}>
@@ -98,10 +97,10 @@ const LoginForm = () => {
 /* Register button function.
 To apply useHitory function, it should be function.
 */
-const RegisterButton =  () =>{
+const SignUpButton =  () =>{
   const history = useHistory()
   const handleClick= () =>{
-    history.push('/register')
+    history.push('/signup')
   }
   return(
     <button
@@ -135,7 +134,7 @@ class Login extends Component {
         <div className="panel__foot">
           <p className="v-spacer"/>
           <div>
-            <RegisterButton />
+            <SignUpButton />
           </div>
         </div>
       </div>

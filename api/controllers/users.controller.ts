@@ -4,34 +4,34 @@ import { Request, Response, NextFunction } from "express";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 const saltRounds = 10
+import { getManager } from 'typeorm'
+import { newBCryptPassword } from '../helpers/bcrypt.helper'
+import { Users } from '../entity/Users'
 
 /*
   bcrypt.genSalt(saltRounds)
 */
 
-export const login = (req:Request, res:Response) => {
+export async function login(req:Request, res:Response){
   // later delete log
-  console.log('access to /api/signin')
-
-  // TO DO: This process is needed for register
-  // TO DO: how to generate salt for password?
-  const saltWhat = "asdfasdfajoiaf" // This saltWhat represents salt in sqlite
-  const salt = bcrypt.genSaltSync(saltRounds)
-  const myHash = bcrypt.hashSync("error" + saltWhat, salt)
-
-  // TO DO: Here add Read component
-  console.log("salt and hash: ",salt, myHash)
-  // This compareSync uses myHash's salt part.
-  if (bcrypt.compareSync(req.body.password + saltWhat, myHash)){
-    //TO DO: swap correct and incorrect process
-    res.json({status:403})
-  } else {
-
-    // Create accessToken
-    const token = jwt.sign({id: 1}, req.app.get("secretKey"), {expiresIn:3600}  )
+  let userRepository = getManager().getRepository(Users)
+  const user = await userRepository.findOne({where: {email:req.body.email}})
+  console.log(req.body)
+  console.log(user)
+  if ( user === undefined ){
+    res.json({status:401, msg:'Login failure. User is not found'}) // User not found and password fail is different
+  } else if(
+    bcrypt.compareSync(req.body.password + user.salt, user.crypted_password)
+  ){
+  // Create
+    const token = jwt.sign({id: user.id},
+                            req.app.get("secretKey"),
+                            {expiresIn:3600}  )
     res.json({status:200,
               accessToken:token,
               email:req.body.email
             })
+  } else {
+    res.json({status:401, msg:'Login failure. Password is not correct'})
   }
 }

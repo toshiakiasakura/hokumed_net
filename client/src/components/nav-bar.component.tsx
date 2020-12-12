@@ -36,10 +36,10 @@ class NavBar extends React.Component {
         <div className="navbar__items">
           <NavItem name="HOME" path="/home" />
           <NavItem name="STUDY" path="/study" />
-          <NavItem name="MAILLIST" path="/maillist" />
           <NavItem name="PROFILE" path="/profile" />
           <NavItem name="ADMIN" path="/admin" />
           <NavItem name="LOGIN" path="/" />
+          <NavItem name="SIGNUP" path="/signup" />
           <NavItem name="ERROR" path="/error" />
         </div>
       </div>
