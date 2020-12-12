@@ -1,20 +1,8 @@
 import React, { Component } from 'react'
-import { useForm } from 'react-hook-form'
-import AuthService from '../services/auth.service'
-
-type SignUpData = {
-  family_name: string
-  given_name: string
-  handle_name: string
-  birth_year: string
-  birth_month: string
-  birth_day: string
-  email: string
-  email_mobile: string
-  class_year: number
-  password: string
-  reenteredPassword: string
-}
+import { useForm, Controller } from 'react-hook-form'
+import { AuthService, SignUpData } from '../services/auth.service'
+import DatePicker from 'react-datepicker'
+import { TextField } from '@material-ui/core'
 
 export const RequirePop = () => {
   // TO DO: convert it into pop up.
@@ -24,7 +12,7 @@ export const RequirePop = () => {
 }
 
 
-export const RowBlock = (
+const RowBlock = (
   props:
     {
       // default value for optional arguments. condition will be good choice.
@@ -61,15 +49,87 @@ export const RowBlock = (
 
 }
 
+
+const DateBlock = (props:{register:any}) => {
+  let years = []
+  let months = []
+  let days = []
+  for( var i = 1980; i<= 2020 ; i++){
+    years.push( <option id={"birth_year" +i } value={i}> {i}年 </option>)
+  }
+  for( var i = 1; i <= 12; i++){
+    months.push( <option id={"birth_month" +i } value={i}> {i}月 </option>)
+  }
+  for( var i = 1; i <= 31; i++){
+    days.push( <option id={"birth_month" +i } value={i}> {i}日 </option>)
+  }
+  return(
+    <div className="form__group">
+      <div className="col--sm-4">
+        <label className="form__label">
+          生年月日
+        </label>
+      </div>
+        <div className="col--sm-4">
+        <select
+          className="form__control"
+          name="bitry_year"
+          ref={props.register}
+        >
+          {years}
+        </select>
+        <select
+          className="form__control"
+          name="bitry_month"
+          ref={props.register}
+        >
+          {months}
+        </select>
+        <select
+          className="form__control"
+          name="bitry_day"
+          ref={props.register}
+        >
+          {days}
+        </select>
+        </div>
+    </div>
+
+  )
+}
+
+const ClassYearBlock = (props:{register:any}) => {
+  let content = []
+  for( var i = 94; i < 110; i++){
+    content.push( <option id={"signupYear"+i} value={i}> {i}期 </option> )
+  }
+  return(
+    <div className="form__group">
+      <div className="col--sm-4">
+        <label className="form__label">
+           期を選択
+        </label>
+      </div>
+      <div className="col--sm-8">
+        <select
+          className="form__control"
+          name="class_year"
+          ref={props.register}
+        >
+          {content}
+        </select>
+      </div>
+    </div>
+  )
+}
 export const SignUpForm = () => {
-  const { register, handleSubmit, errors, formState } =
+  const { register, handleSubmit, errors, formState, control } =
                             useForm<SignUpData>({mode:'onChange'})
   const handleSignUp = (data: SignUpData) =>{
-  // TO DO: change name into signup and recieve json format data.
-  //AuthService.register()
-    const a = 1 //dummy
-
+    console.log(data)
+    AuthService.signup(data)
   }
+
   return(
     <form
       className="form row"
@@ -101,6 +161,7 @@ export const SignUpForm = () => {
               errors={errors} register={register}
             />
             {/*TO DO: dropdown and checkbox implementation. */}
+            <DateBlock register={register}/>
             <RowBlock
               title="ELMSメール"
               type="email"
@@ -109,6 +170,7 @@ export const SignUpForm = () => {
               placeholder="example@eis.hokudai.ac.jp"
               errors={errors} register={register}
             />
+            <ClassYearBlock register={register}/>
             <RowBlock
               title="パスワード"
               type="password"

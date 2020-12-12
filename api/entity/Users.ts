@@ -26,22 +26,40 @@ export class Users {
     @Column(NULL)
     updated_at: Date
 
-    @Column({default: 'pending'})
-    activation_state: string
+    @Column({default: 'waiting'})
+    approval_state: string
 
     @Column(NULL)
-    activation_token: string
+    last_login_at: Date
 
     @Column(NULL)
-    activation_token_expires_at: Date
+    last_logout_at: Date
 
     @Column(NULL)
+    last_login_from_ip_address: string
+
+    @Column()
     family_name: string
 
-    @Column(NULL)
+    @Column()
     given_name: string
 
-    @Column(NULL)
+    @Column()
     handle_name: string
+
+    @Column()
+    birth_date: Date
+
+    @Column()
+    email_mobile: string
+
+    @Column({default: false})
+    admin: boolean
+
+    @Column()
+    class_year_id: number
+
+    @Column(NULL)
+    ml_member_id: number
 
 }

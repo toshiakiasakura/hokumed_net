@@ -2,9 +2,24 @@ import axios from "axios";
 
 const API_URL = '/api/user/'
 
+// This type is matched with SignUpForm in signup.component.tsx
+export type SignUpData = {
+  email: string
+  password: string
+  family_name: string
+  given_name: string
+  handle_name: string
+  birth_year: string
+  birth_month: string
+  birth_day: string
+  email_mobile: string
+  class_year: number
+  reenteredPassword: string
+}
 type String = string | null
+
 class AuthService {
-  login(email: String, password: String) {
+  static login(email: String, password: String) {
     return axios
       .post(API_URL + "login", { email, password })
       .then((response) => {
@@ -25,16 +40,13 @@ class AuthService {
       })
   }
 
-  logout() {
-    localStorage.removeItem("email");
+  static logout() {
+    localStorage.removeItem("user");
   }
 
-  register(email: String, password: String) {
-    return axios.post(API_URL + "signup", {
-      email,
-      password,
-    });
+  static signup(data: SignUpData) {
+    return axios.post(API_URL + "signup", data);
   }
 }
 
-export default new AuthService();
+export {AuthService}
