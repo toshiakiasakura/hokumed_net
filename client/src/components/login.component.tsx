@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory, Link } from 'react-router-dom'
 import { AuthService } from '../services/auth.service'
@@ -24,14 +24,14 @@ const LoginForm = () => {
     /*login procedures. This should be written in other places.
     */
     AuthService.login(data.email, data.password)
-    .then( (res_data) => {
+    .then( (res) => {
       console.log('login process started.')
-      console.log(res_data)
-      if (res_data.status === 200){
+      console.log(res)
+      if (res.status === 200){
         history.push("/home")
-      } else if (res_data.status === 401) {
+      } else if (res.status === 401) {
         // TO DO: Become more elegant one. .
-        alert(res_data.msg)
+        alert(res.msg)
         //history.push("/error")
       } else (
         history.push("/error")
@@ -112,13 +112,7 @@ const SignUpButton =  () =>{
   )
 }
 
-class Login extends Component {
-
-  constructor(props:{}){
-    super(props)
-  }
-
-  render() {
+const Login = () => {
 
     return(
     <div className="hero">
@@ -139,17 +133,7 @@ class Login extends Component {
         </div>
       </div>
     </div>
-  )}
+  )
 }
-
-
-// function mapStateToProps(state}) {
-//   const { isLoggedIn } = state.auth
-//   const { message } = state.message
-//   return {
-//     isLoggedIn,
-//     message
-//   };
-// }
 
 export {Login}

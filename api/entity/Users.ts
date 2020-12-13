@@ -47,17 +47,17 @@ export class Users {
     @Column()
     handle_name: string
 
-    @Column()
-    birth_date: Date
+    @Column(NULL)
+    birthday: Date
 
-    @Column()
+    @Column(NULL)
     email_mobile: string
 
     @Column({default: false})
     admin: boolean
 
-    @Column()
-    class_year_id: number
+    @Column(NULL)
+    class_year_id: string
 
     @Column(NULL)
     ml_member_id: number

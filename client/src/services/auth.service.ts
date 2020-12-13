@@ -2,20 +2,6 @@ import axios from "axios";
 
 const API_URL = '/api/user/'
 
-// This type is matched with SignUpForm in signup.component.tsx
-export type SignUpData = {
-  email: string
-  password: string
-  family_name: string
-  given_name: string
-  handle_name: string
-  birth_year: string
-  birth_month: string
-  birth_day: string
-  email_mobile: string
-  class_year: number
-  reenteredPassword: string
-}
 type String = string | null
 
 class AuthService {
@@ -30,10 +16,9 @@ class AuthService {
           localStorage.setItem("user", JSON.stringify(response.data))
         }
 
-        return response.data;
+        return response.data
       })
       .catch((err) => {
-          // later delete log
           console.log(API_URL+'login')
           console.log('axios post method failure in auth.service.ts')
           console.log(err)
@@ -41,11 +26,18 @@ class AuthService {
   }
 
   static logout() {
-    localStorage.removeItem("user");
+    localStorage.removeItem("user")
   }
 
-  static signup(data: SignUpData) {
-    return axios.post(API_URL + "signup", data);
+  static signup(data: any) {
+    return axios.post(API_URL + "signup", data)
+    .then((response) => {
+      return(response.data)
+    })
+    .catch((err) => {
+      console.log('axios signup failure')
+      console.log(err)
+    })
   }
 }
 
