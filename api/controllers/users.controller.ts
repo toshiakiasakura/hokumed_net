@@ -46,6 +46,7 @@ export async function signup(req:Request, res:Response){
     user.crypted_password = crypted_password
     user.family_name = body.family_name
     user.given_name = body.given_name
+    user.handle_name = body.handle_name
     user.birthday = body.birth_day
     user.email_mobile = body.email_mobile
     user.class_year_id = body.class_year_id
