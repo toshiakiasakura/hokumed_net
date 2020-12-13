@@ -23,7 +23,7 @@ createConnection()
     next()
   })
   // Serve the static files from the React app
-  app.use(express.static(path.join(__dirname, '../client/build')))
+  app.use(express.static(path.join(__dirname, '/../client/build')))
 
   // body parser for json
   app.use(bodyParser.json())
@@ -35,7 +35,7 @@ createConnection()
 
   // Handles any requests that don't match the ones above
   app.get('*', (req:Request,res:Response) =>{
-      res.sendFile(path.join(__dirname+'../client/build/index.html'));
+      res.sendFile(path.join(__dirname+'/../client/build/index.html'));
   })
 
   //const port = process.env.PORT || 3000;
