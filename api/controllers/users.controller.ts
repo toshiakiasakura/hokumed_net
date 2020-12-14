@@ -1,14 +1,16 @@
 /* User authentication and register user are defined here.
  */
-import { Request, Response, NextFunction } from "express";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 const saltRounds = 10
 import { getManager } from 'typeorm'
 import { newBCryptPassword } from '../helpers/bcrypt.helper'
 import { Users } from '../entity/Users'
+import { ExpressFunc } from '../helpers/express_typing'
 
-export async function login(req:Request, res:Response){
+// This typing is called contextual typing.
+
+export const login: ExpressFunc = async function (req, res){
   // later delete log
   let userRepository = getManager().getRepository(Users)
   const user = await userRepository.findOne({where: {email:req.body.email}})
@@ -33,7 +35,7 @@ export async function login(req:Request, res:Response){
   }
 }
 
-export async function signup(req:Request, res:Response){
+export const signup: ExpressFunc = async function signup(req, res){
   let userRepository = getManager().getRepository(Users)
 
   let users = await userRepository.find({email: req.body.email})

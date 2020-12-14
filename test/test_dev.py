@@ -53,14 +53,14 @@ class TestSite(unittest.TestCase):
     def test_login_user_not_found(self):
         self.login("not_found@eis.hokudai.ac.jp", "hogehoge")
         alert = self.browser.switch_to.alert
-        self.assertEqual(alert.text,'Login failure. User is not found' )
+        self.assertEqual(alert.text,'Login failure. User is not found.' )
         alert.accept()
         self.assertEqual(self.current_url(), "/")
 
     def test_login_user_password_error(self):
         self.login("test@eis.hokudai.ac.jp", "hogehoge")
         alert = self.browser.switch_to.alert
-        self.assertEqual(alert.text, 'Login failure. Password is not correct')
+        self.assertEqual(alert.text, 'Login failure. Password is not correct.')
         alert.accept()
         self.assertEqual(self.current_url(), "/")
 
