@@ -1,6 +1,6 @@
 # New version of hokui.net
 **The name of the the new site is now under consideration.**   
-**hoku_med.net** is one choice. 
+**hokumed.net** is one choice. 
 <br />  
 The site is now accessible via http://ik1-419-41929.vs.sakura.ne.jp/  
 The reference site is http://hokui.net/  
