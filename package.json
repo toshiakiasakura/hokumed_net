@@ -1,0 +1,38 @@
+{
+  "dependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/express": "^4.17.9",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/node": "^14.14.12",
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.3.0",
+    "cores": "^0.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "path": "^0.12.7",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^5.0.0",
+    "typeorm": "^0.3.0-alpha.24"
+  },
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "dev": "cd client && yarn dev",
+    "test": "cd client && yarn test"
+  },
+  "name": "2_hokui_net_ver2",
+  "description": "Our aim is to construct simple website.  Follow the rule of KISS!",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toshiakiasakura/hokui_ver2.net.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/toshiakiasakura/hokui_ver2.net/issues"
+  },
+  "homepage": "https://github.com/toshiakiasakura/hokui_ver2.net#readme"
+}

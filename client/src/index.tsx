@@ -1,14 +1,22 @@
-import * as React from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import RouterFunc from './routes'
-
-import './index.css';
+import { CookiesProvider } from 'react-cookie'
+import App from './App'
+import { Provider as AlertProvider} from 'react-alert'
 import reportWebVitals from './reportWebVitals';
 
+// optional cofiguration
+const options = {
+  position: 'bottom center',
+  timeout: 5000,
+  offset: '30px',
+  transition: 'scale'
+}
+
 ReactDOM.render(
-  <React.StrictMode>
-    <RouterFunc />,
-  </React.StrictMode>,
+  <CookiesProvider>
+      <App />
+  </CookiesProvider>,
   document.getElementById('root')
 );
 

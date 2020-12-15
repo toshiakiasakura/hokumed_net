@@ -1,5 +1,9 @@
 # This .gitignore was obtained from https://github.com/github/gitignore/blob/master/Node.gitignore
 
+# custom
+*.js
+*.sqlite
+
 # Logs
 logs
 *.log
@@ -116,4 +120,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
