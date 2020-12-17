@@ -5,9 +5,11 @@ import { BrowserRouter as Router,
   Redirect} from 'react-router-dom';
 import { Login } from './components/login.component'
 import { Home } from './components/home.component'
+import { Admin } from './components/admin.component'
 import { SignUp } from './components/signup.component'
 import { NotFound } from './components/404.component'
 import { NavBar } from './components/nav-bar.component'
+
 import './style/_index.sass'
 
 
@@ -20,6 +22,7 @@ class App extends Component{
         <Route exact path='/' component={Login} />
         <Route exact path='/login' component= {() => <Redirect to='/' />} />
         <Route path='/home' component={Home} />
+        <Route path='/admin' component={Admin} />
         <Route path='/signup' component={ SignUp } />
         <Route exact path='/error' component={NotFound} />
         <Route component={() => <Redirect to='error' />}/>

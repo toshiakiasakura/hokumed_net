@@ -11,6 +11,7 @@ import bodyParser from 'body-parser'
 import { testRouter } from './routes/tests'
 import { userRouter } from './routes/user.route'
 import { studyRouter } from './routes/study.route'
+import { adminRouter } from './routes/admin.route'
 
 createConnection()
 .then(async connection => {
@@ -32,6 +33,7 @@ createConnection()
   app.use('/api/test', testRouter )
   app.use('/api/user', userRouter)
   app.use('/api/study', studyRouter)
+  app.use('/api/admin', adminRouter)
 
   // Handles any requests that don't match the ones above
   app.get('*', (req:Request,res:Response) =>{
