@@ -13,7 +13,7 @@
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.0.0",
-    "typeorm": "^0.2.29"
+    "typeorm": "^0.3.0-alpha.24"
   },
   "scripts": {
     "start": "tsc && node dist/index.js",

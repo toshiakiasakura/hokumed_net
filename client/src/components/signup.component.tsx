@@ -1,8 +1,6 @@
-import React, { Component } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { AuthService, SignUpData } from '../services/auth.service'
-import DatePicker from 'react-datepicker'
-import { TextField } from '@material-ui/core'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import { AuthService } from '../services/auth.service'
 
 export const RequirePop = () => {
   // TO DO: convert it into pop up.
@@ -54,13 +52,14 @@ const DateBlock = (props:{register:any}) => {
   let years = []
   let months = []
   let days = []
-  for( var i = 1980; i<= 2020 ; i++){
+  var i
+  for(i = 1980; i<= 2020 ; i++){
     years.push( <option id={"birth_year" +i } value={i}> {i}年 </option>)
   }
-  for( var i = 1; i <= 12; i++){
+  for(i = 1; i <= 12; i++){
     months.push( <option id={"birth_month" +i } value={i}> {i}月 </option>)
   }
-  for( var i = 1; i <= 31; i++){
+  for(i = 1; i <= 31; i++){
     days.push( <option id={"birth_month" +i } value={i}> {i}日 </option>)
   }
   return(
@@ -113,7 +112,7 @@ const ClassYearBlock = (props:{register:any}) => {
       <div className="col--sm-8">
         <select
           className="form__control"
-          name="class_year"
+          name="class_year_id"
           ref={props.register}
         >
           {content}
@@ -122,12 +121,34 @@ const ClassYearBlock = (props:{register:any}) => {
     </div>
   )
 }
+
+export type SignUpData = {
+  email: string
+  password: string
+  family_name: string
+  given_name: string
+  handle_name: string
+  birth_year: string
+  birth_month: string
+  birth_day: string
+  birthday: Date
+  email_mobile: string
+  class_year_id: number
+  reenteredPassword: string
+}
+
 export const SignUpForm = () => {
   const { register, handleSubmit, errors, formState, control } =
                             useForm<SignUpData>({mode:'onChange'})
   const handleSignUp = (data: SignUpData) =>{
     console.log(data)
+    data.birthday = new Date('{data.birth_year}-{data.birth_month}-{data.birth_day}')
     AuthService.signup(data)
+    .then((res) =>{
+      alert(res.msg)
+    }
+
+    )
   }
 
   return(

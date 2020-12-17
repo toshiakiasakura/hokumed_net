@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from "express";
 import { getManager } from 'typeorm'
 import { Users } from '../entity/Users'
 import { newBCryptPassword } from '../helpers/bcrypt.helper'
+import { ExpressFunc } from '../helpers/express_typing'
 
-export async function addSampleUser(req:Request, res:Response){
+export const addSampleUser: ExpressFunc = async function(req, res){
 
     console.log('Inserting sample users into the database')
     let user = new Users()
@@ -15,16 +15,16 @@ export async function addSampleUser(req:Request, res:Response){
     user.family_name = 'family'
     user.given_name = "given"
     user.handle_name = 'handle'
-    user.birth_date = new Date(2020,12,1)
+    user.birthday = new Date(2020,12,1)
     user.email_mobile = "test@gmail.com"
-    user.class_year_id =  98
+    user.class_year_id =  '98'
 
     let userRepository = getManager().getRepository(Users)
     await userRepository.save(user)
     console.log('finish inserting')
     res.json({status:200})
 }
-export async function removeSampleUser(req:Request, res:Response){
+export const removeSampleUser: ExpressFunc = async function(req, res){
   console.log('Removing sample users')
   let userRepository = getManager().getRepository(Users)
 
