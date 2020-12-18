@@ -3,8 +3,20 @@ import { getManager } from 'typeorm'
 import { Users } from '../entity/Users'
 
 
-export const UserBoard: ExpressFunc = async function(req, res){
-  let userRepository = getManager().getRepository(Users)
-  const users = await userRepository.find()
-  res.json(users)
+class AdminController{
+  
+  static UserBoard: ExpressFunc = async function(req, res){
+    let userRepository = getManager().getRepository(Users)
+    const users = await userRepository.find()
+    res.json(users)
+  }
+
+  static UserDetail: ExpressFunc = async function(req, res){
+    const id = parseInt(req.params.id)
+    let userRepository = getManager().getRepository(Users)
+    const user = await userRepository.findOne(id)
+    res.json(user)
+  }
 }
+
+export { AdminController }
