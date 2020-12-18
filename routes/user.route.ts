@@ -2,10 +2,10 @@
  */
 import express from 'express'
 const router = express.Router()
-import {login, signup} from '../api/controllers/users.controller'
+import { UserController } from '../api/controllers/users.controller'
 
-router.post('/login', login)
-router.post('/signup', signup)
+router.post('/login', UserController.login)
+router.post('/signup', UserController.signup)
 // TO DO: router.post('/register', register)
 
 

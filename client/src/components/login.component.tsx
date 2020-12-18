@@ -2,8 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory, Link } from 'react-router-dom'
 import { AuthService } from '../services/auth.service'
-// import { useCookies } from 'react-cookie'
-import '../style/_temp.sass'
+
 // This type for onClick
 // type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 

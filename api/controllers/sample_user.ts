@@ -11,11 +11,10 @@ export const addSampleUser: ExpressFunc = async function(req, res){
     const [salt, crypted_password] = newBCryptPassword("test")
     user.crypted_password = crypted_password
     user.salt = salt
-    user.approval_state = 'test'
     user.family_name = 'family'
     user.given_name = "given"
     user.handle_name = 'handle'
-    user.birthday = new Date(2020,12,1)
+    user.birthday = new Date(2020,11,1) // counts month from 0 to 11.
     user.email_mobile = "test@gmail.com"
     user.class_year_id =  '98'
 
@@ -28,7 +27,7 @@ export const removeSampleUser: ExpressFunc = async function(req, res){
   console.log('Removing sample users')
   let userRepository = getManager().getRepository(Users)
 
-  let users = await userRepository.find({approval_state:'test'})
+  let users = await userRepository.find({email:'test@eis.hokudai.ac.jp'})
   for (const user of users){
     await userRepository.remove(user)
   }

@@ -3,7 +3,7 @@
   to react application.
  */
 import express from 'express'
-import { Request, Response, NextFunction } from "express";
+import { Request, Response} from "express";
 import 'reflect-metadata'
 import { createConnection } from 'typeorm'
 import path from 'path';
@@ -11,6 +11,7 @@ import bodyParser from 'body-parser'
 import { testRouter } from './routes/tests'
 import { userRouter } from './routes/user.route'
 import { studyRouter } from './routes/study.route'
+import { adminRouter } from './routes/admin.route'
 
 createConnection()
 .then(async connection => {
@@ -32,10 +33,13 @@ createConnection()
   app.use('/api/test', testRouter )
   app.use('/api/user', userRouter)
   app.use('/api/study', studyRouter)
-
+  app.use('/api/admin', adminRouter)
+  app.get('/api/*', (req:Request, res:Response) => {
+      res.json({status:404})
+  })
   // Handles any requests that don't match the ones above
   app.get('*', (req:Request,res:Response) =>{
-      res.sendFile(path.join(__dirname+'/../client/build/index.html'));
+      res.sendFile(path.join(__dirname+'/../client/build/index.html'))
   })
 
   //const port = process.env.PORT || 3000;

@@ -27,7 +27,7 @@ export class Users {
     updated_at: Date
 
     @Column({default: 'waiting'})
-    approval_state: string
+    approval_state: 'waiting' | 'approved'
 
     @Column(NULL)
     last_login_at: Date
@@ -56,7 +56,7 @@ export class Users {
     @Column({default: false})
     admin: boolean
 
-    @Column(NULL)
+    @Column()
     class_year_id: string
 
     @Column(NULL)
