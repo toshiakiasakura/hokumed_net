@@ -26,12 +26,30 @@ export interface Users {
 }
 
 class AdminService {
-  static getUserBoard() {
+  static async getUserBoard() {
     return axios.get<Users[]>(API_URL + 'user')
   }
 
-  static getUserDetail(id: number) {
-  return axios.get<Users>(API_URL + `user/${id}`)
+  static async getUserDetail(id: number) {
+    return axios.get<Users>(API_URL + `user/${id}`)
+  }
+
+  static async changeApproveStatus(id: number){
+    return axios.get(API_URL + `approve/${id}`)
+    .then( res => {return(res.data)} )
+    .catch( err =>  console.log(err))
+  }
+
+  static async deleteUser(id: number){
+    return axios.get(API_URL + `delete/${id}`)
+    .then( res => {return(res.data)} )
+    .catch( err =>  console.log(err))
+  }
+
+  static async changeAdminStatus(id: number){
+    return axios.get(API_URL + `change-admin/${id}`)
+    .then( res => {return(res.data)} )
+    .catch( err =>  console.log(err))
   }
 }
 

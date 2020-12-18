@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import { Route, useRouteMatch, Switch, Link, Redirect } from 'react-router-dom'
+import { Route, Switch,
+         Link, Redirect, useHistory } from 'react-router-dom'
 import { AdminService } from '../services/admin.service'
 import { Users } from '../services/admin.service'
 import { NotFound } from './404.component'
 
 const TopNavItem = (props:{url:string, tabName:string} ) => {
-  let match = useRouteMatch()
   return(
     <div className="tab">
-      <a href={`${match.url}/${props.url}`}> {props.tabName} </a>
+      <Link to={`/admin/${props.url}`}> {props.tabName} </Link>
     </div>
   )
 }
@@ -28,9 +28,47 @@ const TopNavVar = () => {
   )
 }
 
+const TopItem = (props:{href:string, col1:string, col2:string})=>{
+  return(
+    <tr>
+      <th>
+        <a href={props.href}>
+          {props.col1}
+        </a>
+      </th>
+      <td>
+        {props.col2}
+      </td>
+    </tr>
+  )
+}
+
+const Top = () => {
+  return(
+  <table  className="table table--bordered">
+    <tr>
+      <th> <a href="/admin/user" > ユーザー </a>
+      </th>
+      <td>
+        <strong>
+        取得 ， 管理人の認証(approve) ，削除，管理人の管理
+        </strong>
+        をすることが出来ます．
+      </td>
+    </tr>
+    <TopItem href="/admin/year" col1="学年" col2="93期以降から作成可能です．" />
+    <TopItem href="/admin/subject" col1="教科"
+      col2={'英語名には半角英数字と「_(アンダーバー)」のみ設定できます． '+
+      '教科のページのURLに使われるので慎重に設定しましょう．' }/>
+    <TopItem href="/admin/semester" col1="学期" col2="各学年のセメスター(前期・後期)ごとの履修科目のマップです．" />
+    <TopItem href="/admin/notification" col1="お知らせ" col2="お知らせの編集が出来ます．" />
+
+
+  </table>
+  )
+}
 
 const UserBody = (props:{users:Users[]}) => {
-  let match = useRouteMatch()
   let table_row = []
   for (let user of props.users){
     table_row.push(
@@ -38,7 +76,7 @@ const UserBody = (props:{users:Users[]}) => {
         <td> {user.id} </td>
         <td> {user.class_year_id } </td>
         <td>
-          <Link to={`${match.url}/${user.id}`}>
+          <Link to={`/admin/user/${user.id}`}>
             {user.handle_name }
           </Link>
         </td>
@@ -73,6 +111,7 @@ class UserBoard extends Component<{},{content: Users[], status: number}> {
       })
     })
     .catch( err => {
+      console.log(err)
       this.setState({
         status:404
       })
@@ -108,13 +147,54 @@ class UserBoard extends Component<{},{content: Users[], status: number}> {
 const TableRow = (props:{rowName:string,
                          item: string | number | boolean | Date
                        }) => {
+    const item =[]
+    if (typeof props.item === 'boolean'){
+      item.push(props.item ? 'true' : 'false')
+    } else if (  ['誕生日','作成日'].includes(props.rowName) &&
+                typeof props.item === 'string') {
+      const d = new Date(props.item)
+      const birthday = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`
+      item.push(birthday)
+    } else if (props.item === null) {
+      item.push('NULL')
+    } else {
+      item.push(props.item)
+    }
     return(
       <tr>
         <th> {props.rowName} </th>
-        <td> {props.item} </td>
+          <td> {item} </td>
       </tr>
     )
 }
+
+const DeleteButton = (props:{id: number}) => {
+  const history = useHistory()
+  const deleteHandle = (id:number ) => {
+    if (window.confirm('本当に削除しますか？')){
+      AdminService.deleteUser(id)
+      .then( (res) => {
+        console.log(res)
+        if( res.status === 200 ){
+          history.push('/admin/user')
+        } else {
+          alert(res.msg)
+        }
+      })
+    }
+
+  }
+  return(
+    <button
+      className="btn btn--sm btn--accent"
+      onClick={() => deleteHandle(props.id)}
+    >
+      削除する
+    </button>
+  )
+
+}
+
 
 class UserDetail extends Component<
                           {match:{params:{id:number}}},
@@ -138,12 +218,30 @@ class UserDetail extends Component<
 
     })
     .catch(err => {
+      console.log(err)
       this.setState({
         status:404
       })
     })
   }
 
+  approveButton(id:number){
+    AdminService.changeApproveStatus(id)
+    .then( res =>{
+        if (res.status === 200){
+          window.location.reload()
+        }
+    })
+   }
+
+   changeAdminStatusButton(id:number){
+     AdminService.changeAdminStatus(id)
+     .then( res =>{
+        if (res.status === 200){
+          window.location.reload()
+        }
+     })
+   }
 
   render(){
     let user = this.state.users[0]
@@ -157,13 +255,22 @@ class UserDetail extends Component<
         <ul className="list-inline">
           <li> <h3>  {user.handle_name} </h3></li>
           <li>
-            <button className="btn btn--sm btn--primary">
-              Approve
+            <button
+              className="btn btn--sm btn--primary"
+              onClick={()=>this.approveButton(this.props.match.params.id)}
+            >
+              {user.approval_state==='waiting' ? 'Approve' : 'Disapprove'}
             </button>
           </li>
           <li>
-            <button className="btn btn--sm btn--accent">
-              削除する
+            <DeleteButton id={this.props.match.params.id}/>
+          </li>
+          <li>
+            <button
+              className="btn btn--sm btn--primary"
+              onClick={()=>this.changeAdminStatusButton(this.props.match.params.id)}
+            >
+              {user.admin ? '管理者から外す': '管理者にする' }
             </button>
           </li>
         </ul>
@@ -178,6 +285,8 @@ class UserDetail extends Component<
                <TableRow rowName="メールアドレス" item={user.email} />
                <TableRow rowName="携帯メールアドレス" item={user.email_mobile} />
                <TableRow rowName="誕生日" item={user.birthday} />
+               <TableRow rowName="作成日" item={user.created_at} />
+               {/*// TO DO: Add last login, logout, ip address information.*/}
             </tbody>
           </table>
 
@@ -188,13 +297,13 @@ class UserDetail extends Component<
 }
 
 const Admin = () => {
-  let match = useRouteMatch()
   return(
     <div className="topfix">
       <TopNavVar />
       <Switch>
-        <Route exact path={`${match.url}/user`} component={UserBoard} />
-        <Route path={`${match.url}/user/:id`} component={UserDetail}/>
+        <Route exact path='/admin' component={Top} />
+        <Route exact path='/admin/user' component={UserBoard} />
+        <Route path='/admin/user/:id' component={UserDetail}/>
         <Route component={NotFound} />
       </Switch>
     </div>
