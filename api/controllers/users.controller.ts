@@ -23,18 +23,23 @@ class UserController{
       bcrypt.compareSync(req.body.password + user.salt, user.crypted_password)
     ){
     // Create
-      const token = jwt.sign({id: user.id},
+      const token = jwt.sign({id: user.id, email: user.email},
                               req.app.get("secretKey"),
                               {expiresIn:3600}  )
       res.json({status:200,
                 msg:'successfuly login.',
                 accessToken:token,
-                email:req.body.email
+                email:req.body.email,
+                userID:user.id,
+                admin: user.admin
               })
+      user.accessToken = token
+      userRepository.save(user)
     } else {
       res.json({status:401, msg:'Login failure. Password is not correct.'})
     }
   }
+
   static signup: ExpressFunc = async function signup(req, res){
     let userRepository = getManager().getRepository(Users)
 

@@ -4,6 +4,7 @@ import { Route, Switch,
 import { AdminService } from '../services/admin.service'
 import { Users } from '../services/admin.service'
 import { NotFound } from './404.component'
+import Cookies from 'universal-cookie'
 
 const TopNavItem = (props:{url:string, tabName:string} ) => {
   return(
@@ -105,9 +106,11 @@ class UserBoard extends Component<{},{content: Users[], status: number}> {
   componentDidMount() {
     AdminService.getUserBoard()
     .then( (res) =>{
+      console.log('getUserBoard componentDidMount process starts.')
+      console.log(res)
       this.setState({
-        content: res.data,
-        status: 200
+        content: res.data.users,
+        status: res.data.status
       })
     })
     .catch( err => {
@@ -120,11 +123,11 @@ class UserBoard extends Component<{},{content: Users[], status: number}> {
   }
 
   render() {
-    let {content} = this.state
-    if (typeof content === 'undefined'){
+    let {content, status} = this.state
+    if (status === 404 || status === 401){
+      return <Redirect to='/error' />
+    } else if (typeof content === 'undefined'){
       return( <div> 読み込み中 </div> )
-    } else if (this.state.status === 404){
-      return <Redirect to='/' />
     }
     return(
       <table className="table table--bordered">
@@ -212,8 +215,8 @@ class UserDetail extends Component<
     AdminService.getUserDetail(this.props.match.params.id)
     .then( res => {
       this.setState({
-        users: [res.data],
-        status: 200
+        users: [res.data.user],
+        status: res.data.status
       })
 
     })
@@ -245,10 +248,11 @@ class UserDetail extends Component<
 
   render(){
     let user = this.state.users[0]
-    if (typeof user === 'undefined'){
+    let status = this.state.status
+    if (status === 404 || status === 401){
+      return <Redirect to='/error' />
+    } else if (typeof user === 'undefined'){
       return <div> 読み込み中 </div>
-    } else if (this.state.status === 404){
-      return <Redirect to='/' />
     }
     return(
       <div>
@@ -278,7 +282,7 @@ class UserDetail extends Component<
             <tbody>
                <TableRow rowName="ID" item={user.id} />
                <TableRow rowName="ハンドルネーム" item={user.handle_name} />
-               <TableRow rowName="氏名" item={`${user.handle_name} ${user.given_name}`} />
+               <TableRow rowName="氏名" item={`${user.family_name} ${user.given_name}`} />
                <TableRow rowName="期" item={user.class_year_id} />
                <TableRow rowName="管理者" item={user.admin} />
                <TableRow rowName="承認状態" item={user.approval_state} />
@@ -297,6 +301,12 @@ class UserDetail extends Component<
 }
 
 const Admin = () => {
+  console.log("Try to access admin page.  ")
+  const cookies = new Cookies()
+  console.log(cookies.getAll())
+  if (cookies.get('isLogIn') !== 'true' || cookies.get('isAdmin') !== 'true'){
+    return( <Redirect to='/error' />)
+  }
   return(
     <div className="topfix">
       <TopNavVar />

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {authHeader } from './auth-header'
+import { authHeader } from './auth-header'
 const API_URL = 'http://localhost:3000/api/admin/'
 
 
@@ -27,27 +27,29 @@ export interface Users {
 
 class AdminService {
   static async getUserBoard() {
-    return axios.get<Users[]>(API_URL + 'user')
+    return axios.get<{users:Users[], status:number}>
+                    (API_URL + 'user', { headers: authHeader() })
   }
 
   static async getUserDetail(id: number) {
-    return axios.get<Users>(API_URL + `user/${id}`)
+    return axios.get<{user:Users, status:number}>
+                    (API_URL + `user/${id}`, {headers: authHeader()})
   }
 
   static async changeApproveStatus(id: number){
-    return axios.get(API_URL + `approve/${id}`)
+    return axios.get(API_URL + `approve/${id}`, {headers: authHeader()})
     .then( res => {return(res.data)} )
     .catch( err =>  console.log(err))
   }
 
   static async deleteUser(id: number){
-    return axios.get(API_URL + `delete/${id}`)
+    return axios.get(API_URL + `delete/${id}`, {headers: authHeader()})
     .then( res => {return(res.data)} )
     .catch( err =>  console.log(err))
   }
 
   static async changeAdminStatus(id: number){
-    return axios.get(API_URL + `change-admin/${id}`)
+    return axios.get(API_URL + `change-admin/${id}`, {headers: authHeader()})
     .then( res => {return(res.data)} )
     .catch( err =>  console.log(err))
   }

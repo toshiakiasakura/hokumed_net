@@ -8,14 +8,14 @@ class AdminController{
   static UserBoard: ExpressFunc = async function(req, res){
     let userRepository = getManager().getRepository(Users)
     const users = await userRepository.find()
-    res.json(users)
+    res.json({users:users, status:200})
   }
 
   static UserDetail: ExpressFunc = async function(req, res){
     const id = parseInt(req.params.id)
     let userRepository = getManager().getRepository(Users)
     const user = await userRepository.findOne(id)
-    res.json(user)
+    res.json({user:user, status:200})
   }
 
   static changeApproveStatus: ExpressFunc = async function(req, res){

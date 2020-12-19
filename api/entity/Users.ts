@@ -61,4 +61,6 @@ export class Users {
     @Column('number', NULL)
     ml_member_id: number
 
+    @Column({nullable:true, type:'varchar'})
+    accessToken: string
 }

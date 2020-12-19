@@ -2,7 +2,6 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory, Link } from 'react-router-dom'
 import { AuthService } from '../services/auth.service'
-import { useCookies } from 'react-cookie'
 // This type for onClick
 // type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 
@@ -12,23 +11,21 @@ type FormData ={
   password: string
 }
 
+
 /* This is hook function for form.
    In this function, input  validation is done.
  */
 const LoginForm = () => {
-  //const state = {email:"", password:""}
   const { register, handleSubmit, errors, formState } = useForm<FormData>({mode:'onChange'})
-  const [ cookies ] = useCookies(["user"])
   const history = useHistory()
   const handleLogin = (data: FormData) => {
     /*login procedures. This should be written in other places.
     */
     AuthService.login(data.email, data.password)
     .then( (res) => {
-      console.log('login process started.')
+      console.log('login component process started.')
       console.log(res)
       if (res && res.status === 200){
-        cookies.set('accessToken', res.accessToken, {path:'/', maxAge:3600})
         history.push("/home")
       } else if (res && res.status === 401) {
         // TO DO: Become more elegant one. .
@@ -54,7 +51,7 @@ const LoginForm = () => {
               required: true,
               pattern: {
                 value: /^[A-Z0-9._%+-]+@(eis|elms).hokudai.ac.jp$/i,
-                message: "@以下は(elms or eis).hokuida.ac.jpのみ有効です．"
+                message: "@以下は(elms or eis).hokudai.ac.jpのみ有効です．"
               },
             })}
           />{errors.email && errors.email.message}
