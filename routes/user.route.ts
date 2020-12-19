@@ -10,8 +10,8 @@ router.post('/signup', UserController.signup)
 
 
 // For test
-import { addSampleUser, removeSampleUser } from '../api/controllers/sample_user'
-router.get('/add_sample', addSampleUser )
-router.get('/remove_sample', removeSampleUser)
+import { SampleController } from '../api/controllers/sample_user'
+router.get('/add_sample', SampleController.addSampleUser)
+router.get('/add_admin', SampleController.addSampleAdmin)
 
 export { router as userRouter }

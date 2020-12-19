@@ -3,7 +3,6 @@ import { Entity, PrimaryGeneratedColumn, Column,
 
 
 const NULL = {nullable: true}
-
 @Entity()
 export class Users {
 
@@ -23,19 +22,19 @@ export class Users {
     @Column({type:'datetime', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date
 
-    @Column(NULL)
+    @Column('datetime', NULL)
     updated_at: Date
 
     @Column({default: 'waiting'})
     approval_state: 'waiting' | 'approved'
 
-    @Column(NULL)
+    @Column('datetime', NULL)
     last_login_at: Date
 
-    @Column(NULL)
+    @Column('datetime', NULL)
     last_logout_at: Date
 
-    @Column(NULL)
+    @Column('varchar', NULL)
     last_login_from_ip_address: string
 
     @Column()
@@ -47,19 +46,21 @@ export class Users {
     @Column()
     handle_name: string
 
-    @Column(NULL)
+    @Column('datetime', NULL)
     birthday: Date
 
-    @Column(NULL)
+    @Column({nullable:true, type:'varchar'})
     email_mobile: string
 
     @Column({default: false})
     admin: boolean
 
     @Column()
-    class_year_id: string
+    class_year_id: number
 
-    @Column(NULL)
+    @Column('number', NULL)
     ml_member_id: number
 
+    @Column({nullable:true, type:'varchar'})
+    accessToken: string
 }

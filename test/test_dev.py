@@ -12,6 +12,7 @@ https://selenium-python.readthedocs.io/
 - unittest, official document
 https://docs.python.org/3/library/unittest.html
 """
+
 import unittest
 import time
 import subprocess
@@ -45,6 +46,8 @@ class TestSite(unittest.TestCase):
         return( self.browser.current_url[len(self.url):])
 
     def test_login_success(self):
+        """The below 4 is for login component testing.
+        """
         self.login("test@eis.hokudai.ac.jp", "test")
         local_storage = self.browser.execute_script("return window.localStorage;")
         print("# localStorage :\n",local_storage)
@@ -85,10 +88,20 @@ class TestSite(unittest.TestCase):
             self.browser.find_element_by_id(k).click()
             self.assertEqual(self.current_url(), v)
 
+    def test_admin_authentication_success(self):
+        self.login("admin@eis.hokudai.ac.jp", "admin")
+        self.browser.get(self.url + "/admin")
+        self.assertEqual(self.current_url(), "/admin")
+        self.browser.get(self.url + "/admin/user")
+        self.assertEqual(self.current_url(), "/admin/user")
 
+    def test_admin_authentication_failure(self):
+        self.login("test@eis.hokudai.ac.jp", "test")
+        self.browser.get(self.url + "/admin")
+        self.assertEqual(self.current_url(), "/error")
 
 
 if __name__ == "__main__":
     subprocess.check_call(["curl",f"{test_url}/api/user/add_sample"])
+    subprocess.check_call(["curl",f"{test_url}/api/user/add_admin"])
     unittest.main()
-    subprocess.check_call(["curl",f"{test_url}/api/user/remove_sample"])

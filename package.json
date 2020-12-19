@@ -13,10 +13,10 @@
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.0.0",
-    "typeorm": "^0.3.0-alpha.24"
+    "typeorm": "^0.2.29"
   },
   "scripts": {
-    "start": "tsc && node dist/index.js",
+    "start": "rm -rf /dist/api && tsc && node dist/index.js",
     "dev": "cd client && yarn dev",
     "test": "cd client && yarn test"
   },
