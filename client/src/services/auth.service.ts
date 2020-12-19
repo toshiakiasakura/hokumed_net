@@ -3,11 +3,13 @@ import axios from "axios";
 const API_URL = '/api/user/'
 
 type String = string | null
+type Token = {accessToken:string, id:number, status: number, msg:string }
 
 class AuthService {
   static login(email: String, password: String) {
     return axios
-      .post(API_URL + "login", { email, password })
+      .post<Token>
+          (API_URL + "login", { email, password })
       .then((response) => {
         console.log("autho.service.ts: post method succeded!!")
         console.log(response)
@@ -15,8 +17,8 @@ class AuthService {
           console.log("setItem")
           localStorage.setItem("user", JSON.stringify(response.data))
         }
-
         return response.data
+
       })
       .catch((err) => {
           console.log(API_URL+'login')

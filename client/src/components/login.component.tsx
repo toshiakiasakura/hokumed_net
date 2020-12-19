@@ -2,7 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory, Link } from 'react-router-dom'
 import { AuthService } from '../services/auth.service'
-
+import { useCookies } from 'react-cookie'
 // This type for onClick
 // type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 
@@ -18,6 +18,7 @@ type FormData ={
 const LoginForm = () => {
   //const state = {email:"", password:""}
   const { register, handleSubmit, errors, formState } = useForm<FormData>({mode:'onChange'})
+  const [ cookies ] = useCookies(["user"])
   const history = useHistory()
   const handleLogin = (data: FormData) => {
     /*login procedures. This should be written in other places.
@@ -26,9 +27,10 @@ const LoginForm = () => {
     .then( (res) => {
       console.log('login process started.')
       console.log(res)
-      if (res.status === 200){
+      if (res && res.status === 200){
+        cookies.set('accessToken', res.accessToken, {path:'/', maxAge:3600})
         history.push("/home")
-      } else if (res.status === 401) {
+      } else if (res && res.status === 401) {
         // TO DO: Become more elegant one. .
         alert(res.msg)
         //history.push("/error")

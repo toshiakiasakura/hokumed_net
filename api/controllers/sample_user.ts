@@ -15,10 +15,10 @@ export const addSampleUser: ExpressFunc = async function(req, res){
     user.given_name = "given"
     user.handle_name = 'handle'
     user.birthday = new Date(2020,11,1) // counts month from 0 to 11.
-    user.email_mobile = "test@gmail.com"
-    user.class_year_id =  '98'
+    user.email_mobile = "test_mobile@gmail.com"
+    user.class_year_id =  98
 
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = await getManager().getRepository(Users)
     await userRepository.save(user)
     console.log('finish inserting')
     res.json({status:200})

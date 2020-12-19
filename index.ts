@@ -15,6 +15,7 @@ import { adminRouter } from './routes/admin.route'
 
 createConnection()
 .then(async connection => {
+
   const app = express()
   app.set("secretKey", "hogehoge")
   // axios post problem
