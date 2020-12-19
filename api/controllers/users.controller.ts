@@ -34,7 +34,7 @@ class UserController{
                 admin: user.admin
               })
       user.accessToken = token
-      userRepository.save(user)
+      await userRepository.save(user)
     } else {
       res.json({status:401, msg:'Login failure. Password is not correct.'})
     }
