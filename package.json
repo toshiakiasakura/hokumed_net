@@ -18,7 +18,8 @@
   "scripts": {
     "start": "rm -rf /dist/api && tsc && node dist/index.js",
     "dev": "cd client && yarn dev",
-    "test": "cd client && yarn test"
+    "test": "cd client && yarn test",
+    "production":"rm -rf /dist/api && tsc %% forever start dist/index.js"
   },
   "name": "2_hokui_net_ver2",
   "description": "Our aim is to construct simple website.  Follow the rule of KISS!",

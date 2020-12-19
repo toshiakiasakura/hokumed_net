@@ -1,7 +1,8 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useHistory, Link } from 'react-router-dom'
+import { useHistory, Link, Redirect } from 'react-router-dom'
 import { AuthService } from '../services/auth.service'
+import Cookies from 'universal-cookie'
 // This type for onClick
 // type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 
@@ -27,6 +28,8 @@ const LoginForm = () => {
       console.log(res)
       if (res && res.status === 200){
         history.push("/home")
+        window.location.reload()
+        // This line is for reloading cookies for eveyr component
       } else if (res && res.status === 401) {
         // TO DO: Become more elegant one. .
         alert(res.msg)
@@ -111,6 +114,10 @@ const SignUpButton =  () =>{
 }
 
 const Login = () => {
+    const cookies = new Cookies()
+    if (cookies.get('isLogIn') === 'true'){
+      return <Redirect to='home' />
+    }
 
     return(
     <div className="hero">

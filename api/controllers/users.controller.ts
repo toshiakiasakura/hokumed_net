@@ -15,8 +15,7 @@ class UserController{
     // later delete log
     let userRepository = getManager().getRepository(Users)
     let user = await userRepository.findOne({where: {email:req.body.email}})
-    console.log(req.body)
-    console.log(user)
+    console.log('Login process started.')
     if ( user === undefined ){
       res.json({status:401, msg:'Login failure. User is not found.'}) // User not found and password fail is different
     } else if(
@@ -40,7 +39,7 @@ class UserController{
     }
   }
 
-  static signup: ExpressFunc = async function signup(req, res){
+  static signup: ExpressFunc = async function (req, res){
     let userRepository = getManager().getRepository(Users)
 
     let users = await userRepository.find({email: req.body.email})
@@ -69,6 +68,24 @@ class UserController{
       })
       console.log(users)
       console.log('signup fail.')
+    }
+  }
+
+  static ProfileBoard: ExpressFunc = async function (req, res){
+    let userRepository = getManager().getRepository(Users)
+    const userID = req.headers['x-user-id']
+    let user = null
+    console.log(userID, user, typeof userID, typeof user)
+    if (typeof userID === 'string'){
+      user = await userRepository.findOne(parseInt(userID))
+    }
+
+    if(user){
+      console.log("GET profile succeeded")
+      res.json({user:user, status:200})
+    } else{
+      console.log('GET profile failed. ', user)
+      res.json({status:401})
     }
   }
 }

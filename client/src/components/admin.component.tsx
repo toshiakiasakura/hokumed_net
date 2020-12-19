@@ -147,7 +147,7 @@ class UserBoard extends Component<{},{content: Users[], status: number}> {
   }
 }
 
-const TableRow = (props:{rowName:string,
+export const TableRow = (props:{rowName:string,
                          item: string | number | boolean | Date
                        }) => {
     const item =[]
