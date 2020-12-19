@@ -14,7 +14,7 @@ class UserController{
   static login: ExpressFunc = async function (req, res){
     // later delete log
     let userRepository = getManager().getRepository(Users)
-    const user = await userRepository.findOne({where: {email:req.body.email}})
+    let user = await userRepository.findOne({where: {email:req.body.email}})
     console.log(req.body)
     console.log(user)
     if ( user === undefined ){
