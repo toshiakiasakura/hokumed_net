@@ -1,6 +1,7 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { AuthService } from '../services/auth.service'
+import moment from 'moment'
 
 export const RequirePop = () => {
   // TO DO: convert it into pop up.
@@ -21,37 +22,36 @@ const RowBlock = (
       placeholder: string,
       register: any,
       errors: any,
+      reg_json: any
     }
+) => (
 
-) => {
-  return(
-
-    <div className="form__group">
-      <div className="col--sm-4">
-        <label className="form__label" htmlFor={props.id}>
-          {props.title}
-        </label>
-      </div>
-      <div className="col--sm-8 tooltip tooltip--secondary">
-        <input
-          className="form__control"
-          type= {props.type || "text"}
-          name={props.name}
-          id={props.id}
-          placeholder={props.placeholder}
-          ref={props.register({required: true})}
-        />{props.errors[props.name] && <RequirePop />}
-      </div>
+  <div className="form__group">
+    <div className="col--sm-4">
+      <label className="form__label" htmlFor={props.id}>
+        {props.title}
+      </label>
     </div>
-  )
-
-}
+    <div className="col--sm-8 tooltip tooltip--secondary">
+      <input
+        className="form__control"
+        type={props.type || "text"}
+        name={props.name}
+        id={props.id}
+        placeholder={props.placeholder}
+        ref={props.register(props.reg_json)}
+      />
+      {props.errors[props.name] && props.errors[props.name].message}
+    </div>
+  </div>
+)
 
 
 const DateBlock = (props:{register:any}) => {
-  let years = []
-  let months = []
-  let days = []
+  let years = [<option id="birth_year_default" value="default"> 年を選択 </option>]
+  let months = [<option id="birth_month_default" value="default"> 月を選択 </option>]
+  let days = [<option id="birth_date_default" value="default"> 日を選択 </option>]
+
   var i
   for(i = 1980; i<= 2020 ; i++){
     years.push( <option id={"birth_year" +i } value={i}> {i}年 </option>)
@@ -72,21 +72,21 @@ const DateBlock = (props:{register:any}) => {
         <div className="col--sm-4">
         <select
           className="form__control"
-          name="bitry_year"
+          name="birth_year"
           ref={props.register}
         >
           {years}
         </select>
         <select
           className="form__control"
-          name="bitry_month"
+          name="birth_month"
           ref={props.register}
         >
           {months}
         </select>
         <select
           className="form__control"
-          name="bitry_day"
+          name="birth_day"
           ref={props.register}
         >
           {days}
@@ -138,19 +138,29 @@ export type SignUpData = {
 }
 
 export const SignUpForm = () => {
-  const { register, handleSubmit, errors, formState, control } =
-                            useForm<SignUpData>({mode:'onChange'})
+  const { register, handleSubmit, errors, formState, control, watch } =
+                            useForm<SignUpData>({mode:'onBlur'})
+
+
   const handleSignUp = (data: SignUpData) =>{
+    // date validation is done here. .
     console.log(data)
-    data.birthday = new Date('{data.birth_year}-{data.birth_month}-{data.birth_day}')
+    const date_str = `${data.birth_year}-${data.birth_month}-${data.birth_day}`
+    const date_bool = moment(date_str, 'YYYY-M-D',true).isValid()
+    if (!date_bool){
+      alert("日付を正しく選択してください．")
+      return
+    }
+    data.birthday = new Date(date_str)
+    console.log(data.birthday)
     AuthService.signup(data)
     .then((res) =>{
       alert(res.msg)
-    }
-
-    )
+    })
   }
 
+  const password = watch("password", "");
+  const require_json = {required: "入力必須項目です．"}
   return(
     <form
       className="form row"
@@ -166,6 +176,7 @@ export const SignUpForm = () => {
               id="signupFamilyName"
               placeholder="苗字"
               errors={errors} register={register}
+              reg_json={require_json}
             />
             <RowBlock
               title="名前"
@@ -173,6 +184,7 @@ export const SignUpForm = () => {
               id="signupGivenName"
               placeholder="名前"
               errors={errors} register={register}
+              reg_json={require_json}
             />
             <RowBlock
               title= "ニックネーム"
@@ -180,6 +192,7 @@ export const SignUpForm = () => {
               id="signupHandleName"
               placeholder="ニックネーム"
               errors={errors} register={register}
+              reg_json={require_json}
             />
             {/*TO DO: dropdown and checkbox implementation. */}
             <DateBlock register={register}/>
@@ -190,6 +203,13 @@ export const SignUpForm = () => {
               id="signupEmail"
               placeholder="example@eis.hokudai.ac.jp"
               errors={errors} register={register}
+              reg_json={{
+                required: true,
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@(eis|elms).hokudai.ac.jp$/i,
+                  message: "@以下は(elms or eis).hokudai.ac.jpのみ有効です．"
+                }
+              }}
             />
             <ClassYearBlock register={register}/>
             <RowBlock
@@ -199,6 +219,12 @@ export const SignUpForm = () => {
               id="signupPassword"
               placeholder="パスワード"
               errors={errors} register={register}
+              reg_json={{required: true,
+                         minLength: {
+                           value: 4,
+                           message: "パスワードは4文字以上で入力してください．"
+                         }
+              }}
             />
             <RowBlock
               title="パスワードの確認"
@@ -207,13 +233,23 @@ export const SignUpForm = () => {
               id="signupReenteredPassword"
               placeholder="もう一度パスワードを入力"
               errors={errors} register={register}
+              reg_json = {{
+                  required: true,
+                  validate: (value:string) => {
+                    return(value === password || "パスワードが一致しません．")
+                  }
+              }}
             />
-            {/*TO DO: match pattern implementation and regular expression*/}
+            {/*TO DO: match pattern implementation and regular expression
+              Also do the error displaying.
+              json should be passed by another way.
+              */}
             <div className="panel_foot">
               <div className="form__group">
                 <button
                   type="submit"
                   className="btn btn--primary"
+                  disabled={!formState.isValid}
                 > Sign UP </button>
               </div>
             </div>

@@ -42,8 +42,21 @@ class UserController{
   static signup: ExpressFunc = async function (req, res){
     let userRepository = getManager().getRepository(Users)
 
-    let users = await userRepository.find({email: req.body.email})
-    if ( !users.length ){
+    let email_users= await userRepository.find({email: req.body.email})
+    let handle_users = await userRepository.find({handle_name: req.body.handle_name})
+    if ( email_users.length ){
+      res.json({
+        status:401,
+        msg:'新規登録に失敗しました. そのemailは既に用いられています．'
+      })
+      console.log(email_users)
+      console.log('signup fail.')
+    } else if( handle_users.length ){
+      res.json({
+        status:401,
+        msg:'新規登録に失敗しました. そのハンドルネームは既に用いられています．'
+      })
+    } else {
       const body = req.body
       let user = new Users()
       user.email = body.email
@@ -61,13 +74,7 @@ class UserController{
 
       await userRepository.save(user)
       res.json({status:200, msg:"successfully signup."})
-      console.log('signup success.')
-    } else {
-      res.json({status:400,
-        msg:'signup fail. That Email is already registerd.'
-      })
-      console.log(users)
-      console.log('signup fail.')
+      console.log('新規登録しました．認証メールが送信されています．(not implemented yet)')
     }
   }
 
