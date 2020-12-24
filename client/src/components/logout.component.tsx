@@ -7,8 +7,8 @@ export const Logout = () => {
     for(let item of ['isLogIn','isAdmin', 'accessToken', 'userID']){
       cookies.set(item, null, {maxAge:0})
     }
-    // To realod the cookie.. 
-    window.setTimeout( () => window.location.reload(),1000)
+    // To realod the cookie..
+    window.setTimeout( () => window.location.reload(),500)
     return(
       <Redirect to="/" />
     )

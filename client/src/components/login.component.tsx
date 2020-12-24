@@ -124,6 +124,7 @@ const Login = () => {
       <div className="hero__bg"/>
       <div className="hero__login">
         <h2> ログイン画面 </h2>
+        <div　className="memo">　このサイトの利用にはCookieの設定を有効にしてください． </div>
         <LoginForm />
         <div className="test-muted text-small">
           {/* TO DO: Resend the confirmation mail.*/}
