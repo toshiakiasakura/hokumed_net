@@ -38,7 +38,6 @@ const LoginForm = () => {
         history.push("/error")
       )
     })
-    .catch(err => console.log(err))
   }
   return(
     <form name="form_2" onSubmit={handleSubmit(handleLogin)}>
@@ -124,7 +123,6 @@ const Login = () => {
       <div className="hero__bg"/>
       <div className="hero__login">
         <h2> ログイン画面 </h2>
-        <div　className="memo">　このサイトの利用にはCookieの設定を有効にしてください． </div>
         <LoginForm />
         <div className="test-muted text-small">
           {/* TO DO: Resend the confirmation mail.*/}
@@ -132,11 +130,9 @@ const Login = () => {
         </div>
         <hr/>
         <div className="panel__foot">
-          <p className="v-spacer"/>
-          <div>
-            <SignUpButton />
-          </div>
+          <SignUpButton />
         </div>
+        <div　className="memo">　＊このサイトの利用にはCookieの設定を有効にしてください． </div>
       </div>
     </div>
   )

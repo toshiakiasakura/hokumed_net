@@ -7,7 +7,8 @@ import { UserController } from '../api/controllers/users.controller'
 router.post('/login', UserController.login)
 router.post('/signup', UserController.signup)
 router.get('/profile', UserController.ProfileBoard)
-// TO DO: router.post('/register', register)
+router.post('/check-email', UserController.checkEmail)
+router.post('/check-handle', UserController.checkHandle)
 
 
 // For test
