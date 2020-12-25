@@ -7,7 +7,6 @@ import { newBCryptPassword } from '../helpers/bcrypt.helper'
 import { Users } from '../entity/Users'
 import { ExpressFunc } from '../helpers/express_typing'
 
-// This typing is called contextual typing.
 
 class UserController{
 
@@ -78,6 +77,10 @@ class UserController{
     }
   }
 
+  /**
+   * Used for displaying personal account information
+   * in individual profile page.
+   */
   static ProfileBoard: ExpressFunc = async function (req, res){
     let userRepository = getManager().getRepository(Users)
     const userID = req.headers['x-user-id']

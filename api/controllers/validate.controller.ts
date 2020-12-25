@@ -3,6 +3,11 @@ import { ExpressMiddleFunc } from '../helpers/express_typing'
 import { Users } from '../entity/Users'
 import jwt from 'jsonwebtoken'
 
+/**
+ * User and admin validation is implemented here.
+ * static method is put in the middle of routing.
+ * See index.ts for usage of this static method. 
+ */
 class ValidateController {
   static validateUser: ExpressMiddleFunc = async function(req, res, next){
     let userRepository = getManager().getRepository(Users)

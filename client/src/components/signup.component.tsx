@@ -11,6 +11,12 @@ export const RequirePop = () => {
 }
 
 
+/**
+ * Construct one item of simple input form using react-hook-form.
+ * @param props.register just pass react-hook-form method.
+ * @param props.errors just pass react-hook-form method.
+ * @param props.reg_json this json contents are passed to register.
+ */
 const RowBlock = (
   props:
     {
@@ -46,7 +52,11 @@ const RowBlock = (
   </div>
 )
 
-
+/**
+ * Implement for birthday input form.
+ * Precisely to say, there are not valid input patten.
+ * Date validation is done when button is pushed in SingUpFrom.
+ */
 const DateBlock = (props:{register:any}) => {
   let years = [<option id="birth_year_default" value="default"> 年を選択 </option>]
   let months = [<option id="birth_month_default" value="default"> 月を選択 </option>]
@@ -97,6 +107,9 @@ const DateBlock = (props:{register:any}) => {
   )
 }
 
+/**
+ * Class year block of input form.
+ */
 const ClassYearBlock = (props:{register:any}) => {
   let content = []
   for( var i = 94; i < 110; i++){
@@ -122,6 +135,12 @@ const ClassYearBlock = (props:{register:any}) => {
   )
 }
 
+
+/**
+ * This type is data format for input.
+ * @param birthday The combination of bith related parameters.
+ *                 This value is used for database.
+ */
 export type SignUpData = {
   email: string
   password: string
@@ -137,10 +156,15 @@ export type SignUpData = {
   reenteredPassword: string
 }
 
-export const SignUpForm = () => {
+/**
+ * The main part of sing up form.
+ * The each input form is set by othter react functions.
+ * After input is completed, sign up process starts.
+ * If validation process fails, the process of sending data is not run.
+ */
+const SignUpForm = () => {
   const { register, handleSubmit, errors, formState, control, watch } =
                             useForm<SignUpData>({mode:'onBlur'})
-
 
   const handleSignUp = (data: SignUpData) =>{
     // date validation is done here. .
@@ -208,7 +232,7 @@ export const SignUpForm = () => {
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@(eis|elms).hokudai.ac.jp$/i,
                   message: "@以下は(elms or eis).hokudai.ac.jpのみ有効です．"
-                }
+                },
               }}
             />
             <ClassYearBlock register={register}/>
@@ -240,10 +264,6 @@ export const SignUpForm = () => {
                   }
               }}
             />
-            {/*TO DO: match pattern implementation and regular expression
-              Also do the error displaying.
-              json should be passed by another way.
-              */}
             <div className="panel_foot">
               <div className="form__group">
                 <button
@@ -260,8 +280,10 @@ export const SignUpForm = () => {
 }
 
 
-
-export const SignUp = () => {
+/**
+ * Main frame work of sign up page.
+ */
+const SignUp = () => {
   return(
     <div className="topfix">
       <div className="container">
@@ -272,7 +294,7 @@ export const SignUp = () => {
                認証確認メールはELMSメールアドレス宛に送信されます。 <br />
                メール認証後、ログイン可能となるのは管理者の承認後になりますのでご注意ください。<br />
                不具合等ございましたら
-               {/*link new mail address. */}
+               {/*TO DO: link new mail address. */}
               <a href="'hokui.net@gmail.com??'">hokui.net@gmail.com??? </a>
                までご連絡ください。
             </p>
@@ -282,3 +304,5 @@ export const SignUp = () => {
     </div>
   )
 }
+
+export { SignUp }
