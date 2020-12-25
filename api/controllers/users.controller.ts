@@ -77,6 +77,39 @@ class UserController{
     }
   }
 
+  /** onBlur duplication check for email.
+   */
+  static checkEmail: ExpressFunc = async function(req, res){
+    let userRepository = getManager().getRepository(Users)
+    let email_users = await userRepository.find({email: req.body.email})
+    if (email_users.length ){
+      res.json({
+        status:401,
+        msg:'そのメールアドレスは既に用いられています．'
+      })
+    } else {
+      res.json({
+        status:200,
+      })
+    }
+  }
+
+  /** onBlur duplication check for handle name.
+   */
+  static checkHandle: ExpressFunc = async function(req, res){
+    let userRepository = getManager().getRepository(Users)
+    let handle_users = await userRepository.find({handle_name: req.body.handle})
+    if (handle_users.length ){
+      res.json({
+        status:401,
+        msg:'そのハンドルネームは既に用いられています．'
+      })
+    } else {
+      res.json({
+        status:200,
+      })
+    }
+  }
   /**
    * Used for displaying personal account information
    * in individual profile page.

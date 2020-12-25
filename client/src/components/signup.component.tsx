@@ -216,7 +216,10 @@ const SignUpForm = () => {
               id="signupHandleName"
               placeholder="ニックネーム"
               errors={errors} register={register}
-              reg_json={require_json}
+              reg_json={{
+                required:true,
+                validate:  AuthService.checkHandle
+              }}
             />
             {/*TO DO: dropdown and checkbox implementation. */}
             <DateBlock register={register}/>
@@ -229,10 +232,11 @@ const SignUpForm = () => {
               errors={errors} register={register}
               reg_json={{
                 required: true,
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@(eis|elms).hokudai.ac.jp$/i,
-                  message: "@以下は(elms or eis).hokudai.ac.jpのみ有効です．"
+                pattern:{
+                  value: !/^[A-Z0-9._%+-]+@(eis|elms).hokudai.ac.jp$/i,
+                  message:"@以下は(elms or eis).hokudai.ac.jpのみ有効です．"
                 },
+                validate: AuthService.checkEmail
               }}
             />
             <ClassYearBlock register={register}/>
@@ -243,11 +247,12 @@ const SignUpForm = () => {
               id="signupPassword"
               placeholder="パスワード"
               errors={errors} register={register}
-              reg_json={{required: true,
-                         minLength: {
-                           value: 4,
-                           message: "パスワードは4文字以上で入力してください．"
-                         }
+              reg_json={{
+                required: true,
+                minLength: {
+                  value: 4,
+                  message: "パスワードは4文字以上で入力してください．"
+               }
               }}
             />
             <RowBlock
@@ -259,7 +264,8 @@ const SignUpForm = () => {
               errors={errors} register={register}
               reg_json = {{
                   required: true,
-                  validate: (value:string) => {
+                  validate:
+                  (value:string) => {
                     return(value === password || "パスワードが一致しません．")
                   }
               }}
@@ -295,7 +301,7 @@ const SignUp = () => {
                メール認証後、ログイン可能となるのは管理者の承認後になりますのでご注意ください。<br />
                不具合等ございましたら
                {/*TO DO: link new mail address. */}
-              <a href="'hokui.net@gmail.com??'">hokui.net@gmail.com??? </a>
+              <a href="'hokumed.net@gmail.com'">hokumed.net@gmail.com</a>
                までご連絡ください。
             </p>
             <SignUpForm />
