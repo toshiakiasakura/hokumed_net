@@ -9,7 +9,8 @@ router.post('/signup', UserController.signup)
 router.get('/profile', UserController.ProfileBoard)
 router.post('/check-email', UserController.checkEmail)
 router.post('/check-handle', UserController.checkHandle)
-
+router.get('/activation/:userID/:token',UserController.verifyEmail )
+router.get('/cleanup', UserController.cleanup)
 
 // For test
 import { SampleController } from '../api/controllers/sample_user'

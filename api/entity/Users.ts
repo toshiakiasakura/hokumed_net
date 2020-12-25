@@ -62,12 +62,12 @@ export class Users {
     ml_member_id: number
 
     @Column()
-    activationToken: string
+    activation_token: string
 
     // TO DO: if production, set it to be false.
     @Column({default: true})
-    activationStatus: boolean
+    activation_status: boolean
 
     @Column({nullable:true, type:'varchar'})
-    accessToken: string
+    access_token: string
 }

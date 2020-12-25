@@ -3,10 +3,10 @@
   to react application.
  */
 import express from 'express'
-import { Request, Response} from "express";
+import { Request, Response} from "express"
 import 'reflect-metadata'
 import { createConnection } from 'typeorm'
-import path from 'path';
+import path from 'path'
 import bodyParser from 'body-parser'
 import { testRouter } from './routes/tests'
 import { userRouter } from './routes/user.route'
