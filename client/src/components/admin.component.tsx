@@ -228,10 +228,13 @@ class UserDetail extends Component<
     })
   }
 
-  approveButton(id:number){
+  approveButton(id: number,approval_state: string){
     AdminService.changeApproveStatus(id)
     .then( res =>{
         if (res.status === 200){
+          if(approval_state === 'waiting'){
+            alert('承認しました．承認メールを送信しました．')
+          }
           window.location.reload()
         }
     })
@@ -261,7 +264,10 @@ class UserDetail extends Component<
           <li>
             <button
               className="btn btn--sm btn--primary"
-              onClick={()=>this.approveButton(this.props.match.params.id)}
+              onClick={()=>this.approveButton(
+                this.props.match.params.id,
+                user.approval_state
+              )}
             >
               {user.approval_state==='waiting' ? 'Approve' : 'Disapprove'}
             </button>
