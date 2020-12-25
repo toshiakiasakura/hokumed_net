@@ -1,9 +1,11 @@
 import nodemailer from 'nodemailer'
 
+const API_URL = 'http://ik1-419-41929.vs.sakura.ne.jp'
+const API_MAIL = 'hokumed.net@gmail.com'
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'hokumed.net@gmail.com',
+    user: API_MAIL,
     pass: process.env.HOKUI_PW
   }
 })
@@ -13,10 +15,12 @@ function signupVerificationMail(
     to_mail: string,
     family: string,
     given: string,
+    userID: number,
     token: string
+
   ){
   const mailOptions = {
-    from: 'hokumed.net@gmail.com',
+    from: API_MAIL,
     to: to_mail,
     subject: "北医ネットへようこそ！",
     text: `${family} ${given} さん\n\n` +
@@ -30,7 +34,7 @@ function signupVerificationMail(
     '資料は管理者が削除する可能性があります．同意して北医ネットを使用する場合，以下の' +
     '以下のURLからクリックしてください．管理者チームで学部在籍を確認次第，北医ネット' +
     'がご利用いただけます．\n\n' +
-    `http://ik1-419-41929.vs.sakura.ne.jp/api/user/activation/${token}`
+    `${API_URL}/api/user/activation/${userID}/${token}`
     // TO DO: replace with the domain.
   }
   console.log(process.env.HOKUI_PW)
@@ -43,4 +47,45 @@ function signupVerificationMail(
   })
 }
 
-export { signupVerificationMail }
+function approvalNotification(
+  to_mail: string,
+  family: string,
+  given: string,
+){
+  const mailOptions = {
+    from: API_MAIL,
+    to: to_mail,
+    subject: '北医ネットへようこそ!',
+    text: `${family} ${given} さん\n\n` +
+    '北医ネットのユーザー登録が承認されました。 以下のURLからログインすることができます。\n\n'+
+    `北医ネットを使って，有意義な学生生活を送りましょう．\n\n${API_URL}`
+  }
+  transporter.sendMail(mailOptions, (err, info)=>{
+    if(err){
+      console.log(err)
+    } else {
+      console.log('Email sent: ' + info.response)
+    }
+  })
+
+  const adminMailOptions = {
+    from: API_MAIL,
+    to: API_MAIL,
+    subject: `承認確認メール: ${family} ${given} さん`,
+    text: `${family} ${given} さんを管理者画面から承認しました．` +
+    `${to_mail}に承認メールを送信しました．`  +
+    'もし，このユーザーにメールが届いて居ない場合は，受診設定を確認してみてください．'
+  }
+
+  transporter.sendMail(adminMailOptions, (err, info)=>{
+    if(err){
+      console.log(err)
+    } else {
+      console.log('Email sent: ' + info.response)
+    }
+  })
+
+
+}
+
+export { signupVerificationMail, approvalNotification }

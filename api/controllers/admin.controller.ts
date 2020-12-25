@@ -1,7 +1,7 @@
 import { ExpressFunc } from '../helpers/express_typing'
 import { getManager } from 'typeorm'
 import { Users } from '../entity/Users'
-
+import { approvalNotification } from '../helpers/email.helper'
 
 class AdminController{
 
@@ -23,10 +23,13 @@ class AdminController{
     let userRepository = getManager().getRepository(Users)
     const user = await userRepository.findOne(id)
     if(user !== undefined){
-      user.approval_state = user.approval_state === 'waiting' ? 'approved' : 'waiting'
+      if( user.approval_state === 'waiting'){
+        user.approval_state = 'approved'
+        approvalNotification(user.email, user.family_name, user.given_name)
+      } else {
+        user.approval_state = 'waiting'
+      }
       userRepository.save(user)
-
-      // TO DO: send email to Approved user.
       res.json({status:200})
     } else {
       res.json({status:401})

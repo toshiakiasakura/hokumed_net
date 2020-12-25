@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 /**
  * User and admin validation is implemented here.
  * static method is put in the middle of routing.
- * See index.ts for usage of this static method. 
+ * See index.ts for usage of this static method.
  */
 class ValidateController {
   static validateUser: ExpressMiddleFunc = async function(req, res, next){
@@ -16,7 +16,7 @@ class ValidateController {
     if( typeof userID === 'string' && typeof accessToken === 'string' ){
       const user = await userRepository.findOne(parseInt(userID))
       if( user
-          && user.accessToken === accessToken
+          && user.access_token === accessToken
           && user.approval_state === 'approved'
         ){
         req.body.userID = userID
@@ -41,7 +41,10 @@ class ValidateController {
 
     if( typeof userID === 'string' && typeof accessToken === 'string' ){
       const user = await userRepository.findOne(parseInt(userID))
-      if( user && user.accessToken === accessToken && user.admin ){
+      if( user
+          && user.access_token === accessToken
+          && user.admin
+        ){
         req.body.userID = userID
         next()
       } else{
