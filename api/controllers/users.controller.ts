@@ -6,7 +6,7 @@ import { getManager } from 'typeorm'
 import { newBCryptPassword } from '../helpers/bcrypt.helper'
 import { Users } from '../entity/Users'
 import { ExpressFunc } from '../helpers/express_typing'
-
+import { signupVerificationMail } from '../helpers/email.helper'
 
 class UserController{
 
@@ -68,9 +68,18 @@ class UserController{
       user.birthday = body.birth_day
       user.email_mobile = body.email_mobile
       user.class_year_id = body.class_year_id
-
       user.created_at = new Date()
+      const activationToken = jwt.sign({id: user.id, email: user.email},
+                              "hogehoge",
+                              {expiresIn:3600}  )
+      user.activationToken = activationToken
 
+      signupVerificationMail(
+        user.email,
+        user.family_name,
+        user.given_name,
+        activationToken
+      )
       await userRepository.save(user)
       res.json({status:200, msg:"successfully signup."})
       console.log('新規登録しました．認証メールが送信されています．(not implemented yet)')

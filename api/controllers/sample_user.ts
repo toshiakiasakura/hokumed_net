@@ -24,6 +24,8 @@ class SampleController{
         admin.class_year_id =  98
         admin.admin = true
         admin.approval_state = 'approved'
+        admin.activationToken = 'admin'
+        admin.activationStatus =  true
         await userRepository.save(admin)
         console.log('admin finish inserting')
       } else {
@@ -50,6 +52,8 @@ class SampleController{
         test.email_mobile = "test@gmail.com"
         test.class_year_id =  98
         test.approval_state = 'approved'
+        test.activationToken = "test"
+        test.activationStatus =  true
         await userRepository.save(test)
         console.log('test is finish inserting')
       } else {

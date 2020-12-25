@@ -1,6 +1,6 @@
 module.exports = {
    "type": "sqlite",
-   "database": "db/test.sqlite",
+   "database": "db/app.sqlite",
    "synchronize": true, 
     // CONSTRAINT ERROR: https://github.com/typeorm/typeorm/issues/2576
    "logging": false,

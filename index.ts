@@ -28,7 +28,8 @@ createConnection()
    * This variable is used in jwt authentication encryption.
    */
   const app = express()
-  app.set("secretKey", "hogehoge")
+  console.log(process.env.HOKUI_SECRET)
+  app.set("secretKey", process.env.HOKUI_SECRET)
 
   /**
    * In developmental and production stage, CORS policy errors should be

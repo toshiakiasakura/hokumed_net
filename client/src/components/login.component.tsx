@@ -13,8 +13,9 @@ type FormData ={
 }
 
 
-/* This is hook function for form.
-   In this function, input  validation is done.
+/**
+ * This is hook function for form.
+ * In this function, input  validation is done.
  */
 const LoginForm = () => {
   const { register, handleSubmit, errors, formState } = useForm<FormData>({mode:'onChange'})
