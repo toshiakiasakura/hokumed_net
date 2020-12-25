@@ -43,6 +43,9 @@ class UserController{
     }
   }
 
+  /**
+   * User sign up function. 
+   */
   static signup: ExpressFunc = async function (req, res){
     let userRepository = getManager().getRepository(Users)
 
@@ -90,7 +93,8 @@ class UserController{
     }
   }
 
-  /** onBlur duplication check for email.
+  /**
+   * onBlur duplication check for email.
    */
   static checkEmail: ExpressFunc = async function(req, res){
     let userRepository = getManager().getRepository(Users)
@@ -107,7 +111,8 @@ class UserController{
     }
   }
 
-  /** onBlur duplication check for handle name.
+  /**
+   * onBlur duplication check for handle name.
    */
   static checkHandle: ExpressFunc = async function(req, res){
     let userRepository = getManager().getRepository(Users)
@@ -124,6 +129,9 @@ class UserController{
     }
   }
 
+  /**
+   * E-mail verification. This function is accessed from email.
+   */
   static verifyEmail: ExpressFunc = async function(req, res){
     let userRepository = getManager().getRepository(Users)
     let user = await userRepository.findOne(req.params.userID)
