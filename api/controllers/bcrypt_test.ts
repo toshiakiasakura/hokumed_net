@@ -1,3 +1,6 @@
+/** BCrypt test module.
+ *  In the end, should be thrown away. 
+ */
 import bcrypt from 'bcrypt'
 const saltRounds = 10
 

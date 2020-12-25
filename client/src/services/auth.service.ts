@@ -2,7 +2,6 @@ import axios from "axios";
 import Cookies from 'universal-cookie'
 
 const API_URL = '/api/user/'
-type String = string | null
 type Token = {accessToken:string,
               userID:number,
               status: number,
@@ -10,7 +9,7 @@ type Token = {accessToken:string,
               admin: boolean}
 
 class AuthService {
-  static login(email: String, password: String) {
+  static async login(email: string, password: string) {
     return axios
       .post<Token>
           (API_URL + "login", { email, password })
@@ -39,10 +38,21 @@ class AuthService {
   }
 
   static logout() {
-    localStorage.removeItem("user")
+    console.log('Logout function running.')
+    const cookies = new Cookies()
+    const cookies_dict = cookies.getAll()
+    Object.keys(cookies_dict).forEach( key => {
+      cookies.set(key, null, {maxAge:0})
+    })
   }
 
-  static signup(data: any) {
+  /**
+   * Post data to backend.
+   * @param data If try to specify param. you should import SignUpData type
+   *             from signup.component.tsx. It will be circular dependent,
+   *             so that here we set any for type declaration.
+   */
+  static async signup(data: any) {
     return axios.post(API_URL + "signup", data)
     .then((response) => {
       return(response.data)
@@ -51,6 +61,42 @@ class AuthService {
       console.log('axios signup failure')
       console.log(err)
     })
+  }
+
+  /**
+   * When email is inputted, ask backend server for duplication
+   * of the name.
+   * @return true or error message. Used for react-hook-form.
+   */
+  static async checkEmail(email: string){
+    console.log("AdminService.checkEmail process starts.")
+    const data = await axios.post(API_URL + "check-email", {email} )
+        .then(res => {
+          return(res.data.status === 200 ? true : res.data.msg)
+        })
+        .catch((err) => {
+          console.log('axios checkEmail failure')
+          console.log(err)
+        })
+    return(data)
+  }
+
+  /**
+   * When handle name is inputted, ask backend server for duplication
+   * of the name.
+   * @return true or error message. Used for react-hook-form.
+   */
+  static async checkHandle(handle: string){
+    console.log("AdminService.checkHandle process starts.")
+    const data = await axios.post(API_URL + "check-handle", {handle})
+      .then(res => {
+        return(res.data.status === 200 ? true : res.data.msg)
+      })
+      .catch((err) => {
+        console.log('axios checkHnadle failure')
+        console.log(err)
+      })
+    return(data)
   }
 }
 

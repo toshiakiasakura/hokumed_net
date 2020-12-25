@@ -1,12 +1,8 @@
 import { Redirect } from 'react-router-dom'
-import Cookies from 'universal-cookie'
+import { AuthService } from '../services/auth.service'
 
 export const Logout = () => {
-    console.log('Logout function running.')
-    const cookies = new Cookies()
-    for(let item of ['isLogIn','isAdmin', 'accessToken', 'userID']){
-      cookies.set(item, null, {maxAge:0})
-    }
+    AuthService.logout()
     // To realod the cookie..
     window.setTimeout( () => window.location.reload(),500)
     return(
