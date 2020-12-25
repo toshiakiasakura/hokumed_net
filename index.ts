@@ -18,7 +18,8 @@ createConnection()
 .then(async connection => {
 
   const app = express()
-  app.set("secretKey", "hogehoge")
+  console.log(process.env.HOKUI_SECRET)
+  app.set("secretKey", process.env.HOKUI_SECRET)
   // axios post problem
   app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*") // update to match the domain you will make the request from

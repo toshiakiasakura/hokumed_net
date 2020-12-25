@@ -1,5 +1,6 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { useHistory } from 'react-router-dom'
 import { AuthService } from '../services/auth.service'
 import moment from 'moment'
 
@@ -98,7 +99,7 @@ const DateBlock = (props:{register:any}) => {
 }
 
 const ClassYearBlock = (props:{register:any}) => {
-  let content = []
+  let content = [<option id="signupYearDefault" value="default"> 期を選択</option>]
   for( var i = 94; i < 110; i++){
     content.push( <option id={"signupYear"+i} value={i}> {i}期 </option> )
   }
@@ -140,6 +141,7 @@ export type SignUpData = {
 export const SignUpForm = () => {
   const { register, handleSubmit, errors, formState, control, watch } =
                             useForm<SignUpData>({mode:'onBlur'})
+  const history = useHistory()
 
 
   const handleSignUp = (data: SignUpData) =>{
@@ -156,6 +158,7 @@ export const SignUpForm = () => {
     AuthService.signup(data)
     .then((res) =>{
       alert(res.msg)
+      history.push('/')
     })
   }
 
