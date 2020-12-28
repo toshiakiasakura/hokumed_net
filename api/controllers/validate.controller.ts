@@ -1,6 +1,6 @@
 import { getManager } from 'typeorm'
 import { ExpressMiddleFunc } from '../helpers/express_typing'
-import { Users } from '../entity/Users'
+import { Users } from '../entity/users.entity'
 import jwt from 'jsonwebtoken'
 
 /**

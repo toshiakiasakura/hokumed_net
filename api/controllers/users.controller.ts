@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt'
 import path from 'path'
 import { getManager } from 'typeorm'
 import { newBCryptPassword } from '../helpers/bcrypt.helper'
-import { Users } from '../entity/Users'
+import { Users } from '../entity/users.entity'
 import { ExpressFunc } from '../helpers/express_typing'
 import { signupVerificationMail } from '../helpers/email.helper'
 import moment from 'moment'
@@ -44,7 +44,7 @@ class UserController{
   }
 
   /**
-   * User sign up function. 
+   * User sign up function.
    */
   static signup: ExpressFunc = async function (req, res){
     let userRepository = getManager().getRepository(Users)
