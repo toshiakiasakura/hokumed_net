@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { UserService } from '../services/user.service'
 import Cookies from 'universal-cookie'
 import { Users } from '../services/admin.service'
-import { TableRow } from './admin.component'
+import { TableRow } from './utils.component'
 
 class Profile extends Component<{},{user:Users[], status:number}> {
   constructor(props:any){
