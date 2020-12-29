@@ -90,7 +90,7 @@ def semester_migration():
         
     insertCommand(semester_insert, new_data)
 
-def semesters_subjects_migration():
+def semester_subject_migration():
     from_lis = ['semester_id', 'subject_id']
     to_lis = ['id', 'semester_id', 'subject_id']
     fetch, insert = create_queries(from_lis, to_lis, 'semesters_subjects', 'semester__subject')
@@ -101,14 +101,14 @@ def semesters_subjects_migration():
         
     insertCommand(insert , new_data)
 
-def subjects_migration():
+def subject_migration():
     from_lis = ['id', 'title_ja', 'title_en', 'created_at', 'updated_at']
     to_lis = from_lis
     fetch, insert = create_queries(from_lis, to_lis, 'subjects', 'subject')
     data = sqlFetchCommand(fetch)
     insertCommand(insert , data)
 
-def document_files_migration():
+def document_file_migration():
     from_lis = ['id', 'document_id', 'user_id', 'file_name', 
                 'file_content_type', 'comments', 'download_count', 
                 'created_at', 'updated_at'] 
@@ -124,12 +124,20 @@ def document_files_migration():
         new_data.append( (d[0], doc[1], doc[2]) + d[2:])
     insertCommand(insert , new_data)
 
-def class_years_migration():
+def class_year_migration():
     from_lis = ['id', 'year', 'created_at', 'updated_at']
     to_lis  = from_lis
     fetch, insert = create_queries(from_lis, to_lis, 'class_years', 'class__year')
     data = sqlFetchCommand(fetch)
     insertCommand(insert, data)
 
+def main():
+    user_migration()
+    semester_migration()
+    semester_subject_migration()
+    subject_migration()
+    document_file_migration()
+    class_year_migration()
 
-
+if __name__ == "__main__":
+    main()

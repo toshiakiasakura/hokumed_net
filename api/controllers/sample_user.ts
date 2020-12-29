@@ -1,5 +1,5 @@
 import { getManager } from 'typeorm'
-import { User } from '../entity/users.entity'
+import { User } from '../entity/user.entity'
 import { newBCryptPassword } from '../helpers/bcrypt.helper'
 import { ExpressFunc } from '../helpers/express_typing'
 

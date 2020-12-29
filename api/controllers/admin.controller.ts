@@ -1,7 +1,7 @@
 import { ExpressFunc } from '../helpers/express_typing'
 import { getManager } from 'typeorm'
-import { User } from '../entity/users.entity'
-import { approvalNotification } from '../helpers/email.helper'
+import { User } from '../entity/user.entity'
+import { EmailSender } from '../helpers/email.helper'
 
 class AdminController{
 
@@ -25,7 +25,7 @@ class AdminController{
     if(user !== undefined){
       if( user.approval_state === 'waiting'){
         user.approval_state = 'approved'
-        approvalNotification(user.email, user.family_name, user.given_name)
+        EmailSender.approvalNotification(user.email, user.family_name, user.given_name)
       } else {
         user.approval_state = 'waiting'
       }
