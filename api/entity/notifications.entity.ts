@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column,
   OneToOne, JoinColumn } from 'typeorm'
 
 @Entity()
-export class Notifications {
+export class Notification {
 
     @PrimaryGeneratedColumn()
     id: number

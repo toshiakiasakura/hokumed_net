@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column,
   OneToOne, JoinColumn } from 'typeorm'
 
   @Entity()
-  export class Document_Files {
+  export class Document_File {
 
       @PrimaryGeneratedColumn()
       id: number
@@ -10,6 +10,9 @@ import { Entity, PrimaryGeneratedColumn, Column,
       @Column()
       subject_id: number
 
+      @Column()
+      class_year: number
+      
       @Column()
       user_id: number
 
@@ -33,7 +36,7 @@ import { Entity, PrimaryGeneratedColumn, Column,
   }
 
 @Entity()
-export class Semesters_Subjects {
+export class Semester_Subject {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -47,7 +50,7 @@ export class Semesters_Subjects {
 
 
 @Entity()
-export class Semesters {
+export class Semester {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -70,7 +73,7 @@ export class Semesters {
 
 
 @Entity()
-export class Subjects {
+export class Subject {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -89,7 +92,7 @@ export class Subjects {
 }
 
 @Entity()
-export class Class_Years {
+export class Class_Year {
 
     @PrimaryGeneratedColumn()
     id: number

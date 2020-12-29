@@ -22,7 +22,7 @@
     "typeorm": "^0.2.29"
   },
   "scripts": {
-    "start": "rm -rf /dist&& tsc && node dist/index.js",
+    "start": "rm -rf /dist && tsc && node dist/index.js",
     "dev": "cd client && yarn dev",
     "test": "cd client && yarn test",
     "deploy": "rm -rf /dist && tsc && forever start dist/index.js"
