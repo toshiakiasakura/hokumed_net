@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column,
 
 const NULL = {nullable: true, default:null}
 @Entity()
-export class Users {
+export class User {
 
     @PrimaryGeneratedColumn()
     id: number

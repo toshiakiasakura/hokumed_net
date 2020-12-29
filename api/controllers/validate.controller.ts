@@ -1,6 +1,6 @@
 import { getManager } from 'typeorm'
 import { ExpressMiddleFunc } from '../helpers/express_typing'
-import { Users } from '../entity/users.entity'
+import { User } from '../entity/users.entity'
 import jwt from 'jsonwebtoken'
 
 /**
@@ -10,7 +10,7 @@ import jwt from 'jsonwebtoken'
  */
 class ValidateController {
   static validateUser: ExpressMiddleFunc = async function(req, res, next){
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     const userID = req.headers['x-user-id']
     const accessToken = req.headers['x-access-token']
     if( typeof userID === 'string' && typeof accessToken === 'string' ){
@@ -35,7 +35,7 @@ class ValidateController {
   }
 
   static validateAdmin: ExpressMiddleFunc = async function(req, res, next){
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     const userID = req.headers['x-user-id']
     const accessToken = req.headers['x-access-token']
 

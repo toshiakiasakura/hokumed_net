@@ -1,26 +1,26 @@
 import { ExpressFunc } from '../helpers/express_typing'
 import { getManager } from 'typeorm'
-import { Users } from '../entity/users.entity'
+import { User } from '../entity/users.entity'
 import { approvalNotification } from '../helpers/email.helper'
 
 class AdminController{
 
   static UserBoard: ExpressFunc = async function(req, res){
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     const users = await userRepository.find()
     res.json({users:users, status:200})
   }
 
   static UserDetail: ExpressFunc = async function(req, res){
     const id = parseInt(req.params.id)
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     const user = await userRepository.findOne(id)
     res.json({user:user, status:200})
   }
 
   static changeApproveStatus: ExpressFunc = async function(req, res){
     const id = parseInt(req.params.id)
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     const user = await userRepository.findOne(id)
     if(user !== undefined){
       if( user.approval_state === 'waiting'){
@@ -38,7 +38,7 @@ class AdminController{
 
   static deleteUser: ExpressFunc = async function(req, res){
     const id = parseInt(req.params.id)
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     let user = await userRepository.findOne(id)
     if(user !== undefined){
       await userRepository.remove(user)
@@ -50,7 +50,7 @@ class AdminController{
 
   static changeAdminStatus: ExpressFunc = async function(req, res){
     const id = parseInt(req.params.id)
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     let user = await userRepository.findOne(id)
     if(user !== undefined){
       user.admin = user.admin ? false : true
