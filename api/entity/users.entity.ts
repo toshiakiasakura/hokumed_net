@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column,
-  OneToOne, JoinColumn } from "typeorm";
+  OneToOne, JoinColumn } from 'typeorm'
 
 
 const NULL = {nullable: true}
