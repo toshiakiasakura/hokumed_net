@@ -22,7 +22,6 @@ import { ValidateController } from './api/controllers/validate.controller'
 const app = express()
 console.log(process.env.HOKUI_SECRET)
 app.set("secretKey", process.env.HOKUI_SECRET)
-app.set("MAIL_PW", process.env.HOKUI_PW)
 
 
 /**
