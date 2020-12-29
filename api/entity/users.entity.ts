@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column,
   OneToOne, JoinColumn } from 'typeorm'
 
 
-const NULL = {nullable: true}
+const NULL = {nullable: true, default:null}
 @Entity()
 export class Users {
 
@@ -56,17 +56,14 @@ export class Users {
     admin: boolean
 
     @Column()
-    class_year_id: number
+    class_year: number
 
-    @Column('number', NULL)
-    ml_member_id: number
-
-    @Column()
+    @Column({nullable:true, default: null, type:'varchar'})
     activation_token: string
 
     // TO DO: if production, set it to be false.
-    @Column({default: true})
-    activation_status: boolean
+    @Column({default: 'pending'})
+    activation_status: 'active' | 'pending'
 
     @Column({nullable:true, type:'varchar'})
     access_token: string

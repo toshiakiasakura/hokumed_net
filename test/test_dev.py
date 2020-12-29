@@ -20,6 +20,7 @@ from selenium import webdriver
 from selenium.webdriver.common.alert import Alert
 
 test_url = "http://localhost:3001"
+back_url = "http://localhost:3000"
 class TestSite(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -108,6 +109,6 @@ class TestSite(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    subprocess.check_call(["curl",f"{test_url}/api/user/add_sample"])
-    subprocess.check_call(["curl",f"{test_url}/api/user/add_admin"])
+    subprocess.check_call(["curl",f"{back_url}/api/user/add_sample"])
+    subprocess.check_call(["curl",f"{back_url}/api/user/add_admin"])
     unittest.main()

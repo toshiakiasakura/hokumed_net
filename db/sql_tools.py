@@ -1,6 +1,9 @@
 import sqlite3
 from sqlite3 import Error
 
+path_hokui = "../../app_hokui.sqlite"
+path_hokumed = "./app.sqlite"
+
 def sqlConnect(path):
     def _decorator_arg(func):
         def _decorator(*args,**kargs):
@@ -16,3 +19,116 @@ def sqlConnect(path):
             return(res)
         return(_decorator)
     return(_decorator_arg)
+
+@sqlConnect(path =path_hokui)
+def sqlFetchCommand(con, sql):
+    cursorObj = con.cursor()
+    cursorObj.execute(sql)
+    rows = cursorObj.fetchall()
+    return(rows)
+
+@sqlConnect(path=path_hokumed)
+def insertCommand(con,sql, entities):
+    cursorObj = con.cursor()
+    for e in entities:
+        cursorObj.execute(sql, e)
+    con.commit()   
+
+
+def create_queries(from_lis,to_lis, table: str, table2: str):
+
+    select_sentence = ', '.join(from_lis)
+    insert_sentence = ', '.join(to_lis)
+    que_sentence = ', '.join(['?' for i in range(len(to_lis))])
+    table_fetch = f"SELECT {select_sentence} FROM {table}"
+    table_insert = f"INSERT INTO {table2}({insert_sentence}) VALUES({que_sentence})"
+    return(table_fetch, table_insert)
+
+def user_migration():
+    user_match = {
+     'id': 'id',
+     'email': 'email',
+     'crypted_password': 'crypted_password',
+     ' salt': ' salt',
+     'created_at': 'created_at',
+     'updated_at': 'updated_at',
+     'approval_state': 'approval_state',
+     'activation_state': 'activation_status',
+     'family_name': 'family_name',
+     'given_name': 'given_name',
+     'handle_name': 'handle_name',
+     'birthday': 'birthday',
+     'email_mobile': 'email_mobile',
+     'admin': 'admin',
+     'class_year_id': 'class_year',
+    }
+    rep_dic={1:93,2:94, 3:95, 4:96, 5:97, 6:98, 7:99, 8:100}
+    rep_admin = {'f':0, 't':1}
+
+    user_fetch, user_insert = create_queries(user_match.keys(), user_match.values(), 'users', 'users')
+    user_data = sqlFetchCommand(user_fetch)
+    new_data = []
+    for u in user_data:
+        year = rep_dic[u[-1]]
+        admin = rep_admin[ u[-2]]
+        new_data.append( u[:-2] + (admin, year))
+
+    insertCommand(user_insert, new_data)
+
+def semester_migration():
+    from_lis = ['id', 'class_year_id', 'identifier', 'created_at', 'updated_at']
+    to_lis = ['id', 'class_year_id', 'learn_year', 'learn_term', 'created_at', 'updated_at']
+    semester_fetch, semester_insert = create_queries(from_lis, to_lis, 'semesters', 'semesters')
+    semester_data = sqlFetchCommand(semester_fetch)
+    new_data = []
+    for d in semester_data: 
+        ident = d[2]
+        year = ident[0]
+        term = ident[1]
+        new_data.append( (d[0], d[1], year, term, d[3], d[4]) )
+        
+    insertCommand(semester_insert, new_data)
+
+def semesters_subjects_migration():
+    from_lis = ['semester_id', 'subject_id']
+    to_lis = ['id', 'semester_id', 'subject_id']
+    fetch, insert = create_queries(from_lis, to_lis, 'semesters_subjects', 'semesters__subjects')
+    data = sqlFetchCommand(fetch)
+    new_data = []
+    for i, d in enumerate(data):
+        new_data.append( (i+1, d[0], d[1]) )
+        
+    insertCommand(insert , new_data)
+
+def subjects_migration():
+    from_lis = ['id', 'title_ja', 'title_en', 'created_at', 'updated_at']
+    to_lis = from_lis
+    fetch, insert = create_queries(from_lis, to_lis, 'subjects', 'subjects')
+    data = sqlFetchCommand(fetch)
+    insertCommand(insert , data)
+
+def document_files_migration():
+    from_lis = ['id', 'document_id', 'user_id', 'file_name', 
+                'file_content_type', 'comments', 'download_count', 
+                'created_at', 'updated_at'] 
+    to_lis = ['id', 'subject_id', 'user_id', 'file_name',
+              'file_content_type', 'comment', 'download_count', 'created_at', 'updated_at']
+
+    fetch, insert = create_queries(from_lis, to_lis, 'document_files', 'document__files')
+    data = sqlFetchCommand(fetch)
+    new_data = []
+    for d in data:
+        sql = f'SELECT * FROM documents WHERE id={d[1]}'
+        doc = sqlFetchCommand(sql)[0]
+        new_data.append( (d[0], doc[1]) + d[2:])
+    insertCommand(insert , new_data)
+
+def class_years_migration():
+    from_lis = ['id', 'year', 'created_at', 'updated_at']
+    to_lis  = from_lis
+    fetch, insert = create_queries(from_lis, to_lis, 'class_years', 'class__years')
+    data = sqlFetchCommand(fetch)
+    insertCommand(insert, data)
+
+
+
