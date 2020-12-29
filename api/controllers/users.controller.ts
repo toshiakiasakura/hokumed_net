@@ -19,7 +19,7 @@ class UserController{
     console.log('Login process started.')
     if ( user === undefined ){
       res.json({status:401, msg:'Login failure. ユーザーが見つかりませんでした.'}) // User not found and password fail is different
-    } else if( !user.activation_status ){
+    } else if( user.activation_status =='pending'){
       res.json({status:401, msg:'Login failure. メール認証が出来ていません.'}) // User not found and password fail is different
     } else if(
       bcrypt.compareSync(req.body.password + user.salt, user.crypted_password)
@@ -75,7 +75,7 @@ class UserController{
       user.handle_name = body.handle_name
       user.birthday = body.birth_day
       user.email_mobile = body.email_mobile
-      user.class_year_id = body.class_year_id
+      user.class_year = body.class_year_id
       user.created_at = new Date()
       const activationToken = sha1(moment().format('DD-MMM-YYY HH:mm:ss'))
       user.activation_token= activationToken
@@ -136,7 +136,7 @@ class UserController{
     let userRepository = getManager().getRepository(Users)
     let user = await userRepository.findOne(req.params.userID)
     if (user && user.activation_token === req.params.token){
-      user.activation_status = true
+      user.activation_status = 'active'
       await userRepository.save(user)
       res.redirect('/verify-success')
     } else {
@@ -172,7 +172,7 @@ class UserController{
    */
   static cleanup: ExpressFunc = async function(req, res){
     let userRepository = getManager().getRepository(Users)
-    let users = await userRepository.find({activation_status:false})
+    let users = await userRepository.find({activation_status:'pending'})
     for(let user of users){
       await userRepository.remove(user)
     }

@@ -19,7 +19,7 @@ import { Entity, PrimaryGeneratedColumn, Column,
       @Column()
       file_content_type: string
 
-      @Column()
+      @Column({nullable: true, default:null})
       comment: string
 
       @Column()
@@ -39,13 +39,10 @@ export class Semesters_Subjects {
     id: number
 
     @Column()
+    semester_id: number
+
+    @Column()
     subject_id: number
-
-    @Column()
-    created_at: Date
-
-    @Column()
-    updated_at: Date
 }
 
 

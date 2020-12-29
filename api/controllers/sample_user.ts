@@ -21,11 +21,11 @@ class SampleController{
         admin.handle_name = 'handle'
         admin.birthday = new Date(2020,11,1) // counts month from 0 to 11.
         admin.email_mobile = "admin@gmail.com"
-        admin.class_year_id =  98
+        admin.class_year =  98
         admin.admin = true
         admin.approval_state = 'approved'
         admin.activation_token = 'admin'
-        admin.activation_status =  true
+        admin.activation_status =  'active'
         await userRepository.save(admin)
         console.log('admin finish inserting')
       } else {
@@ -50,10 +50,10 @@ class SampleController{
         test.handle_name = 'ハンドルネーム'
         test.birthday = new Date(2020,11,1) // counts month from 0 to 11.
         test.email_mobile = "test@gmail.com"
-        test.class_year_id =  98
+        test.class_year =  98
         test.approval_state = 'approved'
-        test.activation_token = "test"
-        test.activation_status =  true
+        test.activation_token = 'test'
+        test.activation_status =  'active'
         await userRepository.save(test)
         console.log('test is finish inserting')
       } else {
