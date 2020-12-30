@@ -43,7 +43,7 @@ class NavBar extends React.Component {
           {isLogIn && <NavItem name="HOME" path="/home" /> }
           {isLogIn && <NavItem name="STUDY" path="/study" /> }
           {isLogIn && <NavItem name="PROFILE" path="/profile" /> }
-          {isAdmin && <NavItem name="ADMIN" path="/admin" /> }
+          {isLogIn && isAdmin && <NavItem name="ADMIN" path="/admin" /> }
           {isLogIn && <NavItem name="LOGOUT" path="/logout" /> }
           {!isLogIn && <NavItem name="LOGIN" path="/" /> }
           {!isLogIn && <NavItem name="SIGNUP" path="/signup" /> }

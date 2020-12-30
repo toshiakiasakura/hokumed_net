@@ -131,6 +131,13 @@ def class_year_migration():
     data = sqlFetchCommand(fetch)
     insertCommand(insert, data)
 
+def notification_migration():
+    from_lis = ['id', 'title', 'text', 'created_at', 'updated_at']
+    to_lis = from_lis
+    fetch, insert = create_queries(from_lis, to_lis, 'news', 'notification')
+    data = sqlFetchCommand(fetch)
+    insertCommand(insert, data)
+
 def main():
     user_migration()
     semester_migration()
@@ -138,6 +145,7 @@ def main():
     subject_migration()
     document_file_migration()
     class_year_migration()
+    #notification_migration()
 
 if __name__ == "__main__":
     main()
