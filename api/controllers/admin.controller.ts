@@ -1,6 +1,8 @@
 import { ExpressFunc } from '../helpers/express_typing'
 import { getManager } from 'typeorm'
 import { User } from '../entity/user.entity'
+import { Subject, Class_Year } from '../entity/study.entity'
+import { Notification } from '../entity/notification.entity'
 import { EmailSender } from '../helpers/email.helper'
 
 class AdminController{
@@ -60,6 +62,25 @@ class AdminController{
       res.json({status:401})
     }
   }
-}
 
+  static SubjectBoard: ExpressFunc = async function(req, res){
+    console.log('SubjectBoard phase.')
+    let subjectRepository = getManager().getRepository(Subject)
+    const subjects = await subjectRepository.find()
+    res.json({subjects:subjects, status:200})
+  }
+
+  static ClassYearBoard: ExpressFunc = async function(req, res){
+    let yearRepository = getManager().getRepository(Class_Year)
+    const years = await yearRepository.find()
+    res.json({years:years, status:200})
+  }
+
+  static NotificationBoard: ExpressFunc = async function(req, res){
+    let notificationRepository = getManager().getRepository(Notification)
+    const notifications = await notificationRepository.find()
+    res.json({notifications:notifications, status:200})
+  }
+
+}
 export { AdminController }

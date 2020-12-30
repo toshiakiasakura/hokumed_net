@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom'
-import { AdminService } from '../services/admin.service'
-import { Users } from '../services/admin.service'
-import { TableRow } from './utils.component'
+import { AdminService } from '../../services/admin.service'
+import { User } from '../../entity/user.entity'
+import { TableRow } from '../utils.component'
 
-const UserBody = (props:{users:Users[]}) => {
+const UserBody = (props:{users:User[]}) => {
   let table_row = []
   for (let user of props.users){
     table_row.push(
       <tr>
         <td> {user.id} </td>
-        <td> {user.class_year_id } </td>
+        <td> {user.class_year } </td>
         <td>
           <Link to={`/admin/user/${user.id}`}>
             {user.handle_name }
@@ -29,7 +29,7 @@ const UserBody = (props:{users:Users[]}) => {
   )
 }
 
-class UserBoard extends Component<{},{content: Users[], status: number}> {
+class UserBoard extends Component<{},{content: User[], status: number}> {
   constructor(props:any){
     super(props)
     this.state = {
@@ -112,7 +112,7 @@ const DeleteButton = (props:{id: number}) => {
 
 class UserDetail extends Component<
                           {match:{params:{id:number}}},
-                          {users: Users[], status:number}
+                          {users: User[], status:number}
                           >{
   constructor(props:any){
     super(props)
@@ -200,7 +200,7 @@ class UserDetail extends Component<
                <TableRow rowName="ID" item={user.id} />
                <TableRow rowName="ハンドルネーム" item={user.handle_name} />
                <TableRow rowName="氏名" item={`${user.family_name} ${user.given_name}`} />
-               <TableRow rowName="期" item={user.class_year_id} />
+               <TableRow rowName="期" item={user.class_year} />
                <TableRow rowName="管理者" item={user.admin} />
                <TableRow rowName="承認状態" item={user.approval_state} />
                <TableRow rowName="メールアドレス" item={user.email} />

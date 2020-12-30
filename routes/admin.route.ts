@@ -8,6 +8,10 @@ router.get('/approve/:id', AdminController.changeApproveStatus)
 router.get('/delete/:id', AdminController.deleteUser)
 router.get('/change-admin/:id', AdminController.changeAdminStatus)
 
+router.get('/subject',AdminController.SubjectBoard)
+router.get('/year',AdminController.ClassYearBoard)
+router.get('/notification',AdminController.NotificationBoard)
+
 router.get('*', (req:Request, res:Response) => {
   res.json({status:404})
 })

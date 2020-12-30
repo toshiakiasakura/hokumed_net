@@ -12,7 +12,7 @@ import { Entity, PrimaryGeneratedColumn, Column,
 
       @Column()
       class_year: number
-      
+
       @Column()
       user_id: number
 

@@ -5,7 +5,7 @@ import { BrowserRouter as Router,
   Redirect} from 'react-router-dom';
 import { Login } from './components/login.component'
 import { Home } from './components/home.component'
-import { Admin } from './components/admin.component'
+import { Admin } from './components/admin/admin.component'
 import { SignUp } from './components/signup.component'
 import { NotFound } from './components/404.component'
 import { NavBar } from './components/nav-bar.component'
