@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { AdminService } from '../../services/admin.service'
-import { TransitionButton } from '../utils.component'
+import { TransitionButton } from '../../helpers/utils.component'
 import { Notification } from '../../entity/notification.entity'
 
 type NotificationState = {

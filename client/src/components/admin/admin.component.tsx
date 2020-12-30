@@ -4,7 +4,7 @@ import Cookies from 'universal-cookie'
 import { Top } from './admin-top.component'
 import { UserBoard, UserDetail } from './admin-user.component'
 import { SubjectBoard } from './admin-subject.component'
-import { ClassYearBoard } from './admin-year.component'
+import { ClassYearPages } from './admin-year.component'
 import { SemesterBoard } from './admin-semester.component'
 import { NotificationBoard  } from './admin-notification.component'
 
@@ -45,9 +45,9 @@ const Admin = () => {
       <Switch>
         <Route exact path='/admin' component={Top} />
         <Route exact path='/admin/user' component={UserBoard} />
-        <Route path='/admin/user/:id/exam' component={UserDetail}/>
+        <Route path='/admin/user/:id' component={UserDetail}/>
         <Route exact path='/admin/subject' component={SubjectBoard} />
-        <Route exact path='/admin/year' component={ClassYearBoard} />
+        <Route path='/admin/year' component={ClassYearPages} />
         <Route exact path='/admin/semester' component={SemesterBoard} />
         <Route exact path='/admin/notification' component={NotificationBoard} />
         <Route component={NotFound} />

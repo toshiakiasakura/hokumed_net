@@ -1,5 +1,5 @@
-import { Subject } from '../entity/Subject'
-import { Semester } from '../entity/Semester'
+import { Subject } from '../../entity/Subject'
+import { Semester } from '../../entity/Semester'
 import { SubjectRouter } from './study-subject.component'
 import { SemesterToggleMenus } from './study-semesters.component'
 

@@ -1,5 +1,5 @@
-import { Semester } from "../entity/Semester"
-import arrow from '../img/arrow.svg'
+import { Semester } from "../../entity/Semester"
+import arrow from '../../img/arrow.svg'
 import { Link } from 'react-router-dom'
 
 

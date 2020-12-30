@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom'
 import { AdminService } from '../../services/admin.service'
 import { User } from '../../entity/user.entity'
-import { TableRow } from '../utils.component'
+import { TableRow } from '../../helpers/utils.component'
+import { MatchIDType } from '../../helpers/types.helper'
 
 const UserBody = (props:{users:User[]}) => {
   let table_row = []
@@ -111,9 +112,9 @@ const DeleteButton = (props:{id: number}) => {
 
 
 class UserDetail extends Component<
-                          {match:{params:{id:number}}},
-                          {users: User[], status:number}
-                          >{
+    MatchIDType,
+    {users: User[], status:number}
+  >{
   constructor(props:any){
     super(props)
     this.state = {
@@ -129,7 +130,6 @@ class UserDetail extends Component<
         users: [res.data.user],
         status: res.data.status
       })
-
     })
     .catch(err => {
       console.log(err)
