@@ -11,6 +11,7 @@ router.get('/change-admin/:id', AdminController.changeAdminStatus)
 router.get('/subject',AdminController.SubjectBoard)
 router.get('/year',AdminController.ClassYearBoard)
 router.get('/notification',AdminController.NotificationBoard)
+router.get('/semester', AdminController.SemesterBoard)
 
 router.get('*', (req:Request, res:Response) => {
   res.json({status:404})
