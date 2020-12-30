@@ -20,6 +20,5 @@ export type SemesterSubjects  ={
     learn_year: number
     learn_term: 'pre' | 'post'
     created_at: Date
-    updated_at: Date
     subjects: Subject[]
 }

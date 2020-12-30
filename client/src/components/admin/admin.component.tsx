@@ -25,7 +25,7 @@ const TopNavVar = () => {
         <TopNavItem url="user" tabName="ユーザー" />
         <TopNavItem url="year" tabName="学年" />
         <TopNavItem url="subject" tabName="教科" />
-        <TopNavItem url="term" tabName="学期" />
+        <TopNavItem url="semester" tabName="学期" />
         <TopNavItem url="notification" tabName="お知らせ" />
       </div>
     </div>
@@ -45,7 +45,7 @@ const Admin = () => {
       <Switch>
         <Route exact path='/admin' component={Top} />
         <Route exact path='/admin/user' component={UserBoard} />
-        <Route path='/admin/user/:id' component={UserDetail}/>
+        <Route path='/admin/user/:id/exam' component={UserDetail}/>
         <Route exact path='/admin/subject' component={SubjectBoard} />
         <Route exact path='/admin/year' component={ClassYearBoard} />
         <Route exact path='/admin/semester' component={SemesterBoard} />

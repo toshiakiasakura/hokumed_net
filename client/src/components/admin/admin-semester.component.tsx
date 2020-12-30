@@ -14,8 +14,10 @@ const SemesterRow = (props:{semester:SemesterSubjects} ) => {
   const semester = props.semester
   const term = semester.learn_term === 'pre' ? '前期' : '後期'
   const title = `${semester.class_year}期\n${semester.learn_year}年${term}`
-  let subjects = semester.subjects.map(sub => sub.title_ja)
-  let subjects_str = subjects.join(', ')
+  console.log(semester)
+  let subjects = semester.subjects.map(sub => sub ? sub.title_ja : '')
+
+  let subjects_str = subjects.join(',  ')
 
   return(
     <tr>
@@ -57,9 +59,10 @@ class SemesterBoard extends Component<{},SemesterState>{
       return <div> 読み込み中 </div>
     }
 
-    let content =  semesters.map((semester) =>
-      <SemesterRow semester={semester} />
-    )
+    console.log(semesters)
+    let content =  semesters.map((semester) =>{
+      return <SemesterRow semester={semester} />
+    })
     return(
       <div>
         <p>

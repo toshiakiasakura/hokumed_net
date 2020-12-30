@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column,
   OneToOne, JoinColumn } from 'typeorm'
-
+import { Class_Year } from './study.entity'
 
 const NULL = {nullable: true, default:null }
 const NULL_STRING = {type: 'varchar', nullable: true, default: null}
