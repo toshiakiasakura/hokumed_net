@@ -1,39 +1,43 @@
 import { Entity, PrimaryGeneratedColumn, Column,
   OneToOne, JoinColumn } from 'typeorm'
-
-  @Entity()
-  export class Document_Files {
-
-      @PrimaryGeneratedColumn()
-      id: number
-
-      @Column()
-      subject_id: number
-
-      @Column()
-      user_id: number
-
-      @Column()
-      file_name: string
-
-      @Column()
-      file_content_type: string
-
-      @Column({nullable: true, default:null})
-      comment: string
-
-      @Column()
-      download_count: number
-
-      @Column()
-      created_at: Date
-
-      @Column()
-      updated_at: Date
-  }
+import { User } from './user.entity'
 
 @Entity()
-export class Semesters_Subjects {
+export class Document_File {
+
+    @PrimaryGeneratedColumn()
+    id: number
+
+    @Column()
+    subject_id: number
+
+    @Column()
+    class_year: number
+
+    @Column()
+    user_id: number
+
+    @Column()
+    file_name: string
+
+    @Column()
+    file_content_type: string
+
+    @Column({nullable: true, default:null})
+    comment: string
+
+    @Column()
+    download_count: number
+
+    @Column()
+    created_at: Date
+
+    @Column()
+    updated_at: Date
+}
+
+@Entity()
+export class Semester_Subject {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -47,7 +51,7 @@ export class Semesters_Subjects {
 
 
 @Entity()
-export class Semesters {
+export class Semester {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -70,7 +74,7 @@ export class Semesters {
 
 
 @Entity()
-export class Subjects {
+export class Subject {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -89,7 +93,7 @@ export class Subjects {
 }
 
 @Entity()
-export class Class_Years {
+export class Class_Year {
 
     @PrimaryGeneratedColumn()
     id: number

@@ -65,7 +65,7 @@ def user_migration():
     rep_dic={1:93,2:94, 3:95, 4:96, 5:97, 6:98, 7:99, 8:100}
     rep_admin = {'f':0, 't':1}
 
-    user_fetch, user_insert = create_queries(user_match.keys(), user_match.values(), 'users', 'users')
+    user_fetch, user_insert = create_queries(user_match.keys(), user_match.values(), 'users', 'user')
     user_data = sqlFetchCommand(user_fetch)
     new_data = []
     for u in user_data:
@@ -78,21 +78,22 @@ def user_migration():
 def semester_migration():
     from_lis = ['id', 'class_year_id', 'identifier', 'created_at', 'updated_at']
     to_lis = ['id', 'class_year_id', 'learn_year', 'learn_term', 'created_at', 'updated_at']
-    semester_fetch, semester_insert = create_queries(from_lis, to_lis, 'semesters', 'semesters')
+    semester_fetch, semester_insert = create_queries(from_lis, to_lis, 'semesters', 'semester')
     semester_data = sqlFetchCommand(semester_fetch)
+    rep_dic = {"a": "pre", "b": "post"}
     new_data = []
     for d in semester_data: 
         ident = d[2]
         year = ident[0]
-        term = ident[1]
+        term = rep_dic[ident[1]]
         new_data.append( (d[0], d[1], year, term, d[3], d[4]) )
         
     insertCommand(semester_insert, new_data)
 
-def semesters_subjects_migration():
+def semester_subject_migration():
     from_lis = ['semester_id', 'subject_id']
     to_lis = ['id', 'semester_id', 'subject_id']
-    fetch, insert = create_queries(from_lis, to_lis, 'semesters_subjects', 'semesters__subjects')
+    fetch, insert = create_queries(from_lis, to_lis, 'semesters_subjects', 'semester__subject')
     data = sqlFetchCommand(fetch)
     new_data = []
     for i, d in enumerate(data):
@@ -100,35 +101,51 @@ def semesters_subjects_migration():
         
     insertCommand(insert , new_data)
 
-def subjects_migration():
+def subject_migration():
     from_lis = ['id', 'title_ja', 'title_en', 'created_at', 'updated_at']
     to_lis = from_lis
-    fetch, insert = create_queries(from_lis, to_lis, 'subjects', 'subjects')
+    fetch, insert = create_queries(from_lis, to_lis, 'subjects', 'subject')
     data = sqlFetchCommand(fetch)
     insertCommand(insert , data)
 
-def document_files_migration():
+def document_file_migration():
     from_lis = ['id', 'document_id', 'user_id', 'file_name', 
                 'file_content_type', 'comments', 'download_count', 
                 'created_at', 'updated_at'] 
-    to_lis = ['id', 'subject_id', 'user_id', 'file_name',
+    to_lis = ['id', 'subject_id', 'class_year', 'user_id',  'file_name' ,
               'file_content_type', 'comment', 'download_count', 'created_at', 'updated_at']
 
-    fetch, insert = create_queries(from_lis, to_lis, 'document_files', 'document__files')
+    fetch, insert = create_queries(from_lis, to_lis, 'document_files', 'document__file')
     data = sqlFetchCommand(fetch)
     new_data = []
     for d in data:
         sql = f'SELECT * FROM documents WHERE id={d[1]}'
         doc = sqlFetchCommand(sql)[0]
-        new_data.append( (d[0], doc[1]) + d[2:])
+        new_data.append( (d[0], doc[1], doc[2]) + d[2:])
     insertCommand(insert , new_data)
 
-def class_years_migration():
+def class_year_migration():
     from_lis = ['id', 'year', 'created_at', 'updated_at']
     to_lis  = from_lis
-    fetch, insert = create_queries(from_lis, to_lis, 'class_years', 'class__years')
+    fetch, insert = create_queries(from_lis, to_lis, 'class_years', 'class__year')
     data = sqlFetchCommand(fetch)
     insertCommand(insert, data)
 
+def notification_migration():
+    from_lis = ['id', 'title', 'text', 'created_at', 'updated_at']
+    to_lis = from_lis
+    fetch, insert = create_queries(from_lis, to_lis, 'news', 'notification')
+    data = sqlFetchCommand(fetch)
+    insertCommand(insert, data)
 
+def main():
+    user_migration()
+    semester_migration()
+    semester_subject_migration()
+    subject_migration()
+    document_file_migration()
+    class_year_migration()
+    #notification_migration()
 
+if __name__ == "__main__":
+    main()

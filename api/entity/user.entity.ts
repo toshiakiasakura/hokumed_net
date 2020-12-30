@@ -1,10 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column,
   OneToOne, JoinColumn } from 'typeorm'
+import { Class_Year } from './study.entity'
 
-
-const NULL = {nullable: true, default:null}
+const NULL = {nullable: true, default:null }
+const NULL_STRING = {type: 'varchar', nullable: true, default: null}
 @Entity()
-export class Users {
+export class User {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -34,7 +35,7 @@ export class Users {
     @Column('datetime', NULL)
     last_logout_at: Date
 
-    @Column('varchar', NULL)
+    @Column('varchar', NULL_STRING)
     last_login_from_ip_address: string
 
     @Column()
@@ -58,13 +59,23 @@ export class Users {
     @Column()
     class_year: number
 
-    @Column({nullable:true, default: null, type:'varchar'})
+    @Column('varchar',NULL_STRING)
     activation_token: string
 
     // TO DO: if production, set it to be false.
     @Column({default: 'pending'})
     activation_status: 'active' | 'pending'
 
-    @Column({nullable:true, type:'varchar'})
+    @Column('varchar', NULL_STRING)
     access_token: string
+
+    @Column('varchar', NULL_STRING)
+    password_token: string
+
+    @Column('varchar', NULL_STRING)
+    new_salt: string
+
+    @Column('varchar', NULL_STRING)
+    new_crypted_password: string
+
 }

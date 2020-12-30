@@ -98,6 +98,18 @@ class AuthService {
       })
     return(data)
   }
+
+  static async resetPassword(email: string, password: string){
+    return axios.post<{status:number, msg:string}>
+              (API_URL + "reset-password", {email, password})
+      .then(res=>{
+        return(res.data)
+      })
+      .catch((err) => {
+        console.log('axios ResetPassword failure')
+        console.log(err)
+      })
+  }
 }
 
 export {AuthService}

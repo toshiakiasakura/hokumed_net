@@ -2,10 +2,10 @@ import { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { UserService } from '../services/user.service'
 import Cookies from 'universal-cookie'
-import { Users } from '../services/admin.service'
-import { TableRow } from './admin.component'
+import { User } from '../entity/user.entity'
+import { TableRow } from './utils.component'
 
-class Profile extends Component<{},{user:Users[], status:number}> {
+class Profile extends Component<{},{user:User[], status:number}> {
   constructor(props:any){
     super(props)
     this.state = {
@@ -51,7 +51,7 @@ class Profile extends Component<{},{user:Users[], status:number}> {
               <tbody>
                <TableRow rowName="ハンドルネーム" item={user.handle_name} />
                <TableRow rowName="氏名" item={`${user.family_name} ${user.given_name}`} />
-               <TableRow rowName="期" item={user.class_year_id} />
+               <TableRow rowName="期" item={user.class_year} />
                <TableRow rowName="管理者" item={user.admin} />
                <TableRow rowName="承認状態" item={user.approval_state} />
                <TableRow rowName="メールアドレス" item={user.email} />

@@ -5,16 +5,16 @@ import bcrypt from 'bcrypt'
 import path from 'path'
 import { getManager } from 'typeorm'
 import { newBCryptPassword } from '../helpers/bcrypt.helper'
-import { Users } from '../entity/users.entity'
+import { User } from '../entity/user.entity'
 import { ExpressFunc } from '../helpers/express_typing'
-import { signupVerificationMail } from '../helpers/email.helper'
+import { EmailSender } from '../helpers/email.helper'
 import moment from 'moment'
 import sha1 from 'sha1'
 
 class UserController{
 
   static login: ExpressFunc = async function (req, res){
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     let user = await userRepository.findOne({where: {email:req.body.email}})
     console.log('Login process started.')
     if ( user === undefined ){
@@ -47,7 +47,7 @@ class UserController{
    * User sign up function.
    */
   static signup: ExpressFunc = async function (req, res){
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
 
     let email_users= await userRepository.find({email: req.body.email})
     let handle_users = await userRepository.find({handle_name: req.body.handle_name})
@@ -65,7 +65,7 @@ class UserController{
       })
     } else {
       const body = req.body
-      let user = new Users()
+      let user = new User()
       user.email = body.email
       const [ salt, crypted_password ] = newBCryptPassword(body.password)
       user.salt = salt
@@ -81,7 +81,7 @@ class UserController{
       user.activation_token= activationToken
       await userRepository.save(user)
 
-      signupVerificationMail(
+      EmailSender.signupVerificationMail(
         user.email,
         user.family_name,
         user.given_name,
@@ -97,7 +97,7 @@ class UserController{
    * onBlur duplication check for email.
    */
   static checkEmail: ExpressFunc = async function(req, res){
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     let email_users = await userRepository.find({email: req.body.email})
     if (email_users.length ){
       res.json({
@@ -115,7 +115,7 @@ class UserController{
    * onBlur duplication check for handle name.
    */
   static checkHandle: ExpressFunc = async function(req, res){
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     let handle_users = await userRepository.find({handle_name: req.body.handle})
     if (handle_users.length ){
       res.json({
@@ -133,14 +133,15 @@ class UserController{
    * E-mail verification. This function is accessed from email.
    */
   static verifyEmail: ExpressFunc = async function(req, res){
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     let user = await userRepository.findOne(req.params.userID)
     if (user && user.activation_token === req.params.token){
       user.activation_status = 'active'
       await userRepository.save(user)
-      res.redirect('/verify-success')
+      // NOTE: This redirect correctly leads to react-app is unbiguous.
+      res.redirect('/verify/email-success')
     } else {
-      res.redirect('/verify-failure')
+      res.redirect('/verify/email-failure')
     }
   }
   /**
@@ -148,7 +149,7 @@ class UserController{
    * in individual profile page.
    */
   static ProfileBoard: ExpressFunc = async function (req, res){
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     const userID = req.headers['x-user-id']
     let user = null
     console.log(userID, user, typeof userID, typeof user)
@@ -166,12 +167,51 @@ class UserController{
   }
 
   /**
+   * Resetpassword process. This function generates token.
+   */
+  static resetPassword: ExpressFunc = async function(req, res){
+    let userRepository = getManager().getRepository(User)
+    let user = await userRepository.findOne({where: {email:req.body.email}})
+    console.log('reset password process started.')
+    if( user ){
+      const [ salt, crypted_password ] = newBCryptPassword(req.body.password)
+      user.new_salt = salt
+      user.new_crypted_password = crypted_password
+      const password_token= sha1(moment().format('DD-MMM-YYY HH:mm:ss'))
+      user.password_token = password_token
+      await userRepository.save(user)
+
+      EmailSender.resetPasswordVerificationMail(user.email, user.id, password_token)
+      res.send({status:200})
+
+    } else {
+      res.send({status:401, msg:'ユーザーが見つかりませんでした．'})
+    }
+  }
+
+  /**
+   * This function is accessed via email, and actually change the password.
+   */
+  static verifyResetPassword: ExpressFunc = async function(req, res){
+    let userRepository = getManager().getRepository(User)
+    let user = await userRepository.findOne(req.params.userID)
+    if (user && user.password_token === req.params.token){
+      user.salt = user.new_salt
+      user.crypted_password = user.new_crypted_password
+      await userRepository.save(user)
+      res.redirect('/verify/reset-success')
+    } else {
+      res.redirect('/verify/reset-failure')
+    }
+  }
+
+  /**
    * This method is intended to be used routinely, for example, every 3:00 am.
    * Delete accounts which activationStatus is false, so that
    * keep database clean.
    */
   static cleanup: ExpressFunc = async function(req, res){
-    let userRepository = getManager().getRepository(Users)
+    let userRepository = getManager().getRepository(User)
     let users = await userRepository.find({activation_status:'pending'})
     for(let user of users){
       await userRepository.remove(user)
