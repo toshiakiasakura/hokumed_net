@@ -1,9 +1,8 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useHistory, Link } from 'react-router-dom'
+import { useHistory, Link, Redirect } from 'react-router-dom'
 import { AuthService } from '../services/auth.service'
-// import { useCookies } from 'react-cookie'
-import '../style/_temp.sass'
+import Cookies from 'universal-cookie'
 // This type for onClick
 // type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 
@@ -13,11 +12,12 @@ type FormData ={
   password: string
 }
 
-/* This is hook function for form.
-   In this function, input  validation is done.
+
+/**
+ * This is hook function for form.
+ * In this function, input  validation is done.
  */
 const LoginForm = () => {
-  //const state = {email:"", password:""}
   const { register, handleSubmit, errors, formState } = useForm<FormData>({mode:'onChange'})
   const history = useHistory()
   const handleLogin = (data: FormData) => {
@@ -25,11 +25,13 @@ const LoginForm = () => {
     */
     AuthService.login(data.email, data.password)
     .then( (res) => {
-      console.log('login process started.')
+      console.log('login component process started.')
       console.log(res)
-      if (res.status === 200){
+      if (res && res.status === 200){
         history.push("/home")
-      } else if (res.status === 401) {
+        window.location.reload()
+        // This line is for reloading cookies for eveyr component
+      } else if (res && res.status === 401) {
         // TO DO: Become more elegant one. .
         alert(res.msg)
         //history.push("/error")
@@ -37,7 +39,6 @@ const LoginForm = () => {
         history.push("/error")
       )
     })
-    .catch(err => console.log(err))
   }
   return(
     <form name="form_2" onSubmit={handleSubmit(handleLogin)}>
@@ -53,7 +54,7 @@ const LoginForm = () => {
               required: true,
               pattern: {
                 value: /^[A-Z0-9._%+-]+@(eis|elms).hokudai.ac.jp$/i,
-                message: "@以下は(elms or eis).hokuida.ac.jpのみ有効です．"
+                message: "@以下は(elms or eis).hokudai.ac.jpのみ有効です．"
               },
             })}
           />{errors.email && errors.email.message}
@@ -113,6 +114,10 @@ const SignUpButton =  () =>{
 }
 
 const Login = () => {
+    const cookies = new Cookies()
+    if (cookies.get('isLogIn') === 'true'){
+      return <Redirect to='home' />
+    }
 
     return(
     <div className="hero">
@@ -122,15 +127,14 @@ const Login = () => {
         <LoginForm />
         <div className="test-muted text-small">
           {/* TO DO: Resend the confirmation mail.*/}
-          <Link to="/error">認証メールの再送信(未実装)</Link>
+          <Link to="/error">認証メールの再送信(未実装)</Link> <br />
+          <Link to="/reset-password">パスワードの再設定</Link>
         </div>
         <hr/>
         <div className="panel__foot">
-          <p className="v-spacer"/>
-          <div>
-            <SignUpButton />
-          </div>
+          <SignUpButton />
         </div>
+        <div　className="memo">　＊このサイトの利用にはCookieの設定を有効にしてください． </div>
       </div>
     </div>
   )
