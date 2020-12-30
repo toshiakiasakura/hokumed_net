@@ -6,6 +6,7 @@ import { User } from '../entity/user.entity'
 
 const API_URL = '/api/admin/'
 
+
 class AdminService {
   static async getUserBoard() {
     return axios.get<{users:User[], status:number}>

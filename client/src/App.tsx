@@ -7,6 +7,7 @@ import { Login } from './components/login.component'
 import { Home } from './components/home.component'
 import { Admin } from './components/admin/admin.component'
 import { SignUp } from './components/signup.component'
+import { Study } from './components/study.component'
 import { NotFound } from './components/404.component'
 import { NavBar } from './components/nav-bar.component'
 import { Logout } from './components/logout.component'
@@ -25,6 +26,7 @@ class App extends Component{
         <Route exact path='/' component={ Login } />
         <Route exact path='/login' component= {() => <Redirect to='/' />} />
         <Route path='/home' component={ Home } />
+        <Route path='/study' component={ Study } />
         <Route exact path='/profile' component={ Profile } />
         <Route path='/admin' component={ Admin } />
         <Route path='/signup' component={ SignUp } />
