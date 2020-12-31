@@ -6,7 +6,7 @@ export type Subject  = {
     updated_at: Date
 }
 
-export type Class_Year = {
+export class Class_Year  {
     id: number
     year: number
     created_at: string

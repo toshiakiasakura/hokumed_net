@@ -56,8 +56,17 @@ class AdminService {
     return axios.get<{semesters:SemesterSubjects[], status:number}>
                   (API_URL + 'semester', {headers:authHeader()})
   }
-  static async getOneDetail<T>(url:string){
+  static async getOneObject<T>(url:string){
     return axios.get<OneClassStatus<T>>(API_URL + url, {headers:authHeader()})
+  }
+
+  /**
+   * Edit or create new object. 
+   * @param url /api/admin/url is inputted here.
+   * @param data one object information. User, Class_Year, etc...
+   */
+  static async editOneObject(url:string, data:any){
+    return axios.post(API_URL + url, data ,{headers:authHeader()})
   }
 
   static async deleteOneObject(url:string ){

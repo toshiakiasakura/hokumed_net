@@ -1,3 +1,5 @@
+import { ContentAdd } from 'material-ui/svg-icons'
+import { relativeTimeRounding } from 'moment'
 import React, { Component } from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom'
 import { AdminService } from '../services/admin.service'
@@ -64,3 +66,24 @@ export const changeDate = (date:string) => {
     return formatDate
 }
 
+/**
+ * According to status infromation, redirect is decided.
+ * If non error, return the children component. 
+ */
+export class FetchValidation extends Component<
+    {status:number},
+    {}
+  >{
+    render(){
+      let status  =  this.props.status
+      if(status === 401 || status === 404){
+        return(<Redirect to='/error' />)
+      } else {
+        return(
+          <a>
+            {this.props.children}
+          </a>
+        )
+      }
+    }
+}

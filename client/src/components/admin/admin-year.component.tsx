@@ -1,11 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { Route, Switch, Link, Redirect} from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+
 import { AdminService } from '../../services/admin.service'
 import { TransitionButton } from '../../helpers/utils.component'
 import { Class_Year } from '../../entity/study.entity'
-import { TableRow } from '../../helpers/utils.component'
+import { TableRow, FetchValidation } from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus } from '../../helpers/types.helper'
-import { DetailPageContainer } from '../../helpers/admin-utils.component'
+import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
+import { FormRow } from '../../helpers/form.component'
 
 type ClassYearState = {
   years: Class_Year[] | null,
@@ -87,77 +90,141 @@ class ClassYearBoard extends Component<{},ClassYearState>{
   }
 }
 
-function ClassYearEdit(){
+type YearFormData = {year:number}
+
+function YearFormBody(
+    props:{errors:any, register:any, content: YearFormData}
+  ){
   return(
-    <div>ここにーフォーム</div>
+    <FormRow 
+      type="number"
+      title="期"
+      name="year"
+      id="yearPageEditYear"
+      placeholder={`${props.content.year}`}
+      errors={props.errors} register={props.register}
+      reg_json={{
+        required:"入力必須項目です",
+      }}
+    />
+
   )
 }
 
-class ClassYearDetail extends Component<
-    MatchIDType, 
-    OneClassStatus<Class_Year>  
-  >{
-
-  constructor(props:any){
-    super(props)
-    this.state = {
-      content: null,
-      status: 200,
-    }
+function ClassYearEdit(props:{content:Class_Year}){
+  const { register, handleSubmit, errors, formState } =
+                            useForm<YearFormData>({mode:'onBlur'})
+  const content = props.content 
+  const editSubmit = (data:YearFormData)=>{
+    AdminService.editOneObject(`year/edit/${content.id}`, data)
   }
+  return(
+    <form 
+      className="form row"
+      role="form"
+      name="yearForm"
+      onSubmit={handleSubmit(editSubmit)}
+    >
+      <DetailFormContainer 
+        title="編集"
+        formState={formState}
+        body={<YearFormBody 
+                register={register} 
+                errors={errors}
+                content={props.content}
+              />}
+        
+      />
+    </form>
+  )
+}
 
-  componentDidMount(){
-    const id = this.props.match.params.id
-    AdminService.getOneDetail<Class_Year>(`year/${id}`)
+function ClassYearNew(){
+  const { register, handleSubmit, errors, formState } =
+                            useForm<YearFormData>({mode:'onBlur'})
+  const newSubmit = (data:YearFormData)=>{
+    AdminService.editOneObject(`year/new`, data)
+  }
+  const content: YearFormData = {year:NaN}
+  return(
+    <form 
+      className="form row"
+      role="form"
+      name="yearForm"
+      onSubmit={handleSubmit(newSubmit)}
+    >
+      <DetailFormContainer 
+        title="期の新規作成．"
+        formState={formState}
+        body={<YearFormBody 
+                register={register} 
+                errors={errors}
+                content={content}
+              />}
+        
+      />
+    </form>
+  )
+}
+
+function ClassYearDetail(props:MatchIDType){
+  const id = props.match.params.id
+  const [state, setState] = useState<
+      OneClassStatus<Class_Year>
+      >(
+        {content:new Class_Year(), status:200}
+       )
+
+  useEffect(()=> {
+    AdminService.getOneObject<Class_Year>(`year/${id}`)
     .then(res =>{
-      let content= {id:1, year:1, created_at:'', updated_at:''}
-      this.setState({
-        //content: res.data.content,
-        //status: res.data.status
+      // TO DO: delete comment part. 
+      content = {id:1, year:1, created_at:'', updated_at:''}
+      setState({
+        // content: res.data.content,
+        // status: res.data.status
         content: content,
-        status: 200,
+        status:200
       })
     })
-  }
+    .catch(err => console.log(err))
+  },[setState])
 
-  render(){
-    console.log("ClassYearDetail page started. ")
-    let content = this.state.content
-    let status = this.state.status
-    if (status === 404 || status === 401){
-      return ( <Redirect to='/error' />)
-    } else if (content === null){
-      return (<div> 読み込み中 </div>)
-    } 
-    return(
-      <DetailPageContainer 
-        title={`${content.year}期`}
-        editPage={<ClassYearEdit />}
-        kind="year"
-        id={this.props.match.params.id}
-       >
-        <table className='table table--bordered'>
-          <tbody>
-            <TableRow rowName='ID' item={content.id}/>
-            <TableRow rowName='期' item={content.year}/>
-            {/* TO DO: set link */}
-            <TableRow rowName='カリキュラム' item={`${content.year}のカリキュラム`}/>
-            <TableRow rowName='作成日' item={content.created_at}/>
-            <TableRow rowName='更新日' item={content.updated_at}/>
-          </tbody>
-        </table>
-
-      </DetailPageContainer>
-    )
-  }
+  console.log("ClassYearDetail page started. ")
+  let content = state.content
+  return(
+    <FetchValidation status={state.status}>
+      {content === undefined || content.id === undefined 
+      ? <div> 読み込み中 </div>
+      : 
+        <DetailPageContainer 
+          title={`${content.year}期`}
+          editForm={<ClassYearEdit content={content}/>}
+          kind="year"
+          id={props.match.params.id}
+          >
+            <table className='table table--bordered'>
+              <tbody>
+                <TableRow rowName='ID' item={content.id}/>
+                <TableRow rowName='期' item={content.year}/>
+                {/* TO DO: set link */}
+                <TableRow rowName='カリキュラム' item={`${content.year}のカリキュラム`}/>
+                <TableRow rowName='作成日' item={content.created_at}/>
+                <TableRow rowName='更新日' item={content.updated_at}/>
+              </tbody>
+            </table>
+        </DetailPageContainer>
+      }
+    </FetchValidation>
+  )
 }
 
 function ClassYearPages(){
   return(
     <Switch>
       <Route exact path='/admin/year' component={ClassYearBoard} />
+      <Route exact path='/admin/year/new' component={ClassYearNew} />
       <Route path='/admin/year/:id' component={ClassYearDetail} />
-      {/** TO DO: add new */}
     </Switch>
   )
 }

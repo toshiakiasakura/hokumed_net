@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom'
 import { AdminService } from '../services/admin.service'
+import { SaveButton } from './form.component'
 
 
 type VoidFunc = () => void
@@ -45,8 +46,19 @@ export const DeleteButton = (props:{kind:string,id: number}) => {
   )
 }
 
-class DetailPageContainer extends Component<
-    {title:string, editPage:any, kind:string, id:number},
+/**
+ * Container for /admin/:kind/:id pages.  
+ * this.props.children contains the table information. 
+ * @param editForm React Component for form of each page. 
+ * @param kind page kind. Ex. year, semester, notification. 
+ */
+export class DetailPageContainer extends Component<
+    {
+        title:string, 
+        editForm :any, 
+        kind:string, 
+        id:number, 
+    },
     {edit: boolean}
   >{
 
@@ -57,8 +69,9 @@ class DetailPageContainer extends Component<
   }
 
   editButton(){
+    let edit = this.state.edit
     this.setState({
-      edit:true
+      edit: edit ? false : true 
     })
   }
 
@@ -81,10 +94,45 @@ class DetailPageContainer extends Component<
 
         </ul>
         {this.props.children}
-        {this.state.edit && this.props.editPage }
+
+        {this.state.edit && 
+          <div>
+          {this.props.editForm}
+            <button 
+              className="btn btn--primary"
+              onClick={() => this.editButton()}
+            >
+              編集をやめる
+            </button>
+          </div>
+        }
       </div>
     )
   }
 }
 
-export { DetailPageContainer }
+/**
+ * Forma container for /admin/:kind/:id pages. 
+ * @param body form body part. 
+ */
+export function DetailFormContainer(props:{
+    body:any, formState:any, title:string
+  }){
+  return(
+    <div className="panel">
+      <div className="panel__head">
+        <h3> {props.title}　</h3>
+      </div>
+      <div className="panel__body">
+        {props.body}
+      </div>
+      <div className="panel__foot">
+        <div className="clearfix">
+          <div className="pull-right">
+            <SaveButton formState={props.formState} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -2,6 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
 import { AuthService } from '../services/auth.service'
+import { FormRow } from '../helpers/form.component' 
 import moment from 'moment'
 
 export const RequirePop = () => {
@@ -10,48 +11,6 @@ export const RequirePop = () => {
     <span> 入力必須項目です </span>
   )
 }
-
-
-/**
- * Construct one item of simple input form using react-hook-form.
- * @param props.register just pass react-hook-form method.
- * @param props.errors just pass react-hook-form method.
- * @param props.reg_json this json contents are passed to register.
- */
-const RowBlock = (
-  props:
-    {
-      // default value for optional arguments. condition will be good choice.
-      type?: string,
-      title: string,
-      name: string,
-      id: string,
-      placeholder: string,
-      register: any,
-      errors: any,
-      reg_json: any
-    }
-) => (
-
-  <div className="form__group">
-    <div className="col--sm-4">
-      <label className="form__label" htmlFor={props.id}>
-        {props.title}
-      </label>
-    </div>
-    <div className="col--sm-8 tooltip tooltip--secondary">
-      <input
-        className="form__control"
-        type={props.type || "text"}
-        name={props.name}
-        id={props.id}
-        placeholder={props.placeholder}
-        ref={props.register(props.reg_json)}
-      />
-      {props.errors[props.name] && props.errors[props.name].message}
-    </div>
-  </div>
-)
 
 /**
  * Implement for birthday input form.
@@ -197,7 +156,7 @@ const SignUpForm = () => {
     >
         <div className="panel">
           <div className="panel__body">
-            <RowBlock
+            <FormRow
               title="苗字"
               name="family_name"
               id="signupFamilyName"
@@ -205,7 +164,7 @@ const SignUpForm = () => {
               errors={errors} register={register}
               reg_json={require_json}
             />
-            <RowBlock
+            <FormRow
               title="名前"
               name="given_name"
               id="signupGivenName"
@@ -213,7 +172,7 @@ const SignUpForm = () => {
               errors={errors} register={register}
               reg_json={require_json}
             />
-            <RowBlock
+            <FormRow
               title= "ニックネーム"
               name="handle_name"
               id="signupHandleName"
@@ -226,7 +185,7 @@ const SignUpForm = () => {
             />
             {/*TO DO: dropdown and checkbox implementation. */}
             <DateBlock register={register}/>
-            <RowBlock
+            <FormRow
               title="ELMSメール"
               type="email"
               name="email"
@@ -243,7 +202,7 @@ const SignUpForm = () => {
               }}
             />
             <ClassYearBlock register={register}/>
-            <RowBlock
+            <FormRow
               title="パスワード"
               type="password"
               name="password"
@@ -258,7 +217,7 @@ const SignUpForm = () => {
                }
               }}
             />
-            <RowBlock
+            <FormRow
               title="パスワードの確認"
               type="password"
               name="reenteredPassword"
