@@ -1,3 +1,4 @@
+import React, { Component } from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom'
 import { AdminService } from '../services/admin.service'
 /**
@@ -17,6 +18,10 @@ export const TableRow = (props:{rowName:string,
 
     } else if (props.item === null) {
       item.push('NULL')
+    } else if(props.item instanceof Date){
+      let d = props.item
+      const formatDate= `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`
+      item.push(formatDate)
     } else {
       item.push(props.item)
     }
@@ -49,47 +54,6 @@ export const TransitionButton = (props: TransitionButtonType) => {
   )
 }
 
-type VoidFunc = () => void
-export function EditButton(props:{func:VoidFunc}){
-  return(
-    <button 
-      className='btn btn--sm btn--accent'
-      onClick={() => props.func()}
-    >
-      編集
-    </button>
-  )
-}
-
-/**
- * This delete button is for admin. 
- * @param props page and id expand to `/api/${url}/${id}`
- */
-export const DeleteButton = (props:{page:string,id: number}) => {
-  const history = useHistory()
-  const deleteHandle = (id:number ) => {
-    if (window.confirm('本当に削除しますか？')){
-      AdminService.deleteOneObject(`${props.page}/${props.id}`)
-      .then( (res) => {
-        console.log(res)
-        if( res.data.status === 200 ){
-          history.push(`/admin/${props.page}`)
-        } else {
-          alert(res.data.msg)
-        }
-      })
-    }
-
-  }
-  return(
-    <button
-      className="btn btn--sm btn--accent"
-      onClick={() => deleteHandle(props.id)}
-    >
-      削除
-    </button>
-  )
-}
 
 /**
  * Given the database date data, convert it to the formatted date. 
