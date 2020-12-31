@@ -1,12 +1,12 @@
-import React, { Component, useEffect, useState } from 'react'
-import { Route, Switch, Link, Redirect} from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Route, Switch, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import { AdminService } from '../../services/admin.service'
 import { TransitionButton } from '../../helpers/utils.component'
 import { Class_Year } from '../../entity/study.entity'
 import { TableRow, FetchValidation } from '../../helpers/utils.component'
-import { MatchIDType, OneClassStatus } from '../../helpers/types.helper'
+import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
 import { FormRow } from '../../helpers/form.component'
 
@@ -33,61 +33,50 @@ const YearRow = (props:{year:Class_Year} ) => {
   )
 }
 
+function ClassYearBoard(props:ClassYearState){
+  const [state, setState] = useState<
+      MultiClassStatus<Class_Year>
+      >( {content:[], status:200})
 
-class ClassYearBoard extends Component<{},ClassYearState>{
-  constructor(props:any){
-    super(props)
-    this.state= {
-      years: null,
-      status: 200,
-    }
-  }
-
-  componentDidMount(){
+  useEffect(()=> {
     AdminService.getClassYearBoard()
     .then( res => {
-      this.setState({
-        years: res.data.years,
+      setState({
+        content: res.data.years,
         status: res.data.status
       })
     })
-  }
+  },[setState])
 
-  render(){
-    let years = this.state.years
-    let status = this.state.status
-    console.log("/admin/subject page started")
-    console.log(status)
-    if( status === 404 || status === 401 ){
-      return <Redirect to='/error' />
-    } else if(years=== null){
-      return <div> 読み込み中 </div>
-    }
-
-    let content =  years.map(year =>
-        <YearRow year={year} />
-    )
-
-    return(
-      <div>
-        <p>
-          <TransitionButton title="新規作成" url='/admin/year/new' />
-        </p>
-        <table className="table table--condensed">
-          <thead className="table__head">
-            {/*TO DO: sorting function.  */}
-            <th> ID </th>
-            <th> 期 </th>
-            <th> カリキュラム </th>
-          </thead>
-          <tbody className="table__body">
-            {content}
-          </tbody>
-        </table>
-      </div>
-
-    )
-  }
+  let content = state.content
+  console.log("/admin/subject page started")
+  let content_comp =  content.map(year =>
+      <YearRow year={year} />
+  )
+  return(
+    <FetchValidation status={state.status}>
+      {content_comp === undefined || content_comp.length === 0
+      ? <div> 読み込み中 </div>
+      : 
+        <div>
+          <p>
+            <TransitionButton title="新規作成" url='/admin/year/new' />
+          </p>
+          <table className="table table--condensed">
+            <thead className="table__head">
+              {/*TO DO: sorting function.  */}
+              <th> ID </th>
+              <th> 期 </th>
+              <th> カリキュラム </th>
+            </thead>
+            <tbody className="table__body">
+              {content_comp}
+            </tbody>
+          </table>
+        </div>
+      }
+    </FetchValidation>
+  )
 }
 
 type YearFormData = {year:number}
