@@ -18,7 +18,7 @@ class StudyController{
   static ClassYearBoard: ExpressFunc = async function(req, res){
     let yearRepository = getManager().getRepository(Class_Year)
     const years = await yearRepository.find()
-    res.json({years:years, status:200})
+    res.json({contents:years, status:200})
   }
 
   static NotificationBoard: ExpressFunc = async function(req, res){

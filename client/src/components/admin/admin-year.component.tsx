@@ -10,10 +10,8 @@ import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/typ
 import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
 import { FormRow } from '../../helpers/form.component'
 
-type ClassYearState = {
-  years: Class_Year[] | null,
-  status: number
-}
+
+type ClassYearsState = MultiClassStatus<Class_Year>
 
 const YearRow = (props:{year:Class_Year} ) => {
   return(
@@ -33,29 +31,36 @@ const YearRow = (props:{year:Class_Year} ) => {
   )
 }
 
-function ClassYearBoard(props:ClassYearState){
+function ClassYearBoard(props:ClassYearsState){
   const [state, setState] = useState<
-      MultiClassStatus<Class_Year>
-      >( {content:[], status:200})
+      ClassYearsState
+      >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getClassYearBoard()
+    AdminService.getMultipleObjects<Class_Year>('year')
     .then( res => {
+      console.log(res)
       setState({
-        content: res.data.years,
-        status: res.data.status
+        contents: res.data.contents, 
+        status: res.data.status,
+        msg: res.data.msg
       })
     })
   },[setState])
 
-  let content = state.content
   console.log("/admin/subject page started")
-  let content_comp =  content.map(year =>
-      <YearRow year={year} />
-  )
+ 
+  const makeContents = (contents:Class_Year[]) => {
+    let contents_comp =  contents.map(v=>
+        <YearRow year={v} />
+    )
+    return(contents_comp)
+  }
+
+  let contents = state.contents
   return(
     <FetchValidation status={state.status}>
-      {content_comp === undefined || content_comp.length === 0
+      {contents=== undefined || contents.length === 0
       ? <div> 読み込み中 </div>
       : 
         <div>
@@ -70,7 +75,7 @@ function ClassYearBoard(props:ClassYearState){
               <th> カリキュラム </th>
             </thead>
             <tbody className="table__body">
-              {content_comp}
+              {makeContents(contents)}
             </tbody>
           </table>
         </div>
@@ -122,7 +127,6 @@ function ClassYearEdit(props:{content:Class_Year}){
                 errors={errors}
                 content={props.content}
               />}
-        
       />
     </form>
   )
@@ -161,7 +165,7 @@ function ClassYearDetail(props:MatchIDType){
   const [state, setState] = useState<
       OneClassStatus<Class_Year>
       >(
-        {content:new Class_Year(), status:200}
+        {content:new Class_Year(), status:200, msg:''}
        )
 
   useEffect(()=> {
@@ -173,7 +177,8 @@ function ClassYearDetail(props:MatchIDType){
         // content: res.data.content,
         // status: res.data.status
         content: content,
-        status:200
+        status:200,
+        msg:''
       })
     })
     .catch(err => console.log(err))

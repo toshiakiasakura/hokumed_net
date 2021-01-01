@@ -3,7 +3,7 @@ import { authHeader } from './auth-header'
 import { Subject, Class_Year, SemesterSubjects } from '../entity/study.entity'
 import { Notification } from '../entity/notification.entity'
 import { User } from '../entity/user.entity'
-import { OneClassStatus } from '../helpers/types.helper'
+import { OneClassStatus, MultiClassStatus } from '../helpers/types.helper'
 
 const API_URL = '/api/admin/'
 
@@ -56,8 +56,21 @@ class AdminService {
     return axios.get<{semesters:SemesterSubjects[], status:number}>
                   (API_URL + 'semester', {headers:authHeader()})
   }
+
+  /**
+   * Fetch one object data. 
+   * @param url /api/admin/url is inputted here.
+   */
   static async getOneObject<T>(url:string){
     return axios.get<OneClassStatus<T>>(API_URL + url, {headers:authHeader()})
+  }
+
+  /**
+   * Fetch multiple objects data.
+   * @param url /api/admin/url is inputted here.
+   */
+  static async getMultipleObjects<T>(url:string){
+    return axios.get<MultiClassStatus<T>>(API_URL + url, {headers:authHeader()})
   }
 
   /**
