@@ -40,11 +40,11 @@ export const TableRow = (props:{rowName:string,
  * This button is used for page transition of
  * editing or create new data.
  */
-type TransitionButtonType = {
+type ButtonType= {
   title:string
   url: string
 }
-export const TransitionButton = (props: TransitionButtonType) => {
+export const TransitionButton = (props: ButtonType) => {
   const history = useHistory()
   return(
     <button
@@ -56,14 +56,30 @@ export const TransitionButton = (props: TransitionButtonType) => {
   )
 }
 
+export function BackButton(props: ButtonType){
+  const history = useHistory()
+  return(
+    <button
+      className="btn btn--xs"
+      onClick={() => history.push(props.url)}
+    >
+      {props.title}
+    </button>
+  )
+}
 
 /**
  * Given the database date data, convert it to the formatted date. 
  */
-export const changeDate = (date:string) => {
-    const d = new Date(date)
-    const formatDate= `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`
-    return formatDate
+export const changeDate = (date: string | Date) => {
+  let d = null 
+  if(typeof date === 'string'){
+    d = new Date(date)
+  } else {
+    d = date
+  }
+  const formatDate= `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`
+  return formatDate
 }
 
 /**

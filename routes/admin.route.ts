@@ -14,8 +14,6 @@ router.get('/one/:kind/:id',StudyController.SendOneObject)
 router.get('/delete/:kind/:id',StudyController.DeleteOneObject)
 router.post('/edit/:kind/:id',StudyController.EditOneObject)
 router.post('/new/:kind',StudyController.NewOneObject)
-router.get('/subject',StudyController.SubjectBoard)
-router.get('/year',StudyController.ClassYearBoard)
 router.get('/notification',StudyController.NotificationBoard)
 router.get('/semester', StudyController.SemesterBoard)
 

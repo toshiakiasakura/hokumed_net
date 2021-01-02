@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom'
 import { AdminService } from '../services/admin.service'
+import { BackButton } from './utils.component'
 import { SaveButton } from './form.component'
 
 
@@ -78,6 +79,9 @@ export class DetailPageContainer extends Component<
   render(){
     return(
       <div className="container">
+        <p>
+          <BackButton title="一覧に戻る" url={`/admin/${this.props.kind}`}/> 
+        </p>
         <ul className="list-inline">
           <li>
             <h3> {this.props.title} </h3>

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Route, Switch, Link } from 'react-router-dom'
+import { Route, Switch, Link, useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import { AdminService } from '../../services/admin.service'
 import { TransitionButton } from '../../helpers/utils.component'
 import { Class_Year } from '../../entity/study.entity'
-import { TableRow, FetchValidation } from '../../helpers/utils.component'
+import {
+   TableRow, FetchValidation, BackButton
+} from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
 import { FormRow } from '../../helpers/form.component'
@@ -51,10 +53,7 @@ function ClassYearBoard(props:ClassYearsState){
   console.log("/admin/year page started")
  
   const makeContents = (contents:Class_Year[]) => {
-    let contents_comp =  contents.map(v=>
-        <YearRow year={v} />
-    )
-    return(contents_comp)
+    return contents.map( v=> <YearRow year={v} />)
   }
 
   let contents = state.contents
@@ -95,7 +94,7 @@ function YearFormBody(
       title="期"
       name="year"
       id="yearPageEditYear"
-      placeholder={`${props.content.year}`}
+      placeholder="期"
       errors={props.errors} register={props.register}
       reg_json={{
         required:"入力必須項目です",
@@ -147,28 +146,39 @@ function ClassYearEdit(props:{content:Class_Year}){
 function ClassYearNew(){
   const { register, handleSubmit, errors, formState } =
                             useForm<YearFormData>({mode:'onBlur'})
+  const history = useHistory()                        
   const newSubmit = (data:YearFormData)=>{
     AdminService.editOneObject(`new/year`, data)
+    .then( res => {
+      alert('期を追加しました．')
+      history.push(`/admin/subject`)
+    })
+
   }
   const content: YearFormData = {year:NaN}
   return(
-    <form 
-      className="form row"
-      role="form"
-      name="yearForm"
-      onSubmit={handleSubmit(newSubmit)}
-    >
-      <DetailFormContainer 
-        title="期の新規作成．"
-        formState={formState}
-        body={<YearFormBody 
-                register={register} 
-                errors={errors}
-                content={content}
-              />}
-        
-      />
-    </form>
+    <div>
+      <p>
+        <BackButton title="一覧に戻る" url="/admin/year" /> 
+      </p>
+      <form 
+        className="form row"
+        role="form"
+        name="yearForm"
+        onSubmit={handleSubmit(newSubmit)}
+      >
+        <DetailFormContainer 
+          title="期の新規作成．"
+          formState={formState}
+          body={<YearFormBody 
+                  register={register} 
+                  errors={errors}
+                  content={content}
+                />}
+          
+        />
+      </form>
+    </div>
   )
 }
 

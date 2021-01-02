@@ -8,37 +8,63 @@ import { SemesterSubjects } from '../../client/src/entity/study.entity'
 import { subjectsFromSemester, classID2Year } from '../helpers/connect.table.helper' 
 
 const switchDic: {[index: string]: 
-    typeof Class_Year | typeof Notification
+  typeof Class_Year |
+  typeof Subject | 
+  typeof Notification 
   } = {
   year: Class_Year, 
+  subject: Subject,
   notification:Notification
 }
+
 const switchKeys = Object.keys(switchDic)
+type UpdateOrNew = 'update' | 'new'
 
+type EditFunc<T> = (
+  Repo: any, obj: T, body: T, type: UpdateOrNew
+) => void
 
-function EditClassYear (
-  Repo:any , obj: Class_Year, body: Class_Year, update:boolean
-){
+const DataNotFound: {
+  status: number,
+  msg: string
+} = {
+  status: 401,
+  msg: 'Data not found.'
+}
+
+const EditClassYear:EditFunc<Class_Year> =  async ( 
+  Repo, obj, body , type 
+) => {
   obj.year = body.year
-  if(update){
+  if(type === 'update'){
     obj.updated_at = new Date()
   }
-  Repo.save(obj)
+  await Repo.save(obj)
+}
+
+const EditSubject: EditFunc<Subject> = async (
+  Repo, obj, body, type 
+) => {
+  obj.title_en = body.title_en
+  obj.title_ja = body.title_ja
+  if(type === 'update'){
+    obj.updated_at = new Date()
+  }
+  await Repo.save(obj)
+}
+
+const EditNotification: EditFunc<Notification> = async (
+  Repo, obj, body, type 
+) => {
+  obj.title = body.title
+  obj.text = body.text
+  if(type === 'update'){
+    obj.updated_at = new Date()
+  }
+  await Repo.save(obj)
 }
 
 class StudyController{
-  static SubjectBoard: ExpressFunc = async function(req, res){
-    console.log('SubjectBoard phase.')
-    let subjectRepository = getManager().getRepository(Subject)
-    const subjects = await subjectRepository.find()
-    res.json({subjects:subjects, status:200})
-  }
-
-  static ClassYearBoard: ExpressFunc = async function(req, res){
-    let yearRepository = getManager().getRepository(Class_Year)
-    const years = await yearRepository.find()
-    res.json({contents:years, status:200})
-  }
 
   static NotificationBoard: ExpressFunc = async function(req, res){
     let notificationRepository = getManager().getRepository(Notification)
@@ -81,7 +107,7 @@ class StudyController{
         await Repo.remove(obj)
         res.json({status:200})
       } else {
-        res.json({status:401, msg:'Data not found. '})
+        res.json(DataNotFound)
       }
     } else {
       res.json({status:401, msg:'kind part is not existed.'})
@@ -90,19 +116,37 @@ class StudyController{
 
   static EditOneObject: ExpressFunc = async function(req, res){
     if(req.params && switchKeys.includes(req.params.kind)){
-      let cls = switchDic[req.params.kind]
-      let Repo = getManager().getRepository(cls)
-      const obj = await Repo.findOne(req.params.id)
-      if(obj){
-        let kind = req.params.kind 
+      let kind = req.params.kind
+      let obj = undefined
 
-        // Add new patterns here. 
-        if(kind === 'year'){
-          EditClassYear(Repo, obj, req.body, true)
+      // Add new patterns here. 
+      if(kind === 'year'){
+        let Repo = getManager().getRepository(Class_Year)
+        let obj = await Repo.findOne(req.body.id)
+        if(obj){
+          await EditClassYear(Repo, obj, req.body, 'update')
+          res.json({status:200, msg:'Edit succeeded.'})
+        } else {
+          res.json(DataNotFound)
         }
-        res.json({status:200, msg:'Edit succeeded.'})
-      } else {
-        res.json({status:401, msg:'Data not found. '})
+      } else if (kind === 'subject'){
+        let Repo = getManager().getRepository(Subject)
+        let obj = await Repo.findOne(req.body.id)
+        if(obj){
+          await EditSubject(Repo, obj, req.body, 'update')
+          res.json({status:200, msg:'Edit succeeded.'})
+        } else {
+          res.json(DataNotFound)
+        }
+      } else if (kind === 'notification'){
+        let Repo = getManager().getRepository(Notification)
+        let obj = await Repo.findOne(req.body.id)
+        if(obj){
+          await EditNotification(Repo, obj, req.body, 'update')
+          res.json({status:200, msg:'Edit succeeded.'})
+        } else {
+          res.json(DataNotFound)
+        }
       }
     } else {
       res.json({status:401, msg:'kind part is not existed.'})
@@ -112,12 +156,20 @@ class StudyController{
   static NewOneObject: ExpressFunc = async function(req,res){
     if(req.params && switchKeys.includes(req.params.kind)){
       let cls = switchDic[req.params.kind]
+      let kind = req.params.kind
       let Repo = getManager().getRepository(cls)
+
       
       // Add new patterns here. 
-      if(req.params.kind === 'year'){
+      if(kind === 'year'){
         const obj = new Class_Year()
-        EditClassYear(Repo, obj, req.body, false)
+        EditClassYear(Repo, obj, req.body, 'new')
+      } else if (kind === 'subject'){
+        const obj = new Subject()
+        EditSubject(Repo, obj, req.body, 'new')
+      } else if (kind === 'notification'){
+        const obj = new Notification()
+        EditNotification(Repo, obj, req.body, 'new')
       }
       res.json({status:200, msg:'new object was created.'})
     } else {

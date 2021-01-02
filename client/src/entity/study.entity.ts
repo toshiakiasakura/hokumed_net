@@ -1,4 +1,4 @@
-export type Subject  = {
+export class Subject {
     id: number
     title_ja: string
     title_en: string
@@ -6,14 +6,14 @@ export type Subject  = {
     updated_at: Date
 }
 
-export class Class_Year  {
+export class Class_Year {
     id: number
     year: number
     created_at: string
     updated_at: string
 }
 
-export type SemesterSubjects  = {
+export class SemesterSubjects {
     id: number
     class_year_id: number
     class_year: number
@@ -23,7 +23,7 @@ export type SemesterSubjects  = {
     subjects: Subject[]
 }
 
-export type Document_File  = {
+export class Document_File {
     id: number
     subject_id: number
     user_id: number
