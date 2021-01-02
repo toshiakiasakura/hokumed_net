@@ -197,4 +197,4 @@ function UserPages(){
     </Switch>
   )
 }
-export { UserBoard, UserDetail }
+export { UserPages }

@@ -1,4 +1,3 @@
-import { ContentAdd } from 'material-ui/svg-icons'
 import { relativeTimeRounding } from 'moment'
 import React, { Component } from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom'

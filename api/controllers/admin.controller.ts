@@ -9,14 +9,6 @@ import { json } from 'body-parser'
 
 class AdminController{
 
-
-  static UserDetail: ExpressFunc = async function(req, res){
-    const id = parseInt(req.params.id)
-    let userRepository = getManager().getRepository(User)
-    const user = await userRepository.findOne(id)
-    res.json({user:user, status:200})
-  }
-
   static changeApproveStatus: ExpressFunc = async function(req, res){
     const id = parseInt(req.params.id)
     let userRepository = getManager().getRepository(User)
@@ -29,18 +21,6 @@ class AdminController{
         user.approval_state = 'waiting'
       }
       userRepository.save(user)
-      res.json({status:200})
-    } else {
-      res.json({status:401})
-    }
-  }
-
-  static deleteUser: ExpressFunc = async function(req, res){
-    const id = parseInt(req.params.id)
-    let userRepository = getManager().getRepository(User)
-    let user = await userRepository.findOne(id)
-    if(user !== undefined){
-      await userRepository.remove(user)
       res.json({status:200})
     } else {
       res.json({status:401})

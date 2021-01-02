@@ -2,7 +2,7 @@ import { Route, Switch, Link, Redirect} from 'react-router-dom'
 import { NotFound } from '../404.component'
 import Cookies from 'universal-cookie'
 import { Top } from './admin-top.component'
-import { UserBoard, UserDetail } from './admin-user.component'
+import { UserPages } from './admin-user.component'
 import { SubjectPages } from './admin-subject.component'
 import { ClassYearPages } from './admin-year.component'
 import { SemesterBoard } from './admin-semester.component'
@@ -42,8 +42,7 @@ const Admin = () => {
       <TopNavVar />
       <Switch>
         <Route exact path='/admin' component={Top} />
-        <Route exact path='/admin/user' component={UserBoard} />
-        <Route path='/admin/user/:id' component={UserDetail}/>
+        <Route path='/admin/user' component={ UserPages } />
         <Route path='/admin/subject' component={ SubjectPages } />
         <Route path='/admin/year' component={ ClassYearPages } />
         <Route exact path='/admin/semester' component={SemesterBoard} />

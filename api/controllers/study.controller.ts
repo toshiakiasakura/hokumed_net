@@ -60,19 +60,14 @@ const EditNotification: EditFunc<Notification> = async (
 ) => {
   obj.title = body.title
   obj.text = body.text
-  if(type === 'update'){
+  if(type==='update'){
     obj.updated_at = new Date()
   }
+  
   await Repo.save(obj)
 }
 
 class StudyController{
-
-  static NotificationBoard: ExpressFunc = async function(req, res){
-    let notificationRepository = getManager().getRepository(Notification)
-    const notifications = await notificationRepository.find()
-    res.json({notifications:notifications, status:200})
-  }
 
   static SendOneObject: ExpressFunc = async function(req, res) {
     if(req.params && switchKeys.includes(req.params.kind)){

@@ -6,10 +6,6 @@ const API_URL = '/api/user/'
 
 
 class UserService {
-  static async getProfileBoard(){
-    return axios.get<{user:User, status: number}>
-                  (API_URL+'profile', {headers: authHeader()})
-  }
 
 }
 
