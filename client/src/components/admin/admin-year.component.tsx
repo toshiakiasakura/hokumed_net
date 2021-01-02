@@ -48,7 +48,7 @@ function ClassYearBoard(props:ClassYearsState){
     })
   },[setState])
 
-  console.log("/admin/subject page started")
+  console.log("/admin/year page started")
  
   const makeContents = (contents:Class_Year[]) => {
     let contents_comp =  contents.map(v=>
@@ -110,7 +110,10 @@ function ClassYearEdit(props:{content:Class_Year}){
                             useForm<YearFormData>({mode:'onBlur'})
   const content = props.content 
   const editSubmit = (data:YearFormData)=>{
-    AdminService.editOneObject(`year/edit/${content.id}`, data)
+    AdminService.editOneObject(`edit/year/${content.id}`, data)
+    .then(res=>{
+      window.location.reload()
+    })
   }
   return(
     <form 
@@ -136,7 +139,7 @@ function ClassYearNew(){
   const { register, handleSubmit, errors, formState } =
                             useForm<YearFormData>({mode:'onBlur'})
   const newSubmit = (data:YearFormData)=>{
-    AdminService.editOneObject(`year/new`, data)
+    AdminService.editOneObject(`new/year`, data)
   }
   const content: YearFormData = {year:NaN}
   return(
@@ -171,14 +174,11 @@ function ClassYearDetail(props:MatchIDType){
   useEffect(()=> {
     AdminService.getOneObject<Class_Year>(`year/${id}`)
     .then(res =>{
-      // TO DO: delete comment part. 
-      content = {id:1, year:1, created_at:'', updated_at:''}
+      console.log(res.data)
       setState({
-        // content: res.data.content,
-        // status: res.data.status
-        content: content,
-        status:200,
-        msg:''
+        content: res.data.content,
+        status: res.data.status,
+        msg: res.data.msg
       })
     })
     .catch(err => console.log(err))

@@ -7,6 +7,22 @@ import { EmailSender } from '../helpers/email.helper'
 import { SemesterSubjects } from '../../client/src/entity/study.entity'
 import { subjectsFromSemester, classID2Year } from '../helpers/connect.table.helper' 
 
+const switchDic: {[index: string]: 
+    typeof Class_Year | typeof Notification
+  } = {
+  year: Class_Year, 
+  notification:Notification
+}
+const switchKeys = Object.keys(switchDic)
+
+function EditClassYear (
+  Repo:any , obj: Class_Year, body: Class_Year
+){
+  obj.year = body.year
+  obj.updated_at = new Date()
+  Repo.save(obj)
+}
+
 class StudyController{
   static SubjectBoard: ExpressFunc = async function(req, res){
     console.log('SubjectBoard phase.')
@@ -27,6 +43,68 @@ class StudyController{
     res.json({notifications:notifications, status:200})
   }
 
+  static SendOneObject: ExpressFunc = async function(req, res) {
+    if(req.params && switchKeys.includes(req.params.kind)){
+        let cls = switchDic[req.params.kind]
+        let Repo = getManager().getRepository(cls)
+        const obj = await Repo.findOne(req.params.id)
+        if(obj){
+          res.json({content:obj, status:200})
+        } else {
+          res.json({status:401, msg:'There is no matched id.'})
+        }
+    } else {
+      res.json({status:401, msg:'kind part is not existed.'})
+    }
+  }
+
+  static SendMultipleObjects: ExpressFunc = async function(req, res){
+    if(req.params && switchKeys.includes(req.params.kind)){
+      let cls = switchDic[req.params.kind]
+      let Repo = getManager().getRepository(cls)
+      const clsObjects = await Repo.find()
+      res.json({contents:clsObjects, status:200})
+    } else {
+      res.json({status:401, msg:'kind part is not existed.'})
+    }
+  }
+
+  static DeleteOneObject: ExpressFunc = async function(req, res){
+    if(req.params && switchKeys.includes(req.params.kind)){
+      let cls = switchDic[req.params.kind]
+      let Repo = getManager().getRepository(cls)
+      const obj = await Repo.findOne(req.params.id)
+      if(obj){
+        await Repo.remove(obj)
+        res.json({status:200})
+      } else {
+        res.json({status:401, msg:'Data not found. '})
+      }
+    } else {
+      res.json({status:401, msg:'kind part is not existed.'})
+    }
+  }
+
+  static EditOneObject: ExpressFunc = async function(req, res){
+    if(req.params && switchKeys.includes(req.params.kind)){
+      let cls = switchDic[req.params.kind]
+      let Repo = getManager().getRepository(cls)
+      const obj = await Repo.findOne(req.params.id)
+      if(obj){
+        let kind = req.params.kind 
+        if(kind === 'year'){
+          EditClassYear(Repo, obj, req.body)
+        }
+
+        res.json({status:200, msg:'Edit succeeded.'})
+      } else {
+        res.json({status:401, msg:'Data not found. '})
+      }
+    } else {
+      res.json({status:401, msg:'kind part is not existed.'})
+    }
+  }
+  
   static SemesterBoard: ExpressFunc = async function(req, res){
     console.log('SemesterBoard process started. ')
     let semesterRepo = getManager().getRepository(Semester)
@@ -46,7 +124,7 @@ class StudyController{
             created_at: new Date, 
             subjects: subjects
           }
-          return( semesterSubject)
+          return(semesterSubject)
       })
       Promise.all(semSubs)
       .then( result => {

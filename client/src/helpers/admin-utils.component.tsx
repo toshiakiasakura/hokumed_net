@@ -18,13 +18,13 @@ export function EditButton(props:{func:VoidFunc}){
 
 /**
  * This delete button is for admin. 
- * @param props page and id expand to `/api/${url}/${id}`
+ * @param props page and id expand to `/api/${kind}/${id}`
  */
 export const DeleteButton = (props:{kind:string,id: number}) => {
   const history = useHistory()
   const deleteHandle = () => {
     if (window.confirm('本当に削除しますか？')){
-      AdminService.deleteOneObject(`${props.kind}/delete/${props.id}`)
+      AdminService.deleteOneObject(`delete/${props.kind}/${props.id}`)
       .then( (res) => {
         console.log(res)
         if( res.data.status === 200 ){
