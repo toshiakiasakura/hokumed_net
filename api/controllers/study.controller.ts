@@ -8,10 +8,12 @@ import { SemesterSubjects } from '../../client/src/entity/study.entity'
 import { subjectsFromSemester, classID2Year } from '../helpers/connect.table.helper' 
 
 const switchDic: {[index: string]: 
+  typeof User |
   typeof Class_Year |
   typeof Subject | 
   typeof Notification 
   } = {
+  user: User,
   year: Class_Year, 
   subject: Subject,
   notification:Notification

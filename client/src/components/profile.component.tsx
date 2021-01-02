@@ -4,6 +4,7 @@ import { UserService } from '../services/user.service'
 import Cookies from 'universal-cookie'
 import { User } from '../entity/user.entity'
 import { TableRow } from '../helpers/utils.component'
+import { UserBody } from './admin/admin-user.component'
 
 class Profile extends Component<{},{user:User[], status:number}> {
   constructor(props:any){
@@ -48,17 +49,7 @@ class Profile extends Component<{},{user:User[], status:number}> {
               </a>
             </li>
             <table className="table table--bordered no-mb">
-              <tbody>
-               <TableRow rowName="ハンドルネーム" item={user.handle_name} />
-               <TableRow rowName="氏名" item={`${user.family_name} ${user.given_name}`} />
-               <TableRow rowName="期" item={user.class_year} />
-               <TableRow rowName="管理者" item={user.admin} />
-               <TableRow rowName="承認状態" item={user.approval_state} />
-               <TableRow rowName="メールアドレス" item={user.email} />
-               <TableRow rowName="携帯メールアドレス" item={user.email_mobile} />
-               <TableRow rowName="誕生日" item={user.birthday} />
-               <TableRow rowName="作成日" item={user.created_at} />
-              </tbody>
+              <UserBody user={user} />
             </table>
           </ul>
         </div>

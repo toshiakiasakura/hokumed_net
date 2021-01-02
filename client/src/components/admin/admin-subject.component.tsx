@@ -236,6 +236,7 @@ function SubjectDetail(props:MatchIDType){
     </FetchValidation>
   )
 }
+
 function SubjectPages(){
   return(
     <Switch>

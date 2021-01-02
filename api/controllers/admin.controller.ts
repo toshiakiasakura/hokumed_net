@@ -9,11 +9,6 @@ import { json } from 'body-parser'
 
 class AdminController{
 
-  static UserBoard: ExpressFunc = async function(req, res){
-    let userRepository = getManager().getRepository(User)
-    const users = await userRepository.find()
-    res.json({users:users, status:200})
-  }
 
   static UserDetail: ExpressFunc = async function(req, res){
     const id = parseInt(req.params.id)
