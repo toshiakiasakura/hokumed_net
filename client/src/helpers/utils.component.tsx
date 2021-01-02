@@ -95,9 +95,9 @@ export class FetchValidation extends Component<
         return(<Redirect to='/error' />)
       } else {
         return(
-          <a>
+          <div>
             {this.props.children}
-          </a>
+          </div>
         )
       }
     }

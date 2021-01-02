@@ -87,7 +87,7 @@ function NotificationFormBody(
     props:{errors:any, register:any, content: NotificationFormData}
   ){
   return(
-    <a>
+    <div>
       <FormRow 
         title="タイトル"
         name="title"
@@ -108,7 +108,7 @@ function NotificationFormBody(
           required:"入力必須項目です",
         }}
       />
-    </a>
+    </div>
   )
 }
 
