@@ -105,9 +105,18 @@ function YearFormBody(
   )
 }
 
+/**
+ * Component of Class Year edit page. 
+ * Form of edit is compeleted with <form></form> and <YearFormBody> parts. 
+ * <DetailFormContainer> is just a design purpose and irrevalent to react-hook-form. 
+ * @param props 
+ */
 function ClassYearEdit(props:{content:Class_Year}){
-  const { register, handleSubmit, errors, formState } =
-                            useForm<YearFormData>({mode:'onBlur'})
+  const { register, handleSubmit, errors, formState 
+  } = useForm<YearFormData>({
+    mode:'onBlur',
+    defaultValues: {year: props.content.year}
+  })
   const content = props.content 
   const editSubmit = (data:YearFormData)=>{
     AdminService.editOneObject(`edit/year/${content.id}`, data)

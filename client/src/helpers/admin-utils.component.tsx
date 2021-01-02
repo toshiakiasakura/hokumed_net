@@ -113,6 +113,8 @@ export class DetailPageContainer extends Component<
 
 /**
  * Forma container for /admin/:kind/:id pages. 
+ * This function is irrevalent to form part. 
+ * Create homogenous design for edit and new page. 
  * @param body form body part. 
  */
 export function DetailFormContainer(props:{

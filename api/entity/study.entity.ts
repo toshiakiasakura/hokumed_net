@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column,
   OneToOne, JoinColumn } from 'typeorm'
-import { User } from './user.entity'
 
+const NULL = {nullable: true, default:null }
 @Entity()
 export class Document_File {
 
@@ -29,10 +29,10 @@ export class Document_File {
     @Column()
     download_count: number
 
-    @Column()
+    @Column({type:'datetime', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date
 
-    @Column()
+    @Column('datetime', NULL)
     updated_at: Date
 }
 
@@ -65,10 +65,10 @@ export class Semester {
     @Column()
     learn_term: 'pre' | 'post'
 
-    @Column()
+    @Column({type:'datetime', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date
 
-    @Column()
+    @Column('datetime', NULL)
     updated_at: Date
 }
 
@@ -85,10 +85,10 @@ export class Subject {
     @Column()
     title_en: string
 
-    @Column()
+    @Column({type:'datetime', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date
 
-    @Column()
+    @Column('datetime', NULL)
     updated_at: Date
 }
 
@@ -101,9 +101,9 @@ export class Class_Year {
     @Column()
     year: number
 
-    @Column()
+    @Column({type:'datetime', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date
 
-    @Column()
+    @Column('datetime', NULL)
     updated_at: Date
 }
