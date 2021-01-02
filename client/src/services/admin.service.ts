@@ -9,24 +9,8 @@ const API_URL = '/api/admin/'
 
 
 class AdminService {
-  static async getUserBoard() {
-    return axios.get<{users:User[], status:number}>
-                    (API_URL + 'user', { headers: authHeader() })
-  }
-
-  static async getUserDetail(id: number) {
-    return axios.get<{user:User, status:number}>
-                    (API_URL + `user/${id}`, {headers: authHeader()})
-  }
-
   static async changeApproveStatus(id: number){
     return axios.get(API_URL + `user/approve/${id}`, {headers: authHeader()})
-    .then( res => {return(res.data)} )
-    .catch( err =>  console.log(err))
-  }
-
-  static async deleteUser(id: number){
-    return axios.get(API_URL + `user/delete/${id}`, {headers: authHeader()})
     .then( res => {return(res.data)} )
     .catch( err =>  console.log(err))
   }
@@ -35,21 +19,6 @@ class AdminService {
     return axios.get(API_URL + `user/change-admin/${id}`, {headers: authHeader()})
     .then( res => {return(res.data)} )
     .catch( err =>  console.log(err))
-  }
-
-  static async getSubjectBoard(){
-    return axios.get<{subjects:Subject[], status:number}>
-                  (API_URL + 'subject', {headers:authHeader()})
-  }
-
-  static async getClassYearBoard(){
-    return axios.get<{years:Class_Year[], status:number}>
-                  (API_URL + 'year', {headers:authHeader()})
-  }
-
-  static async getNotificationBoard(){
-    return axios.get<{notifications:Notification[], status:number}>
-                  (API_URL + 'notification', {headers:authHeader()})
   }
 
   static async getSemesterBoard(){

@@ -159,7 +159,7 @@ class UserController{
 
     if(user){
       console.log("GET profile succeeded")
-      res.json({user:user, status:200})
+      res.json({content:user, status:200})
     } else{
       console.log('GET profile failed. ', user)
       res.json({status:401})

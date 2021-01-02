@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { AdminService } from '../services/admin.service'
+import { UserService } from '../services/user.service'
 import { User } from '../entity/user.entity'
 import { FetchValidation, TableRow } from '../helpers/utils.component'
 import { UserBody } from './admin/admin-user.component'
@@ -12,7 +12,7 @@ function Profile(props:MatchIDType){
       >( {content:new User(), status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getOneObject<User>(`user/${id}`)
+    UserService.getProfileBoard()
     .then( res => {
       console.log(res)
       setState({
