@@ -144,7 +144,7 @@ function StudySubjectBody(
 
 
 type MatchStudyType = {match:{ 
-  params:{title:string, kind:string} 
+  params:{title_en:string, kind:string} 
 }}
 
 export type FilesSubjectStatus = {
@@ -156,11 +156,10 @@ export type FilesSubjectStatus = {
   msg: string
 }
 
-
 function StudySubjectBoard( props:MatchStudyType){
   console.log('study subject pagegs process started.')
   const history = useHistory()
-  let title_en = props.match.params.title
+  let title_en = props.match.params.title_en
   let kind = props.match.params.kind
 
   const PageArray = 'exam quiz summary personal'.split(' ') 
@@ -200,7 +199,7 @@ function StudySubjectBoard( props:MatchStudyType){
           <div>
             <h1 className="caption"> {subject.title_ja}</h1>
             <div>
-            <StudyNavVar title_en={title_en} />
+              <StudyNavVar title_en={title_en} />
             </div>
             <p>
               <TransitionButton title='新規アップロード' url={`/study/${title_en}/new`}/>
@@ -211,7 +210,6 @@ function StudySubjectBoard( props:MatchStudyType){
                />
             : '資料がまだ投稿されていません．'
             }
-            
           </div>
       }
     </FetchValidation>
@@ -222,7 +220,7 @@ function StudySubjectPages(){
   return(
     <Switch>
       <Route 
-        path='/study/:title/:kind' 
+        path='/study/:title_en/:kind' 
         component={(props:MatchStudyType) => 
         <StudySubjectBoard match={props.match}/>} 
        />
