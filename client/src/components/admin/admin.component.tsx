@@ -30,7 +30,7 @@ const TopNavVar = () => {
   )
 }
 
-const Admin = () => {
+function Admin(){
   console.log("Try to access admin page.  ")
   const cookies = new Cookies()
   console.log(cookies.getAll())

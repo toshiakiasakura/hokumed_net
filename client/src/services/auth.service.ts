@@ -1,6 +1,7 @@
 import axios from "axios";
 import Cookies from 'universal-cookie'
 
+// TO DO: change the api url. user to auth.
 const API_URL = '/api/user/'
 type Token = {accessToken:string,
               userID:number,

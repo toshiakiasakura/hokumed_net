@@ -48,27 +48,34 @@ function Home(){
     return(disp)
   }
 
+  let contents = state.contents
   return(
-    <div className="hero">
-      <div className="hero__bg" />
-      <div className="hero__welcome">
-        <div className="hero__welcome__title">北医ネット </div>
-        <div className="hero__welcome__elocution">
-          {/*TO DO: Connect with backend and display notification. */}
-          <h3> お知らせ </h3>
-          <table className="table table--bordered">
-            <tbody className="table__body">
-              {makeContents(state.contents)}
-            </tbody>
-          </table>
-          <p className="text-right">
-            <Link to="/notification">
-              お知らせ一覧
-            </Link>
-          </p>
+    <FetchValidation status={state.status}>
+      {contents === undefined  
+      ? <div> 読み込み中 </div>
+      : 
+        <div className="hero">
+          <div className="hero__bg" />
+          <div className="hero__welcome">
+            <div className="hero__welcome__title">北医ネット </div>
+            <div className="hero__welcome__elocution">
+              {/*TO DO: Connect with backend and display notification. */}
+              <h3> お知らせ </h3>
+              <table className="table table--bordered">
+                <tbody className="table__body">
+                  {makeContents(state.contents)}
+                </tbody>
+              </table>
+              <p className="text-right">
+                <Link to="/notification">
+                  お知らせ一覧
+                </Link>
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      }
+    </FetchValidation>
   )
 } 
 

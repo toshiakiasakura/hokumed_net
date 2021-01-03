@@ -49,3 +49,18 @@ export async function getOneSemesterSubjects(sem: Semester){
   }
   return(semesterSubject)
 }
+
+/**
+ * From header, user object is extracted. 
+ */
+export async function UserFromHeader(req:any){
+  let userRepository = getManager().getRepository(User)
+  const userID = req.headers['x-user-id']
+  let user = undefined
+  if (typeof userID === 'string'){
+    user = await userRepository.findOne(parseInt(userID))
+  }
+  console.log('UserFromHeader process ',userID, user, typeof userID, typeof user)
+  return user
+
+}

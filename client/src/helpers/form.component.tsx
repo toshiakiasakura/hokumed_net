@@ -1,4 +1,8 @@
 
+/**
+ * One row desgine of a form is decorated with this function. 
+ * @param props.title Title of the form.
+ */
 export function FormGroupContainer(props:{title:string, children:any}){
   return(
     <div className="form__group">

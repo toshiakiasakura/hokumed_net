@@ -2,14 +2,18 @@
  */
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import path from 'path'
 import { getManager } from 'typeorm'
+import moment from 'moment'
+import sha1 from 'sha1'
+
 import { newBCryptPassword } from '../helpers/bcrypt.helper'
 import { User } from '../entity/user.entity'
 import { ExpressFunc } from '../helpers/express_typing'
 import { EmailSender } from '../helpers/email.helper'
-import moment from 'moment'
-import sha1 from 'sha1'
+import { Subject, Class_Year, Semester_Subject, Semester } from '../entity/study.entity'
+import { 
+  getOneSemesterSubjects, Year2ClassID, UserFromHeader, classID2Year
+} from '../helpers/connect.table.helper' 
 
 class UserController{
 
@@ -144,27 +148,6 @@ class UserController{
       res.redirect('/verify/email-failure')
     }
   }
-  /**
-   * Used for displaying personal account information
-   * in individual profile page.
-   */
-  static ProfileBoard: ExpressFunc = async function (req, res){
-    let userRepository = getManager().getRepository(User)
-    const userID = req.headers['x-user-id']
-    let user = null
-    console.log(userID, user, typeof userID, typeof user)
-    if (typeof userID === 'string'){
-      user = await userRepository.findOne(parseInt(userID))
-    }
-
-    if(user){
-      console.log("GET profile succeeded")
-      res.json({content:user, status:200})
-    } else{
-      console.log('GET profile failed. ', user)
-      res.json({status:401})
-    }
-  }
 
   /**
    * Resetpassword process. This function generates token.
@@ -215,6 +198,46 @@ class UserController{
     let users = await userRepository.find({activation_status:'pending'})
     for(let user of users){
       await userRepository.remove(user)
+    }
+  }
+
+  /**
+   * Used for displaying personal account information
+   * in individual profile page.
+   */
+  static ProfileBoard: ExpressFunc = async function (req, res){
+    const user = await UserFromHeader(req)
+
+    if(user){
+      console.log("GET profile succeeded")
+      res.json({content:user, status:200})
+    } else{
+      console.log('GET profile failed. ', user)
+      res.json({status:401})
+    }
+  }
+
+  /**
+   * Send data for toggle menus of "/semester" page. 
+   */
+  static SemesterBoard: ExpressFunc = async function(req,res){
+    console.log('semester board process started.')
+    const user = await UserFromHeader(req)
+    if(user){
+      const class_year_id = await Year2ClassID(user.class_year)
+      if(class_year_id){
+        let semesterRepo = getManager().getRepository(Semester)
+        const semesters = await semesterRepo.find(
+          {class_year_id:class_year_id}
+          )
+        if(semesters){
+          const semSubs = semesters.map(getOneSemesterSubjects)
+          Promise.all(semSubs)
+          .then(result =>{
+            res.json({contents: result, status:200})
+          })
+        }
+      }
     }
   }
 }

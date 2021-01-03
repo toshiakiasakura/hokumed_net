@@ -10,7 +10,6 @@ import path from 'path'
 import bodyParser from 'body-parser'
 import { testRouter } from './routes/tests'
 import { userRouter } from './routes/user.route'
-import { studyRouter } from './routes/study.route'
 import { adminRouter } from './routes/admin.route'
 import { ValidateController } from './api/controllers/validate.controller'
 
@@ -55,7 +54,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
  */
 app.use('/api/test', testRouter )
 app.use('/api/user', userRouter)
-app.use('/api/study', studyRouter)
 app.use('/api/admin',ValidateController.validateAdmin, adminRouter)
 app.get('/api/*', (req:Request, res:Response) => {
     res.json({status:404})
