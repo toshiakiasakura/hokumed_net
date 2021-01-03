@@ -19,6 +19,7 @@ router.get('/cleanup', UserController.cleanup)
 
 router.get('/profile', UserController.ProfileBoard)
 router.get('/multiple/semester', UserController.SemesterBoard)
+router.get('/multiple/file/:title_en/:kind', UserController.FileBoard)
 
 
 // For test

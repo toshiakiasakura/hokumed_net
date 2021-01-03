@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form'
 import { AdminService } from '../../services/admin.service'
 import { SemesterSubjects, Subject, SemesterSubjectsDetail } from '../../entity/study.entity'
 import { 
-  TableRow, FetchValidation, BackButton, TransitionButton
+  TableRow, FetchValidation, BackButton, 
+  TransitionButton, Loading
 } from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
@@ -63,7 +64,7 @@ function SemesterBoard(props:SemestersStatus){
   return(
     <FetchValidation status={state.status}>
       {contents=== undefined || contents.length === 0
-      ? <div> 読み込み中 </div>
+      ? <Loading/>
       : 
         <div>
           <p>
@@ -321,7 +322,7 @@ function SemesterDetail(props:MatchIDType){
   return(
     <FetchValidation status={state.status}>
       {semester === undefined || semester.id === undefined 
-      ? <div> 読み込み中 </div>
+      ? <Loading/>
       : 
         <DetailPageContainer 
           title={ makeTitle(semester)}

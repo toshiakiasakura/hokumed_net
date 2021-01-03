@@ -10,9 +10,10 @@ import { newBCryptPassword } from '../helpers/bcrypt.helper'
 import { User } from '../entity/user.entity'
 import { ExpressFunc } from '../helpers/express_typing'
 import { EmailSender } from '../helpers/email.helper'
-import { Subject, Class_Year, Semester_Subject, Semester } from '../entity/study.entity'
+import { Subject, Class_Year, Semester_Subject, Semester, Document_File } from '../entity/study.entity'
 import { 
-  getOneSemesterSubjects, Year2ClassID, UserFromHeader, classID2Year
+  getOneSemesterSubjects, Year2ClassID, UserFromHeader, 
+  classID2Year, subjectsFromSemester, getOneFile
 } from '../helpers/connect.table.helper' 
 
 class UserController{
@@ -238,6 +239,37 @@ class UserController{
           })
         }
       }
+    }
+  }
+  /**
+   * Document_File[] with File_Code, Subject, User is created. 
+   * Based on req.params.kind value 
+   * @param req.params.title_en subject english title. 
+   * @param req.params.kind Take exam, quiz, summary or personal.
+   */
+  static FileBoard: ExpressFunc = async function(req,res){
+    let subjectRepo = getManager().getRepository(Subject)
+    let subject = await subjectRepo.findOne(
+      {where:{title_en:req.params.title_en}}
+      )
+    if(subject){
+      let fileRepo = getManager().getRepository(Document_File)
+      let doc_files = await fileRepo.find({subject_id:subject.id})
+      let files = doc_files.map(getOneFile)
+      Promise.all(files)
+      .then(result =>{
+        let filtered_result = result.filter(
+          v => {
+            return v !== null && v.file_code.kind === req.params.kind
+          })
+        res.json({
+          contents: {
+            items:filtered_result, 
+            subject: subject
+          },
+          status:200
+        })
+      })
     }
   }
 }

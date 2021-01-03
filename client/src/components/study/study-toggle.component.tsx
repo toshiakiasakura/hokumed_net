@@ -16,13 +16,12 @@ function StudyToggleMenu(props:{semester: SemesterSubjects}){
   const subjectButtons = subjects.map((sub, index) =>{
     return(
       <li key={index} >
-        <Link to={`/study/${sub.title_en}`}> {sub.title_ja} </Link>
+        <Link to={`/study/${sub.title_en}/exam`}> {sub.title_ja} </Link>
       </li>
     )
   })
   const term = props.semester.learn_term === 'pre' ? '前期' : '後期'
   const title= `${props.semester.learn_year}年-${term}`
-  console.log("Try to access study page.  ")
   return(
       <div className="toggle-mennu">
         <div className="toggle-menu__toggler">
@@ -49,7 +48,6 @@ export function StudyToggleMenus(){
   useEffect(()=> {
     UserService.getMultipleObjects<SemesterSubjects>('semester')
     .then( res => {
-      console.log(res)
       setState({
         contents: res.data.contents, 
         status: res.data.status,

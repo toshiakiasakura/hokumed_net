@@ -4,7 +4,7 @@ import { Route, Switch, Link } from 'react-router-dom'
 import { AdminService } from '../../services/admin.service'
 import { User } from '../../entity/user.entity'
 import {
-   TableRow, FetchValidation, BackButton 
+   TableRow, FetchValidation, BackButton, Loading
 } from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { DeleteButton } from '../../helpers/admin-utils.component'
@@ -56,7 +56,7 @@ function UserBoard(props:UsersState){
   return(
     <FetchValidation status={state.status}>
       {contents=== undefined || contents.length === 0
-      ? <div> 読み込み中 </div>
+      ? <Loading />
       : 
       <div>
         <table className="table table--bordered">
@@ -149,7 +149,7 @@ function UserDetail(props:MatchIDType){
   return(
     <FetchValidation status={state.status}>
       {user === undefined || user.id === undefined 
-      ? <div> 読み込み中 </div>
+      ? <Loading />
       : 
         <div>
         <p>

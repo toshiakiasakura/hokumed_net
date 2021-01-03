@@ -32,12 +32,13 @@ export class SemesterSubjectsDetail {
     checkboxes: boolean[]
 }
 
-export class File {
+export class Doc_File {
     id: number
     subject_id: number
     user_id: number
     file_name: string
     file_content_type: string
+    class_year: number
     code: number
     comment: string
     download_count: number
@@ -52,6 +53,6 @@ export class File_Code {
     id: number
     code: number
     kind: string | null
-    order: string | null
+    no_doc: string | null
     type: string | null
 }

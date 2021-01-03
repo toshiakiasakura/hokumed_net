@@ -3,6 +3,7 @@ import { authHeader } from './auth-header'
 import { User } from '../entity/user.entity'
 import { OneClassStatus, MultiClassStatus } from '../helpers/types.helper'
 import { url } from 'inspector'
+import { FilesSubjectStatus } from '../components/study/study-subject.component'
 
 const API_URL = '/api/user/'
 
@@ -26,6 +27,11 @@ class UserService {
    */
   static async getMultipleObjects<T>(url: string){
     return axios.get<MultiClassStatus<T>>
+      (API_URL + 'multiple/' + url, {headers:authHeader()} )
+  }
+
+  static async getFileBoard<T>(url: string){
+    return axios.get<FilesSubjectStatus>
       (API_URL + 'multiple/' + url, {headers:authHeader()} )
   }
 }
