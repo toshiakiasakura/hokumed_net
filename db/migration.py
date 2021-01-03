@@ -145,7 +145,7 @@ def main():
     subject_migration()
     document_file_migration()
     class_year_migration()
-    #notification_migration()
+    notification_migration()
 
 if __name__ == "__main__":
     main()

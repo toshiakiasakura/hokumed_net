@@ -20,7 +20,7 @@ class AuthService {
             && response.data.accessToken
             && response.data.userID){
           const cookies = new Cookies()
-          const options = {path:'/', maxAge:3600}
+          const options = {path:'/', maxAge:3600*3}
           cookies.set('accessToken', response.data.accessToken,options)
           cookies.set('userID', response.data.userID, options)
           cookies.set('isLogIn', 'true', options)

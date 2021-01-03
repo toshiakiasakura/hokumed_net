@@ -1,8 +1,7 @@
-
-export type Notification = {
+export class Notification {
     id: number
     title: string
     text: string
-    created_at: Date
-    updated_at: Date
+    created_at: string
+    updated_at: string 
 }

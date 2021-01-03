@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { Switch, Link, Route } from 'react-router-dom'
-import { Document_File } from '../entity/Document_File'
+import { Document_File } from '../../entity/Document_File'
 
 export class SubjectRouter extends Component<{match:{params:{id:number}}}, {documents: Document_File | undefined, status: number | undefined}> {
 	constructor(props: any) {
@@ -12,12 +12,13 @@ export class SubjectRouter extends Component<{match:{params:{id:number}}}, {docu
 	}
 
 	componentDidMount() {
-		// TODO: Create Backend API to Get Documents Related to Subject enTitle(this.props.match.params.id)
+		/** TODO: Create Backend API to Get Documents Related to Subject enTitle(this.props.match.params.id)
 		this.setState(
 			state: {
 				
 			}
 		)
+		*/ 
 	}
 
 	render() {
@@ -28,7 +29,7 @@ export class SubjectRouter extends Component<{match:{params:{id:number}}}, {docu
 				SenntakubotannTshukuru
 				<h1 className="caption">{this.props.match.params.id}</h1>
 				<Switch>
-					<Route path='/study/:id/exam' component={() => <SubjectExam documents={}/>} />
+					<Route path='/study/:id/exam' component={() => <SubjectExam />} />
 					<Route path='/study/:id/quiz' component={SubjectQuiz} />
 					<Route path='/study/:id/summery' component={SubjectSummary} />
 					<Route path='/study/:id/personal' component={SubjectPersonal} />
@@ -38,7 +39,7 @@ export class SubjectRouter extends Component<{match:{params:{id:number}}}, {docu
 	}	
 }
 
-const SubjectExam = (documents: Document_File[]) => {
+const SubjectExam = () => {
 	return (
 		// TODO: Make Exam Page
 		<div>Exam</div>
