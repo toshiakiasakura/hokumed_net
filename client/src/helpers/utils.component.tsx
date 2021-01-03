@@ -102,3 +102,9 @@ export class FetchValidation extends Component<
       }
     }
 }
+
+export function Loading(){
+  return(
+    <div>読み込み中</div>
+  )
+}

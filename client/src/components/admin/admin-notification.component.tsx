@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form'
 import { AdminService } from '../../services/admin.service'
 import { Notification } from '../../entity/notification.entity'
 import { 
-  TableRow, FetchValidation, changeDate, BackButton, TransitionButton
+  TableRow, FetchValidation, changeDate, 
+  BackButton, TransitionButton, Loading
 } from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { 
@@ -57,7 +58,7 @@ function NotificationBoard(props:NotificationsStatus){
   return(
     <FetchValidation status={state.status}>
       {contents=== undefined || contents.length === 0
-      ? <div> 読み込み中 </div>
+      ? <Loading/>
       : 
         <div>
           <p>
@@ -211,7 +212,7 @@ function NotificationDetail(props:MatchIDType){
   return(
     <FetchValidation status={state.status}>
       {content === undefined || content.id === undefined 
-      ? <div> 読み込み中 </div>
+      ? <Loading/>
       : 
         <DetailPageContainer 
           title={`${content.title}`}

@@ -5,7 +5,7 @@ import { AdminService } from '../services/admin.service'
 import { Notification } from '../entity/notification.entity'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../helpers/types.helper'
 import { 
-  FetchValidation, changeDate, BackButton
+  FetchValidation, changeDate, BackButton, Loading
 } from '../helpers/utils.component'
 import { sortDate } from '../helpers/sort.helper'
 
@@ -52,7 +52,7 @@ function Home(){
   return(
     <FetchValidation status={state.status}>
       {contents === undefined  
-      ? <div> 読み込み中 </div>
+      ? <Loading />
       : 
         <div className="hero">
           <div className="hero__bg" />
@@ -142,7 +142,7 @@ function NotificationDetail(props:MatchIDType){
   return(
     <FetchValidation status={state.status}>
       {content === undefined || content.id === undefined 
-      ? <div> 読み込み中 </div>
+      ? <Loading />
       : 
 
         <div className="topfix container">

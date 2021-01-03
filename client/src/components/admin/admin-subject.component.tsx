@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form'
 import { AdminService } from '../../services/admin.service'
 import { Subject } from '../../entity/study.entity'
 import { 
-  TableRow, FetchValidation, BackButton, TransitionButton
+  TableRow, FetchValidation, BackButton, 
+  TransitionButton, Loading
 } from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
@@ -56,7 +57,7 @@ function SubjectBoard(props:SubjectsStatus){
   return(
     <FetchValidation status={state.status}>
       {contents=== undefined || contents.length === 0
-      ? <div> 読み込み中 </div>
+      ? <Loading/>
       : 
         <div>
           <p>
@@ -213,7 +214,7 @@ function SubjectDetail(props:MatchIDType){
   return(
     <FetchValidation status={state.status}>
       {content === undefined || content.id === undefined 
-      ? <div> 読み込み中 </div>
+      ? <Loading />
       : 
         <DetailPageContainer 
           title={`${content.title_ja}`}

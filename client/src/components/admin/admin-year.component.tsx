@@ -6,7 +6,7 @@ import { AdminService } from '../../services/admin.service'
 import { TransitionButton } from '../../helpers/utils.component'
 import { Class_Year } from '../../entity/study.entity'
 import {
-   TableRow, FetchValidation, BackButton
+   TableRow, FetchValidation, BackButton, Loading
 } from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
@@ -60,7 +60,7 @@ function ClassYearBoard(props:ClassYearsState){
   return(
     <FetchValidation status={state.status}>
       {contents=== undefined || contents.length === 0
-      ? <div> 読み込み中 </div>
+      ? <Loading />
       : 
         <div>
           <p>
@@ -208,7 +208,7 @@ function ClassYearDetail(props:MatchIDType){
   return(
     <FetchValidation status={state.status}>
       {content === undefined || content.id === undefined 
-      ? <div> 読み込み中 </div>
+      ? <Loading />
       : 
         <DetailPageContainer 
           title={`${content.year}期`}

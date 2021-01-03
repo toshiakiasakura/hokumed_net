@@ -12,7 +12,6 @@ import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-ut
 import { 
   FormRow, ClassYearBlock, FormGroupContainer, LearnYearBlock, TermBlock
 } from '../../helpers/form.component'
-import { Semester } from '../../entity/Semester'
 
 type SemestersStatus= MultiClassStatus<SemesterSubjects>
 

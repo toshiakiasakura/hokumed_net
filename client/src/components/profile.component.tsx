@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { UserService } from '../services/user.service'
 import { User } from '../entity/user.entity'
-import { FetchValidation, TableRow } from '../helpers/utils.component'
+import { FetchValidation, Loading } from '../helpers/utils.component'
 import { UserBody } from './admin/admin-user.component'
 import { MatchIDType, MultiClassStatus, OneClassStatus } from '../helpers/types.helper'
 
@@ -28,7 +28,7 @@ function Profile(props:MatchIDType){
   return(
     <FetchValidation status={state.status}>
       {user === undefined || user.id === undefined 
-      ? <div> 読み込み中 </div>
+      ? <Loading />
       : 
         <div className="topfix">
           <div className="container">

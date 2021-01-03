@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Route, Switch, Link, useHistory } from 'react-router-dom'
 
 import { 
-  TableRow, FetchValidation, BackButton, TransitionButton
+  TableRow, FetchValidation, BackButton, TransitionButton, Loading
 } from '../../helpers/utils.component'
 import { OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { UserService } from '../../services/user.service'
@@ -67,7 +67,7 @@ export function StudyToggleMenus(){
   return(
     <FetchValidation status={state.status}>
       {contents=== undefined || contents.length === 0
-      ? <div> 読み込み中 </div>
+      ? <Loading />
       : 
         <div className="col--sm-12 col--md-3 col--xs-10 col--no-gutter">
           <div className="col--xs-6 col--sm-12">

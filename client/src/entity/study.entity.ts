@@ -1,3 +1,5 @@
+import { User } from './user.entity'
+
 export class Subject {
     id: number
     title_ja: string
@@ -30,15 +32,26 @@ export class SemesterSubjectsDetail {
     checkboxes: boolean[]
 }
 
-export class Document_File {
+export class File {
     id: number
     subject_id: number
     user_id: number
     file_name: string
     file_content_type: string
-    file_kind: 'exam' | 'quiz' | 'summary' | 'personal' 
+    code: number
     comment: string
     download_count: number
     created_at: Date
     updated_at: Date
+    file_code: File_Code
+    subject: Subject 
+    user: User 
+}
+
+export class File_Code {
+    id: number
+    code: number
+    kind: string | null
+    order: string | null
+    type: string | null
 }

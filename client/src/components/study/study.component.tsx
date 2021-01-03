@@ -3,6 +3,7 @@ import { NotFound } from '../404.component'
 import Cookies from 'universal-cookie'
 
 import { StudyToggleMenus } from './study-toggle.component'
+import { StudySubjectPages } from './study-subject.component'
 
 function StudyTop(){
   return(
@@ -23,6 +24,7 @@ function Study(){
       <div className="col--sm-12 col--md-9 col--xs-12 pull-right">
         <Switch>
           <Route exact path='/study' component={StudyTop} />
+          <Route path='/study' component={ StudySubjectPages } />
         </Switch>
       </div>
     </div>
