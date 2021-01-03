@@ -5,7 +5,7 @@ import { Top } from './admin-top.component'
 import { UserPages } from './admin-user.component'
 import { SubjectPages } from './admin-subject.component'
 import { ClassYearPages } from './admin-year.component'
-import { SemesterBoard } from './admin-semester.component'
+import { SemesterPages } from './admin-semester.component'
 import { NotificationPages } from './admin-notification.component'
 
 
@@ -45,7 +45,7 @@ const Admin = () => {
         <Route path='/admin/user' component={ UserPages } />
         <Route path='/admin/subject' component={ SubjectPages } />
         <Route path='/admin/year' component={ ClassYearPages } />
-        <Route exact path='/admin/semester' component={SemesterBoard} />
+        <Route path='/admin/semester' component={ SemesterPages } />
         <Route path='/admin/notification' component={ NotificationPages } />
         <Route component={NotFound} />
       </Switch>

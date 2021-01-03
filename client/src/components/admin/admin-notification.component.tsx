@@ -3,10 +3,9 @@ import { Route, Switch, Link, useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import { AdminService } from '../../services/admin.service'
-import { TransitionButton } from '../../helpers/utils.component'
 import { Notification } from '../../entity/notification.entity'
 import { 
-  TableRow, FetchValidation, changeDate, BackButton
+  TableRow, FetchValidation, changeDate, BackButton, TransitionButton
 } from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { 

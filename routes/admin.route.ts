@@ -6,7 +6,10 @@ import { StudyController } from '../api/controllers/study.controller'
 router.get('/user/approve/:id', AdminController.changeApproveStatus)
 router.get('/user/change-admin/:id', AdminController.changeAdminStatus)
 
-router.get('/semester', StudyController.SemesterBoard)
+router.get('/multiple/semester', StudyController.SemesterBoard)
+router.get('/one/semester/:id', StudyController.SemesterDetail)
+router.post('/edit/semester/:id', StudyController.EditSemester)
+router.post('/new/semester', StudyController.NewSemester)
 
 router.get('/multiple/:kind',StudyController.SendMultipleObjects )
 router.get('/one/:kind/:id',StudyController.SendOneObject)

@@ -2,7 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
 import { AuthService } from '../services/auth.service'
-import { FormRow } from '../helpers/form.component' 
+import { FormRow, ClassYearBlock } from '../helpers/form.component' 
 import moment from 'moment'
 
 export const RequirePop = () => {
@@ -68,35 +68,6 @@ const DateBlock = (props:{register:any}) => {
 }
 
 /**
- * Class year block of input form.
- */
-const ClassYearBlock = (props:{register:any}) => {
-  let content = [<option id="signupYearDefault" value="default"> 期を選択</option>]
-  for( var i = 94; i < 110; i++){
-    content.push( <option id={"signupYear"+i} value={i}> {i}期 </option> )
-  }
-  return(
-    <div className="form__group">
-      <div className="col--sm-4">
-        <label className="form__label">
-           期を選択
-        </label>
-      </div>
-      <div className="col--sm-8">
-        <select
-          className="form__control"
-          name="class_year_id"
-          ref={props.register}
-        >
-          {content}
-        </select>
-      </div>
-    </div>
-  )
-}
-
-
-/**
  * This type is data format for input.
  * @param birthday The combination of bith related parameters.
  *                 This value is used for database.
@@ -112,7 +83,7 @@ export type SignUpData = {
   birth_day: string
   birthday: Date
   email_mobile: string
-  class_year_id: number
+  class_year: number
   reenteredPassword: string
 }
 
@@ -201,7 +172,7 @@ const SignUpForm = () => {
                 validate: AuthService.checkEmail
               }}
             />
-            <ClassYearBlock register={register}/>
+            <ClassYearBlock register={register} name='class_year'/>
             <FormRow
               title="パスワード"
               type="password"

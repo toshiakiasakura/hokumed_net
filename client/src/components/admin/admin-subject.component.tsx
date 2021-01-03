@@ -3,10 +3,9 @@ import { Route, Switch, Link, useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import { AdminService } from '../../services/admin.service'
-import { TransitionButton } from '../../helpers/utils.component'
 import { Subject } from '../../entity/study.entity'
 import { 
-  TableRow, FetchValidation, BackButton 
+  TableRow, FetchValidation, BackButton, TransitionButton
 } from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
@@ -129,11 +128,7 @@ function SubjectEdit(props:{content:Subject}){
     })
   }
   return(
-
     <div>
-      <p>
-        <BackButton title="一覧に戻る" url="/admin/subject" /> 
-      </p>
       <form 
         className="form row"
         role="form"
@@ -167,23 +162,28 @@ function SubjectNew(){
   }
   const content: SubjectFormData = {title_en:'', title_ja:''}
   return(
-    <form 
-      className="form row"
-      role="form"
-      name="subjectForm"
-      onSubmit={handleSubmit(newSubmit)}
-    >
-      <DetailFormContainer 
-        title="科目の新規作成．"
-        formState={formState}
-        body={<SubjectFormBody 
-                register={register} 
-                errors={errors}
-                content={content}
-              />}
-        
-      />
-    </form>
+    <div>
+      <p>
+        <BackButton title="一覧に戻る" url="/admin/subject" /> 
+      </p>
+      <form 
+        className="form row"
+        role="form"
+        name="subjectForm"
+        onSubmit={handleSubmit(newSubmit)}
+      >
+        <DetailFormContainer 
+          title="科目の新規作成．"
+          formState={formState}
+          body={<SubjectFormBody 
+                  register={register} 
+                  errors={errors}
+                  content={content}
+                />}
+          
+        />
+      </form>
+    </div>
   )
 }
 

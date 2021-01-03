@@ -21,11 +21,6 @@ class AdminService {
     .catch( err =>  console.log(err))
   }
 
-  static async getSemesterBoard(){
-    return axios.get<{semesters:SemesterSubjects[], status:number}>
-                  (API_URL + 'semester', {headers:authHeader()})
-  }
-
   /**
    * Fetch one object data. 
    * @param url /api/admin/one/url is inputted here.

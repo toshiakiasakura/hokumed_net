@@ -20,7 +20,14 @@ export class SemesterSubjects {
     learn_year: number
     learn_term: 'pre' | 'post'
     created_at: Date
+    updated_at: Date
     subjects: Subject[]
+}
+
+export class SemesterSubjectsDetail { 
+    item: SemesterSubjects
+    subjects:  Subject[]
+    checkboxes: boolean[]
 }
 
 export class Document_File {
