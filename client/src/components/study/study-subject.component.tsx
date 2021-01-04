@@ -12,9 +12,14 @@ import { StudySubjectBody } from './study-body.component'
 
 
 const TopNavItem = (props:{url:string, tabName:string} ) => {
+  let last = props.url.split('/')
+  let l1 = last[last.length -1]
+  let cur_last = window.location.href.split('/')
+  let l2 = cur_last[cur_last.length -1]
+  const tabActive = l1 === l2 ? "tab--active" : ""
   return(
-    <div className="tab">
-      <Link to={`/study/${props.url}`}> {props.tabName} </Link>
+    <div className={`tab ${tabActive}`}>
+        <Link to={`/study/${props.url}`}> {props.tabName} </Link>
     </div>
   )
 }
@@ -112,9 +117,16 @@ function StudySubjectBoard( props:MatchStudyType){
   )
 }
 
+function Prepare(){
+  return(
+    <h1>準備中</h1>
+  )
+}
+
 function StudySubjectPages(){
   return(
     <Switch>
+      <Route path='/study/:title_en/new' component={ Prepare}/>
       <Route 
         path='/study/:title_en/:kind' 
         component={ StudySubjectBoard } 

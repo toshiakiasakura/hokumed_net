@@ -17,6 +17,23 @@ export const RequirePop = () => {
  * Precisely to say, there are not valid input patten.
  * Date validation is done when button is pushed in SingUpFrom.
  */
+
+function DateContainer(
+    props:{name:string, content:any, register:any}
+){
+  return(
+    <div className="col--xs-4">
+      <select
+        className="form__control"
+        name={props.name}
+        ref={props.register}
+      >
+        {props.content}
+      </select>
+    </div>
+  )
+}
+
 const DateBlock = (props:{register:any}) => {
   let years = [<option id="birth_year_default" value="default"> 年を選択 </option>]
   let months = [<option id="birth_month_default" value="default"> 月を選択 </option>]
@@ -39,28 +56,16 @@ const DateBlock = (props:{register:any}) => {
           生年月日
         </label>
       </div>
-        <div className="col--sm-4">
-        <select
-          className="form__control"
-          name="birth_year"
-          ref={props.register}
-        >
-          {years}
-        </select>
-        <select
-          className="form__control"
-          name="birth_month"
-          ref={props.register}
-        >
-          {months}
-        </select>
-        <select
-          className="form__control"
-          name="birth_day"
-          ref={props.register}
-        >
-          {days}
-        </select>
+        <div className="col--sm-8 col--no-gutter">
+          <DateContainer name="birth_year" 
+            content={years} register={props.register}
+            />
+          <DateContainer name="birth_month" 
+            content={months} register={props.register}
+          />
+          <DateContainer name="birth_day" 
+            content={days} register={props.register}
+          />
         </div>
     </div>
 
@@ -116,8 +121,9 @@ const SignUpForm = () => {
     })
   }
 
-  const password = watch("password", "");
-  const require_json = {required: "入力必須項目です．"}
+  const password = watch("password", "")
+  const require_str = "入力必須項目です．"
+  const require_json = {required: require_str}
   return(
     <form
       className="form row"
@@ -150,7 +156,7 @@ const SignUpForm = () => {
               placeholder="ニックネーム"
               errors={errors} register={register}
               reg_json={{
-                required:true,
+                required:require_str,
                 validate:  AuthService.checkHandle
               }}
             />
@@ -164,7 +170,7 @@ const SignUpForm = () => {
               placeholder="example@eis.hokudai.ac.jp"
               errors={errors} register={register}
               reg_json={{
-                required: true,
+                required: require_str,
                 pattern:{
                   value: !/^[A-Z0-9._%+-]+@(eis|elms).hokudai.ac.jp$/i,
                   message:"@以下は(elms or eis).hokudai.ac.jpのみ有効です．"
@@ -181,7 +187,7 @@ const SignUpForm = () => {
               placeholder="パスワード"
               errors={errors} register={register}
               reg_json={{
-                required: true,
+                required: require_str,
                 minLength: {
                   value: 4,
                   message: "パスワードは4文字以上で入力してください．"
@@ -196,7 +202,7 @@ const SignUpForm = () => {
               placeholder="もう一度パスワードを入力"
               errors={errors} register={register}
               reg_json = {{
-                  required: true,
+                  required: require_str,
                   validate:
                   (value:string) => {
                     return(value === password || "パスワードが一致しません．")

@@ -104,6 +104,12 @@ const ResetPassword = () => {
       <div className="hero__bg"/>
       <div className="hero__login">
         <h2> パスワードの再設定  </h2>
+        <div　className="memo">
+          パスワードの再設定を行います． <br />
+          メールに記載されたリンクを押した時点で <br/> 
+          再設定されます．<br />
+          登録状態の確認にも使えます． <br />
+        </div>
         <ResetForm />
       </div>
     </div>

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import { UserService } from '../services/user.service'
 import { User } from '../entity/user.entity'
-import { FetchValidation, Loading } from '../helpers/utils.component'
+import { FetchValidation, Loading, TransitionButton } from '../helpers/utils.component'
 import { UserBody } from './admin/admin-user.component'
 import { MatchIDType, MultiClassStatus, OneClassStatus } from '../helpers/types.helper'
 
@@ -37,11 +38,7 @@ function Profile(props:MatchIDType){
                 <h1>プロフィール </h1>
               </li>
               <li>
-                <a className="btn btn--primary">
-                  <i className="fa fa-pencil">
-                    編集
-                  </i>
-                </a>
+                <TransitionButton title='編集' url='/profile/edit'/> 
               </li>
               <table className="table table--bordered no-mb">
                 <UserBody user={user} />
@@ -54,4 +51,19 @@ function Profile(props:MatchIDType){
   )
 }
 
-export { Profile }
+function Prepare(){
+  return(
+    <h1 className="topfix container">準備中</h1>
+  )
+}
+
+function ProfilePages(){
+  return(
+    <Switch>
+      <Route exact path='/profile' component={ Profile } />
+      <Route exact path='/profile/edit' component={ Prepare }/> 
+      <Route component={ () => <Redirect to='/error'/>}/> 
+    </Switch>
+  )
+}
+export { ProfilePages }
