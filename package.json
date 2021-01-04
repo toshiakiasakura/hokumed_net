@@ -25,7 +25,7 @@
     "start": "rm -rf dist && tsc && node dist/index.js",
     "dev": "cd client && yarn dev",
     "test": "cd client && yarn test",
-    "deploy": "rm -rf dist && tsc && forever start dist/index.js"
+    "deploy": "rm -rf dist && tsc && forever start dist/index.js && cd client && yarn build"
   },
   "name": "2_hokui_net_ver2",
   "description": "Our aim is to construct simple website.  Follow the rule of KISS!",
