@@ -10,9 +10,12 @@ import { SemesterSubjects } from '../../entity/study.entity'
 import { sortLearnYearTerm } from '../../helpers/sort.helper'
 import { NotFound } from '../404.component'
 import arrow from '../../img/arrow.svg'
+import { sortString } from '../../helpers/sort.helper'
+
 
 function StudyToggleMenu(props:{semester: SemesterSubjects}){
-  const subjects = props.semester.subjects
+  let subjects = props.semester.subjects
+  subjects = sortString(subjects, 'title_ja', true)
   const subjectButtons = subjects.map((sub, index) =>{
     return(
       <li key={index} >
@@ -22,15 +25,30 @@ function StudyToggleMenu(props:{semester: SemesterSubjects}){
   })
   const term = props.semester.learn_term === 'pre' ? '前期' : '後期'
   const title= `${props.semester.learn_year}年-${term}`
+
+  // toggle function part.
+  const [disp, setDisp] = useState('none')
+  const changeDisplay = () =>{ 
+    setDisp(disp === 'block' ? 'none' : 'block')
+  }
+  let rotateStyle = {transform:`rotate(${disp === 'block' ? '0' : '-90'}deg)`}
   return(
       <div className="toggle-mennu">
         <div className="toggle-menu__toggler">
-          <img src={arrow} width={24} height={24} />
-          {title}
-
+          <a href="javascript:;" onClick={() => changeDisplay()}>
+            <img 
+              src={arrow} width={24} height={24} 
+              className="fa fa-lg fa-angle-right toggle-menu__toggler__icon"
+              style={ rotateStyle }
+            />
+            {title}
+          </a>
         </div>
-        <div className="toggle-menu__content toggle-menu__content--shown">
-          <ul className="">{subjectButtons} </ul>
+        <div 
+          className="toggle-menu__content toggle-menu__content--shown" 
+          style={{display:disp}}
+         >
+            <ul className="">{subjectButtons} </ul>
         </div>
       </div>
   )
