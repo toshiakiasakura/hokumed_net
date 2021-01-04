@@ -1,68 +1,125 @@
-import { Component } from 'react'
-import { Switch, Link, Route } from 'react-router-dom'
-import { Document_File } from '../../entity/Document_File'
+import React, { useEffect, useState } from 'react'
+import { 
+  Route, Switch, Link, Redirect, useHistory 
+} from 'react-router-dom'
 
-export class SubjectRouter extends Component<{match:{params:{id:number}}}, {documents: Document_File | undefined, status: number | undefined}> {
-	constructor(props: any) {
-		super(props)
-		this.state = {
-			documents: undefined,
-			status: undefined
-		}
-	}
+import { 
+  TableRow, FetchValidation, BackButton, TransitionButton, Loading
+} from '../../helpers/utils.component'
+import { UserService } from '../../services/user.service'
+import { Doc_File, Subject } from '../../entity/study.entity'
+import { StudySubjectBody } from './study-body.component'
 
-	componentDidMount() {
-		/** TODO: Create Backend API to Get Documents Related to Subject enTitle(this.props.match.params.id)
-		this.setState(
-			state: {
-				
-			}
-		)
-		*/ 
-	}
 
-	render() {
-		if (this.state.documents === undefined || this.state.status === undefined)
-
-		return (
-			<div>
-				SenntakubotannTshukuru
-				<h1 className="caption">{this.props.match.params.id}</h1>
-				<Switch>
-					<Route path='/study/:id/exam' component={() => <SubjectExam />} />
-					<Route path='/study/:id/quiz' component={SubjectQuiz} />
-					<Route path='/study/:id/summery' component={SubjectSummary} />
-					<Route path='/study/:id/personal' component={SubjectPersonal} />
-				</Switch>
-			</div>
-		)
-	}	
+const TopNavItem = (props:{url:string, tabName:string} ) => {
+  return(
+    <div className="tab">
+      <Link to={`/study/${props.url}`}> {props.tabName} </Link>
+    </div>
+  )
 }
 
-const SubjectExam = () => {
-	return (
-		// TODO: Make Exam Page
-		<div>Exam</div>
-	)
+function StudyNavVar(props:{title_en:string}){
+  return(
+    <div className="tabs">
+      <TopNavItem url={`${props.title_en}/exam`} tabName="過去問" />
+      <TopNavItem url={`${props.title_en}/quiz`} tabName="小テスト"/>
+      <TopNavItem url={`${props.title_en}/summary`} tabName="講義資料" />
+      <TopNavItem url={`${props.title_en}/personal`} tabName="個人作成資料"/>
+    </div>
+  )
 }
 
-const SubjectQuiz = (documents: Document_File[]) => {
-	return (
-		// TODO: Make Quiz Page
-		<div>Quiz</div>
-	)
+
+
+type MatchStudyType = {match:{ 
+  params:{title_en:string, kind:string} 
+}}
+
+export type FilesSubjectStatus = {
+  contents: {
+    items: Doc_File[], 
+    subject: Subject
+  },
+  status:number,
+  msg: string
 }
 
-const SubjectSummary = (documents: Document_File[]) => {
-	return (
-		// TODO: Make Summary Page
-		<div>Summery</div>
-	)
+function StudySubjectBoard( props:MatchStudyType){
+  console.log('study subject pagegs process started.')
+  const history = useHistory()
+  let title_en = props.match.params.title_en
+  let kind = props.match.params.kind
+
+  const PageArray = 'exam quiz summary personal'.split(' ') 
+  if(!PageArray.includes(kind)){
+    history.push('/error')
+  }
+
+  const [state, setState] = useState<
+      FilesSubjectStatus
+      >({
+        contents:{items:[], subject: new Subject()}, 
+        status:200, 
+        msg:''
+     })
+
+  /** 
+   * Note: The second argument becomes title_en and kind.
+   * This is because, react routing does not re-render 
+   * when changing within the Route (this case, /study/:title/:kind).
+   * Therefore, to forcely re-render, these two variables are chosen.
+   */
+  useEffect(()=> {
+    window.scrollTo(0,0)
+    UserService.getFileBoard(
+      `file/${title_en}/${kind}`
+      )
+    .then( res => {
+      setState({
+        contents: res.data.contents, 
+        status: res.data.status,
+        msg: res.data.msg
+      })
+    })
+  },[title_en, kind])
+
+  let files = state.contents.items
+  let subject = state.contents.subject
+  console.log('StudySubjectBoard contents.',files)
+  return(
+    <FetchValidation status={state.status}>
+      {subject === undefined  || subject.id === undefined
+        ? <Loading/>
+        : 
+          <div>
+            <h1 className="caption"> {subject.title_ja}</h1>
+            <div>
+              <StudyNavVar title_en={title_en} />
+            </div>
+            <p>
+              <TransitionButton title='新規アップロード' url={`/study/${title_en}/new`}/>
+            </p>
+            { files.length !== 0 
+            ? <StudySubjectBody 
+                files={files} kind={kind} subject={subject}
+               />
+            : '資料がまだ投稿されていません．'
+            }
+          </div>
+      }
+    </FetchValidation>
+  )
 }
 
-const SubjectPersonal = (documents: Document_File[]) => {
-	return (
-		// TODO: Make Personal Page
-		<div>Personal</div>
-	)
+function StudySubjectPages(){
+  return(
+    <Switch>
+      <Route 
+        path='/study/:title_en/:kind' 
+        component={ StudySubjectBoard } 
+       />
+    </Switch>
+  )
 }
+export { StudySubjectPages }

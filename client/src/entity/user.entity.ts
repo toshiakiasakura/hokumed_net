@@ -1,5 +1,4 @@
 export class User {
-    status: number
     id: number
     email: string
     crypted_password: string
@@ -16,6 +15,5 @@ export class User {
     birthday: Date
     email_mobile: string
     admin: boolean
-    class_year: string
-    ml_member_id: number
+    class_year: number 
 }

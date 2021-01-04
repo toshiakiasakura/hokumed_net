@@ -112,7 +112,7 @@ def document_file_migration():
     from_lis = ['id', 'document_id', 'user_id', 'file_name', 
                 'file_content_type', 'comments', 'download_count', 
                 'created_at', 'updated_at'] 
-    to_lis = ['id', 'subject_id', 'class_year', 'user_id',  'file_name' ,
+    to_lis = ['id', 'subject_id', 'class_year', 'code', 'user_id',  'file_name' ,
               'file_content_type', 'comment', 'download_count', 'created_at', 'updated_at']
 
     fetch, insert = create_queries(from_lis, to_lis, 'document_files', 'document__file')
@@ -121,7 +121,7 @@ def document_file_migration():
     for d in data:
         sql = f'SELECT * FROM documents WHERE id={d[1]}'
         doc = sqlFetchCommand(sql)[0]
-        new_data.append( (d[0], doc[1], doc[2]) + d[2:])
+        new_data.append( (d[0], doc[1], doc[2], doc[3]) + d[2:])
     insertCommand(insert , new_data)
 
 def class_year_migration():
@@ -138,6 +138,28 @@ def notification_migration():
     data = sqlFetchCommand(fetch)
     insertCommand(insert, data)
 
+def file_code_migration():
+    from_lis = ['id', ]
+    to_lis = ['id', 'code', 'kind',  'no_doc', 'type']
+    fetch, insert = create_queries(from_lis, to_lis, 'user', 'file__code')
+    n = 50 
+    data = [
+        (1, 98, 'exam', '中間', '問題' ),
+        (2, 99, 'exam', '期末', '問題'),
+        (3, 1098, 'exam', '中間', '解答'),
+        (4, 1099, 'exam', '期末', '解答'),
+         ] +\
+        [ (4 + i, i, 'exam', f'第{i}回', '問題') for i in range(1,n+1)] + \
+        [ (4 + n + i, 1000+i, 'exam', f'第{i}回', '解答') for i in range(1,n+1)] + \
+        [ (4 + 2*n + i, 2000+i, 'quiz', f'第{i}回', '問題') for i in range(1,n+1)] + \
+        [ (4 + 3*n + i, 3000+i, 'quiz', f'第{i}回', '解答') for i in range(1,n+1)] + \
+        [ (4 + 4*n + i, 4000+i, 'summary', f'第{i}回', None) for i in range(1,n+1)] + \
+        [ (4 + 5*n + 1, 4000, 'summary', None, None)] + \
+        [ (4 + 5*n + 2, 5000, 'personal', None, None)]  
+    insertCommand(insert, data)
+
+
+
 def main():
     user_migration()
     semester_migration()
@@ -146,6 +168,7 @@ def main():
     document_file_migration()
     class_year_migration()
     notification_migration()
+    file_code_migration()
 
 if __name__ == "__main__":
     main()

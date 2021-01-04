@@ -5,7 +5,7 @@ import { AdminService } from '../services/admin.service'
 import { Notification } from '../entity/notification.entity'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../helpers/types.helper'
 import { 
-  FetchValidation, changeDate, BackButton
+  FetchValidation, changeDate, BackButton, Loading
 } from '../helpers/utils.component'
 import { sortDate } from '../helpers/sort.helper'
 
@@ -48,27 +48,34 @@ function Home(){
     return(disp)
   }
 
+  let contents = state.contents
   return(
-    <div className="hero">
-      <div className="hero__bg" />
-      <div className="hero__welcome">
-        <div className="hero__welcome__title">北医ネット </div>
-        <div className="hero__welcome__elocution">
-          {/*TO DO: Connect with backend and display notification. */}
-          <h3> お知らせ </h3>
-          <table className="table table--bordered">
-            <tbody className="table__body">
-              {makeContents(state.contents)}
-            </tbody>
-          </table>
-          <p className="text-right">
-            <Link to="/notification">
-              お知らせ一覧
-            </Link>
-          </p>
+    <FetchValidation status={state.status}>
+      {contents === undefined  
+      ? <Loading />
+      : 
+        <div className="hero">
+          <div className="hero__bg" />
+          <div className="hero__welcome">
+            <div className="hero__welcome__title">北医ネット </div>
+            <div className="hero__welcome__elocution">
+              {/*TO DO: Connect with backend and display notification. */}
+              <h3> お知らせ </h3>
+              <table className="table table--bordered">
+                <tbody className="table__body">
+                  {makeContents(state.contents)}
+                </tbody>
+              </table>
+              <p className="text-right">
+                <Link to="/notification">
+                  お知らせ一覧
+                </Link>
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      }
+    </FetchValidation>
   )
 } 
 
@@ -135,7 +142,7 @@ function NotificationDetail(props:MatchIDType){
   return(
     <FetchValidation status={state.status}>
       {content === undefined || content.id === undefined 
-      ? <div> 読み込み中 </div>
+      ? <Loading />
       : 
 
         <div className="topfix container">

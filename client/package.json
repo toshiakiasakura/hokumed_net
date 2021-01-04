@@ -27,6 +27,7 @@
     "file-loader": "^6.2.0",
     "gulp": "^4.0.2",
     "gulp-pug": "^4.0.1",
+    "js-file-download": "^0.4.12",
     "material-ui": "^0.20.2",
     "moment": "^2.29.1",
     "node-sass": "4.14.1",
