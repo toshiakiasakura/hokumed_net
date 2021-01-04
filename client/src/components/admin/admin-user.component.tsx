@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Route, Switch, Link } from 'react-router-dom'
+import ReactTooltip from 'react-tooltip'
 
 import { AdminService } from '../../services/admin.service'
 import { User } from '../../entity/user.entity'
@@ -13,6 +14,14 @@ type UsersState = MultiClassStatus<User>
 
 const UserRow = (props:{user:User}) => {
   let user = props.user
+  let bariconClass = 'baricon--question'
+  let approval = user.approval_state === 'approved' ? true : false
+  let active = user.activation_status === 'active' ? true : false
+  if(user.admin) bariconClass = 'baricon--star baricon--secondary'
+  if(approval && active) bariconClass = 'baricon--heart baricon--accent'
+  if(!approval && active) bariconClass = 'baricon--exclamation baricon--primary clickable'
+  if(!active) bariconClass = 'baricon--times'
+    
   return(
     <tr>
       <td> {user.id} </td>
@@ -24,7 +33,24 @@ const UserRow = (props:{user:User}) => {
       </td>
       <td> { `${user.family_name} ${user.given_name}`} </td>
       <td> {user.email} </td>
-      <td> {user.approval_state} </td>
+      <td > 
+        <div className="text-center">
+          <button
+            className="button-unstyled inline-block tooltip tooltip--left"
+            id={`tooltip${user.id}`}
+            data-toggle="tooltip"
+            data-html="true"
+            title="aaa"
+          >
+            {/** Tooltip and approve function needs to be implemented. */}
+            <div className={`baricon baricon--intext ${bariconClass}`}>
+              <div className="baricon__bar"/>
+              <div className="baricon__bar"/>
+              <div className="baricon__bar"/>
+            </div>
+          </button>
+        </div>
+      </td>
     </tr>
   )
 }
@@ -59,10 +85,10 @@ function UserBoard(props:UsersState){
       ? <Loading />
       : 
       <div>
-        <table className="table table--bordered">
+        <table className="table table--condensed">
           <thead className="table__head">
             <tr>
-              <th> ID </th>
+              <th className="text-small"> ID </th>
               <th> 期 </th>
               <th> ハンドルネーム </th>
               <th> 氏名 </th>
@@ -91,11 +117,13 @@ export function UserBody(props:{user:User}){
       <TableRow rowName="氏名" item={`${user.family_name} ${user.given_name}`} />
       <TableRow rowName="期" item={user.class_year} />
       <TableRow rowName="管理者" item={user.admin} />
+      <TableRow rowName="メールアクティベート" item={user.activation_status} />
       <TableRow rowName="承認状態" item={user.approval_state} />
       <TableRow rowName="メールアドレス" item={user.email} />
       <TableRow rowName="携帯メールアドレス" item={user.email_mobile} />
       <TableRow rowName="誕生日" item={user.birthday} />
       <TableRow rowName="作成日" item={user.created_at} />
+      <TableRow rowName="更新日" item={user.updated_at} />
       {/*// TO DO: Add last login, logout, ip address information.*/}
     </tbody>
   )

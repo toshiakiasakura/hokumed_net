@@ -9,8 +9,10 @@ import sha1 from 'sha1'
 
 import { newBCryptPassword } from '../helpers/bcrypt.helper'
 import { User } from '../entity/user.entity'
+import { Class_Year } from '../entity/study.entity'
 import { ExpressFunc } from '../helpers/express_typing'
 import { EmailSender } from '../helpers/email.helper'
+
 
 class AuthController {
   static login: ExpressFunc = async function (req, res){
@@ -195,6 +197,13 @@ class AuthController {
     for(let user of users){
       await userRepository.remove(user)
     }
+  }
+
+  static ClassYearBoard: ExpressFunc = async function(req,res){
+      let yearRepo = getManager().getRepository(Class_Year)
+      const years = await yearRepo.find()
+      res.json({contents:years, status:200})
+
   }
 
 }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from 'universal-cookie'
+import { MultiClassStatus } from '../helpers/types.helper'
 
 // TO DO: change the api url. user to auth.
 const API_URL = '/api/auth/'
@@ -111,6 +112,17 @@ class AuthService {
         console.log(err)
       })
   }
+
+  static async ClassYearBoard<T>(setState:any){
+    return axios.get<MultiClassStatus<T>>(API_URL + 'multiple/year')
+      .then(res=>{
+        setState({
+          contents: res.data.contents,
+          status: res.data.status,
+          msg: res.data.msg
+        })
+      })
+  }
 }
 
-export {AuthService}
+export { AuthService }

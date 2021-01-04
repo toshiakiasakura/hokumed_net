@@ -48,7 +48,7 @@ function Admin(){
   const cookies = new Cookies()
   console.log(cookies.getAll())
   if (cookies.get('isLogIn') !== 'true' || cookies.get('isAdmin') !== 'true'){
-    return( <Redirect to='/error' />)
+    return( <Redirect to='/error/401' />)
   }
   return(
     <div className="topfix container">
@@ -60,7 +60,7 @@ function Admin(){
         <Route path='/admin/year' component={ ClassYearPages } />
         <Route path='/admin/semester' component={ SemesterPages } />
         <Route path='/admin/notification' component={ NotificationPages } />
-        <Route component={() => <Redirect to='/error/401'/>} />
+        <Route component={() => <Redirect to='/error/404'/>} />
       </Switch>
     </div>
   )

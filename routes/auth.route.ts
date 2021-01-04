@@ -10,6 +10,7 @@ router.post('/login', AuthController.login)
 router.post('/signup', AuthController.signup)
 router.post('/check-email', AuthController.checkEmail)
 router.post('/check-handle', AuthController.checkHandle)
+router.get('/multiple/year', AuthController.ClassYearBoard)
 router.get('/activation/:userID/:token',AuthController.verifyEmail )
 
 router.post('/reset-password', AuthController.resetPassword)
