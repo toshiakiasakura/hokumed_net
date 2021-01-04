@@ -30,7 +30,7 @@ const LoginForm = () => {
       if (res && res.status === 200){
         history.push("/home")
         window.location.reload()
-        // This line is for reloading cookies for eveyr component
+        // This line is for reloading cookies for every component
       } else if (res && res.status === 401) {
         // TO DO: Become more elegant one. .
         alert(res.msg)

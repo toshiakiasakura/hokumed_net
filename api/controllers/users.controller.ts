@@ -80,7 +80,7 @@ class UserController{
       user.handle_name = body.handle_name
       user.birthday = body.birth_day
       user.email_mobile = body.email_mobile
-      user.class_year = body.class_year_id
+      user.class_year = body.class_year
       user.created_at = new Date()
       const activationToken = sha1(moment().format('DD-MMM-YYY HH:mm:ss'))
       user.activation_token= activationToken

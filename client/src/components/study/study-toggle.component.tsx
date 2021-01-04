@@ -74,11 +74,13 @@ export function StudyToggleMenus(){
     })
   },[setState])
 
-  const semesterToggles = sortLearnYearTerm(
+  const makeSemesterToggles = () => {
+    return sortLearnYearTerm(
       state.contents, true
     ).map(
     semSub => <StudyToggleMenu semester={semSub} />
     )
+  }
   let contents = state.contents
   return(
     <FetchValidation status={state.status}>
@@ -87,7 +89,7 @@ export function StudyToggleMenus(){
       : 
         <div className="col--sm-12 col--md-3 col--xs-10 col--no-gutter">
           <div className="col--xs-6 col--sm-12">
-            {semesterToggles}
+            {makeSemesterToggles()}
           </div>
         </div>
       }
