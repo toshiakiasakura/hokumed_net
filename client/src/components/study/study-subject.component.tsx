@@ -2,18 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { 
   Route, Switch, Link, Redirect, useHistory 
 } from 'react-router-dom'
-import Cookies from 'universal-cookie'
 
 import { 
   TableRow, FetchValidation, BackButton, TransitionButton, Loading
 } from '../../helpers/utils.component'
-import { OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { UserService } from '../../services/user.service'
 import { Doc_File, Subject } from '../../entity/study.entity'
-import { sortLearnYearTerm } from '../../helpers/sort.helper'
-import { NotFound } from '../404.component'
-import arrow from '../../img/arrow.svg'
-import { propTypes } from 'react-notification-system'
+import { StudySubjectBody } from './study-body.component'
 
 
 const TopNavItem = (props:{url:string, tabName:string} ) => {
@@ -23,6 +18,7 @@ const TopNavItem = (props:{url:string, tabName:string} ) => {
     </div>
   )
 }
+
 function StudyNavVar(props:{title_en:string}){
   return(
     <div className="tabs">
@@ -34,113 +30,6 @@ function StudyNavVar(props:{title_en:string}){
   )
 }
 
-function FileControl(props:{children:any}){
-  return(
-    <div className="file-control">
-      {props.children}
-    </div>
-  )
-}
-
-function FileRow(props:{file: Doc_File, subject:Subject}){
-  let file = props.file
-  let subject = props.subject
-  let cookie = new Cookies()
-  let userID = cookie.get('userID')
-
-  return(
-    <td>
-      <div className="file-row">
-        <div className="file-caption">
-          {file.file_name}
-        </div>
-        <div className="file-left-controls">
-          <div className="file-controls">
-            <FileControl>
-              <a>
-                <i className="fa fa-floppy-o">
-                </i>
-                <span>ダウンロード</span>
-              </a>
-            </FileControl>
-            <FileControl>
-              <a>
-                <i className="fa fa-ey">
-                </i>
-                <span className="hidden-xs"> プレビュー</span>
-              </a>
-            </FileControl>
-            {userID === file.user_id &&
-              <FileControl>
-                <a>
-                  <i className="fa fa-cog">
-                  </i>
-                  <span>編集</span>
-                </a>
-              </FileControl>
-            }
-          
-          </div>
-        </div>
-        <div className="file-right-controls">
-          <FileControl>
-            <span className="text-gray">
-              {file.download_count}回
-            </span>
-          </FileControl>
-          <FileControl>
-            <span className="text-gray">
-              {file.user.handle_name}
-            </span>
-          </FileControl>
-
-        </div>
-      </div>
-    </td>
-  )
-
-}
-
-function StudySubjectBody(
-  props:{files: Doc_File[], kind:string, subject:Subject}
-){
-  let files = props.files
-  let kind = props.kind
-  const show1 = kind !== 'personal'
-  const show2 = kind !== 'personal' && kind !== 'summary'
-
-  const makeContents = (files: Doc_File[]) => {
-    // TO DO : change the way in the end.
-      return files.map(file => {
-        return(
-          <tr>
-            <td className="text-center"> {file.class_year}期 </td>
-            {show1 && 
-              <td className="text-center"> 
-                {file.file_code.no_doc} 
-              </td>}
-            {show2 && 
-              <td className="text-center"> 
-                {file.file_code.type} 
-              </td>} 
-            <FileRow file={file} subject={props.subject} />
-          </tr>
-        )
-      }) 
-    }
-  return(
-    <table className="table table--condensed table--bordered">
-      <tr>
-        <th> 期 </th>
-        {show1 && <th> 回 </th>}
-        {show2 && <th> 種別 </th> }
-        <th> ファイル </th>
-      </tr>
-      { makeContents(files) }
-
-    </table>
-  )
-}
 
 
 type MatchStudyType = {match:{ 
@@ -175,7 +64,14 @@ function StudySubjectBoard( props:MatchStudyType){
         msg:''
      })
 
+  /** 
+   * Note: The second argument becomes title_en and kind.
+   * This is because, react routing does not re-render 
+   * when changing within the Route (this case, /study/:title/:kind).
+   * Therefore, to forcely re-render, these two variables are chosen.
+   */
   useEffect(()=> {
+    window.scrollTo(0,0)
     UserService.getFileBoard(
       `file/${title_en}/${kind}`
       )
@@ -221,8 +117,7 @@ function StudySubjectPages(){
     <Switch>
       <Route 
         path='/study/:title_en/:kind' 
-        component={(props:MatchStudyType) => 
-        <StudySubjectBoard match={props.match}/>} 
+        component={ StudySubjectBoard } 
        />
     </Switch>
   )

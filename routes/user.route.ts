@@ -20,7 +20,7 @@ router.get('/cleanup', UserController.cleanup)
 router.get('/profile', UserController.ProfileBoard)
 router.get('/multiple/semester', UserController.SemesterBoard)
 router.get('/multiple/file/:title_en/:kind', UserController.FileBoard)
-
+router.get('/file/:id', UserController.DownloadFile)
 
 // For test
 import { SampleController } from '../api/controllers/sample_user'

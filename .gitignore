@@ -5,6 +5,7 @@
 *.sqlite
 *.ipynb_checkpoints
 __pycache__
+downloads
 
 # Logs
 logs

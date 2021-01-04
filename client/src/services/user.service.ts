@@ -4,9 +4,10 @@ import { User } from '../entity/user.entity'
 import { OneClassStatus, MultiClassStatus } from '../helpers/types.helper'
 import { url } from 'inspector'
 import { FilesSubjectStatus } from '../components/study/study-subject.component'
+import fileDownload from 'js-file-download'
+import { Doc_File } from '../entity/study.entity' 
 
 const API_URL = '/api/user/'
-
 
 class UserService {
   /**
@@ -33,6 +34,22 @@ class UserService {
   static async getFileBoard<T>(url: string){
     return axios.get<FilesSubjectStatus>
       (API_URL + 'multiple/' + url, {headers:authHeader()} )
+  }
+
+  static async downloadFile(
+    file: Doc_File, type: 'download' | 'preview'
+  ){
+    console.log("download file.")
+    const res = await fetch(`/api/user/file/${file.id}`)
+    const blob = await res.blob()
+    if(type === 'download'){
+      fileDownload(blob, file.file_name)
+    } else {
+      console.log('preview')
+      var fileURL = window.URL.createObjectURL(blob)
+      window.open(fileURL, '_blank')
+      // fileDownload(blob, file.file_name,undefined ,'open()')
+    }
   }
 }
 

@@ -63,7 +63,7 @@ app.get('/api/*', (req:Request, res:Response) => {
  * Handles any requests that don't match the ones above
  */
 app.get('*', (req:Request,res:Response) =>{
-    res.sendFile(path.join(__dirname+'/../client/build/index.html'))
+    res.sendFile(path.join(__dirname, '/../client/build/index.html'))
 })
 
 /**

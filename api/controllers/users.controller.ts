@@ -222,7 +222,6 @@ class UserController{
    * Send data for toggle menus of "/semester" page. 
    */
   static SemesterBoard: ExpressFunc = async function(req,res){
-    console.log('semester board process started.')
     const user = await UserFromHeader(req)
     if(user){
       const class_year_id = await Year2ClassID(user.class_year)
@@ -271,6 +270,22 @@ class UserController{
         })
       })
     }
+  }
+
+  static DownloadFile: ExpressFunc = async (req,res) => {
+    let fileRepo = getManager().getRepository(Document_File)
+    let doc_file = await fileRepo.findOne(req.params.id)
+    if(doc_file){
+      let subjectRepo = getManager().getRepository(Subject)
+      let subject = await subjectRepo.findOne(doc_file.subject_id)
+      if(subject){
+        let title_en = subject.title_en
+        const downloadPath = `${__dirname}/../../..`
+        const filePath = `${downloadPath}/downloads/${title_en}/${doc_file.file_name}`
+        res.download(filePath)
+      }
+    }
+
   }
 }
 
