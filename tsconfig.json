@@ -89,5 +89,9 @@
     "placeOpenBraceOnNewLineForFunctions": false,
     "placeOpenBraceOnNewLineForControlBlocks": false
   },
-  "exclude": ["client", "dist", "node_modules"]
+  "include": ["*/**/*.ts", "*.ts"],
+  "exclude": ["client", "dist", "node_modules"],
+  "files": ["client/src/entity/notification.entity.ts",
+            "client/src/entity/study.entity.ts",
+            "client/src/entity/user.entity.ts" ]
 }

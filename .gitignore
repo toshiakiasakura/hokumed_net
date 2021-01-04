@@ -3,6 +3,10 @@
 # custom
 *.js
 *.sqlite
+*.ipynb_checkpoints
+__pycache__
+downloads
+*.swp
 
 # Logs
 logs
