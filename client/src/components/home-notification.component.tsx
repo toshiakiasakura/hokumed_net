@@ -8,6 +8,7 @@ import {
   FetchValidation, changeDate, BackButton, Loading
 } from '../helpers/utils.component'
 import { sortDate } from '../helpers/sort.helper'
+import { UserService } from '../services/user.service'
 
 type NotificationsStatus = MultiClassStatus<Notification>
 
@@ -31,9 +32,9 @@ function Home(){
       >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<Notification>('notification')
+    UserService.getMultipleObjects<Notification>('notification')
     .then( res => {
-      console.log(res)
+      console.log('result',res)
       setState({
         contents: res.data.contents, 
         status: res.data.status,
@@ -48,6 +49,7 @@ function Home(){
     return(disp)
   }
 
+  console.log('state',state)
   let contents = state.contents
   return(
     <FetchValidation status={state.status}>

@@ -9,5 +9,6 @@ router.get('/profile', UserController.ProfileBoard)
 router.get('/multiple/semester', UserController.SemesterBoard)
 router.get('/multiple/file/:title_en/:kind', UserController.FileBoard)
 router.get('/file/:id', UserController.DownloadFile)
+router.get('/multiple/notification', UserController.NotificationBoard )
 
 export { router as userRouter }

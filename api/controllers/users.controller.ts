@@ -2,6 +2,7 @@ import { getManager } from 'typeorm'
 import { User } from '../entity/user.entity'
 import { ExpressFunc } from '../helpers/express_typing'
 import { Subject, Class_Year, Semester_Subject, Semester, Document_File } from '../entity/study.entity'
+import { Notification } from '../entity/notification.entity'
 import { 
   getOneSemesterSubjects, Year2ClassID, UserFromHeader, 
   classID2Year, subjectsFromSemester, getOneFile
@@ -15,7 +16,6 @@ class UserController{
    */
   static ProfileBoard: ExpressFunc = async function (req, res){
     const user = await UserFromHeader(req)
-
     if(user){
       console.log("GET profile succeeded")
       res.json({content:user, status:200})
@@ -23,6 +23,15 @@ class UserController{
       console.log('GET profile failed. ', user)
       res.json({status:401})
     }
+  }
+
+  /**
+   * Return notification informations.  
+   */
+  static NotificationBoard: ExpressFunc = async function(req,res){
+    let NotificationRepo = getManager().getRepository(Notification)
+    let notifications = await NotificationRepo.find()
+    res.json({contents: notifications, status:200})
   }
 
   /**

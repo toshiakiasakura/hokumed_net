@@ -1,7 +1,6 @@
 import { getManager } from 'typeorm'
 import { ExpressMiddleFunc } from '../helpers/express_typing'
 import { User } from '../entity/user.entity'
-import jwt from 'jsonwebtoken'
 
 /**
  * User and admin validation is implemented here.
@@ -25,12 +24,12 @@ class ValidateController {
       } else{
         const msg = 'Authentication error.'
         console.log(msg)
-        res.redirect('/error/401')
+        res.json({status:401})
       }
     } else {
       const msg = 'Headers are lack.'
       console.log(msg)
-      res.redirect('/error/401')
+      res.json({status:401})
     }
   }
 
@@ -50,13 +49,13 @@ class ValidateController {
       } else{
         const msg = 'Authentication error.'
         console.log(msg)
-        res.redirect('/error/401')
+        res.json({status:401})
       }
 
     } else {
       const msg = 'Headers are lack.'
       console.log(msg)
-      res.redirect('/error/401')
+      res.json({status:401})
     }
   }
 }
