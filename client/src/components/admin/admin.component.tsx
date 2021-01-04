@@ -1,3 +1,4 @@
+import { useState, useEffect} from 'react'
 import { Route, Switch, Link, Redirect} from 'react-router-dom'
 import { NotFound } from '../404.component'
 import Cookies from 'universal-cookie'
@@ -9,23 +10,36 @@ import { SemesterPages } from './admin-semester.component'
 import { NotificationPages } from './admin-notification.component'
 
 
-const TopNavItem = (props:{url:string, tabName:string} ) => {
+const TopNavItem = function(
+  props:{
+    url:string, tabName:string, state:any, setState:any
+  } 
+){
+  let active = props.url === props.state ? 'tab--active' : ''
   return(
-    <div className="tab">
-      <Link to={`/admin/${props.url}`}> {props.tabName} </Link>
+    <div className={`tab ${active}`}>
+      <Link to={`/admin/${props.url}`}> 
+        {props.tabName} 
+      </Link>
     </div>
   )
 }
 
 const TopNavVar = () => {
+  let urls = window.location.href.split('/')
+  let url = '' + urls[urls.length -1]
+  url = url=== undefined ? '' : url
+  let [state, setState] = useState('/')
+  useEffect(() => {setState(url)}, [url])
+
   return(
     <div className="tabs">
-        <TopNavItem url="" tabName="TOP" />
-        <TopNavItem url="user" tabName="ユーザー" />
-        <TopNavItem url="year" tabName="学年" />
-        <TopNavItem url="subject" tabName="教科" />
-        <TopNavItem url="semester" tabName="学期" />
-        <TopNavItem url="notification" tabName="お知らせ" />
+        <TopNavItem url="" tabName="TOP" state={state} setState={setState}/>
+        <TopNavItem url="user" tabName="ユーザー" state={state} setState={setState}/>
+        <TopNavItem url="year" tabName="学年" state={state} setState={setState}/>
+        <TopNavItem url="subject" tabName="教科" state={state} setState={setState}/>
+        <TopNavItem url="semester" tabName="学期" state={state} setState={setState}/>
+        <TopNavItem url="notification" tabName="お知らせ" state={state} setState={setState}/>
     </div>
   )
 }

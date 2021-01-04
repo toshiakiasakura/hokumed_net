@@ -41,12 +41,12 @@ export function FormRow(
 ){
   return(
     <div className="form__group">
-      <div className="col--sm-2">
+      <div className="col--sm-4">
         <label className="form__label" htmlFor={props.id}>
           {props.title}
         </label>
       </div>
-      <div className="col--sm-10 tooltip tooltip--secondary">
+      <div className="col--sm-8 tooltip tooltip--secondary">
         <input
           className="form__control"
           type={props.type || "text"}

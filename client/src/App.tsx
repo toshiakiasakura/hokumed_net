@@ -12,7 +12,7 @@ import { Study } from './components/study/study.component'
 import { NotFound } from './components/404.component'
 import { NavBar } from './components/nav-bar.component'
 import { Logout } from './components/logout.component'
-import { Profile } from './components/profile.component'
+import { ProfilePages } from './components/profile.component'
 import { ResetPassword } from './components/reset-password.component'
 import { VerificationPage } from './components/verification.component'
 import './style/_index.sass'
@@ -29,7 +29,7 @@ class App extends Component{
         <Route exact path='/home' component={ Home } />
         <Route path='/notification' component={ NotificationPages } />
         <Route path='/study' component={ Study } />
-        <Route path='/profile' component={ Profile } />
+        <Route path='/profile' component={ ProfilePages } />
         <Route path='/admin' component={ Admin } />
         <Route exact path='/signup' component={ SignUp } />
         <Route exact path='/logout' component= { Logout } />

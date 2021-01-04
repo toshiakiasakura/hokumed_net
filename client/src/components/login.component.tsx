@@ -126,8 +126,6 @@ const Login = () => {
         <h2> ログイン画面 </h2>
         <LoginForm />
         <div className="test-muted text-small">
-          {/* TO DO: Resend the confirmation mail.*/}
-          <Link to="/error">認証メールの再送信(未実装)</Link> <br />
           <Link to="/reset-password">パスワードの再設定</Link>
         </div>
         <hr/>
