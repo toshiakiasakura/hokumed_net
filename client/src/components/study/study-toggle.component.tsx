@@ -8,7 +8,6 @@ import { OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { UserService } from '../../services/user.service'
 import { SemesterSubjects } from '../../entity/study.entity'
 import { sortLearnYearTerm } from '../../helpers/sort.helper'
-import { NotFound } from '../404.component'
 import arrow from '../../img/arrow.svg'
 import { sortString } from '../../helpers/sort.helper'
 

@@ -11,6 +11,7 @@ import bodyParser from 'body-parser'
 import { testRouter } from './routes/tests'
 import { userRouter } from './routes/user.route'
 import { adminRouter } from './routes/admin.route'
+import { authRouter } from './routes/auth.route'
 import { ValidateController } from './api/controllers/validate.controller'
 
 /**
@@ -53,7 +54,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
  * Routing part.
  */
 app.use('/api/test', testRouter )
-app.use('/api/user', userRouter)
+app.use('/api/auth', authRouter)
+app.use('/api/user', ValidateController.validateUser,  userRouter)
 app.use('/api/admin',ValidateController.validateAdmin, adminRouter)
 app.get('/api/*', (req:Request, res:Response) => {
     res.json({status:404})

@@ -1,6 +1,5 @@
 import { useState, useEffect} from 'react'
 import { Route, Switch, Link, Redirect} from 'react-router-dom'
-import { NotFound } from '../404.component'
 import Cookies from 'universal-cookie'
 import { Top } from './admin-top.component'
 import { UserPages } from './admin-user.component'
@@ -61,7 +60,7 @@ function Admin(){
         <Route path='/admin/year' component={ ClassYearPages } />
         <Route path='/admin/semester' component={ SemesterPages } />
         <Route path='/admin/notification' component={ NotificationPages } />
-        <Route component={NotFound} />
+        <Route component={() => <Redirect to='/error/401'/>} />
       </Switch>
     </div>
   )

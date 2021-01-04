@@ -92,7 +92,7 @@ export class FetchValidation extends Component<
     render(){
       let status  =  this.props.status
       if(status === 401 || status === 404){
-        return(<Redirect to='/error' />)
+        return(<Redirect to={`/error/${status}`} />)
       } else {
         return(
           <div>

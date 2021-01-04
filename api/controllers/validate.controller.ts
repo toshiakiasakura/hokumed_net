@@ -25,12 +25,12 @@ class ValidateController {
       } else{
         const msg = 'Authentication error.'
         console.log(msg)
-        res.json({status:401, msg:msg })
+        res.redirect('/error/401')
       }
     } else {
       const msg = 'Headers are lack.'
       console.log(msg)
-      res.json({status:401, msg:msg})
+      res.redirect('/error/401')
     }
   }
 
@@ -50,13 +50,13 @@ class ValidateController {
       } else{
         const msg = 'Authentication error.'
         console.log(msg)
-        res.json({status:401, msg:msg })
+        res.redirect('/error/401')
       }
 
     } else {
       const msg = 'Headers are lack.'
       console.log(msg)
-      res.json({status:401, msg:msg})
+      res.redirect('/error/401')
     }
   }
 }

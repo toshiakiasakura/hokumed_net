@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from 'universal-cookie'
 
 // TO DO: change the api url. user to auth.
-const API_URL = '/api/user/'
+const API_URL = '/api/auth/'
 type Token = {accessToken:string,
               userID:number,
               status: number,
@@ -94,7 +94,7 @@ class AuthService {
         return(res.data.status === 200 ? true : res.data.msg)
       })
       .catch((err) => {
-        console.log('axios checkHnadle failure')
+        console.log('axios checkHandle failure')
         console.log(err)
       })
     return(data)

@@ -1,12 +1,8 @@
 import axios from 'axios'
 import { authHeader } from './auth-header'
-import { Subject, Class_Year, SemesterSubjects } from '../entity/study.entity'
-import { Notification } from '../entity/notification.entity'
-import { User } from '../entity/user.entity'
 import { OneClassStatus, MultiClassStatus } from '../helpers/types.helper'
 
 const API_URL = '/api/admin/'
-
 
 class AdminService {
   static async changeApproveStatus(id: number){
