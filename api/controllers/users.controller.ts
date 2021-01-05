@@ -17,10 +17,8 @@ class UserController{
   static ProfileBoard: ExpressFunc = async function (req, res){
     const user = await UserFromHeader(req)
     if(user){
-      console.log("GET profile succeeded")
       res.json({content:user, status:200})
     } else{
-      console.log('GET profile failed. ', user)
       res.json({status:401})
     }
   }
@@ -29,8 +27,9 @@ class UserController{
    * Return notification informations.  
    */
   static NotificationBoard: ExpressFunc = async function(req,res){
-    let NotificationRepo = getManager().getRepository(Notification)
-    let notifications = await NotificationRepo.find()
+    let notifications= await getManager()
+      .getRepository(Notification)
+      .find()
     res.json({contents: notifications, status:200})
   }
 
@@ -42,10 +41,9 @@ class UserController{
     if(user){
       const class_year_id = await Year2ClassID(user.class_year)
       if(class_year_id){
-        let semesterRepo = getManager().getRepository(Semester)
-        const semesters = await semesterRepo.find(
-          {class_year_id:class_year_id}
-          )
+        const semesters= await getManager().getRepository(Semester)
+          .find({class_year_id:class_year_id})
+
         if(semesters){
           const semSubs = semesters.map(getOneSemesterSubjects)
           Promise.all(semSubs)
@@ -63,14 +61,18 @@ class UserController{
    * @param req.params.kind Take exam, quiz, summary or personal.
    */
   static FileBoard: ExpressFunc = async function(req,res){
-    let subjectRepo = getManager().getRepository(Subject)
-    let subject = await subjectRepo.findOne(
-      {where:{title_en:req.params.title_en}}
-      )
+    let subject = await getManager()
+      .getRepository(Subject)
+      .findOne( {where:{title_en:req.params.title_en}} )
     if(subject){
-      let fileRepo = getManager().getRepository(Document_File)
-      let doc_files = await fileRepo.find({subject_id:subject.id})
+      let doc_files = await getManager()
+        .getRepository(Document_File)
+        .find({subject_id:subject.id})
       let files = doc_files.map(getOneFile)
+      let class_years = await getManager()
+        .getRepository(Class_Year)
+        .find()
+
       Promise.all(files)
       .then(result =>{
         let filtered_result = result.filter(
@@ -80,7 +82,8 @@ class UserController{
         res.json({
           contents: {
             items:filtered_result, 
-            subject: subject
+            subject: subject,
+            class_years:class_years
           },
           status:200
         })
@@ -89,11 +92,13 @@ class UserController{
   }
 
   static DownloadFile: ExpressFunc = async (req,res) => {
-    let fileRepo = getManager().getRepository(Document_File)
-    let doc_file = await fileRepo.findOne(req.params.id)
+    let doc_file = await getManager()
+      .getRepository(Document_File)
+      .findOne(req.params.id)
     if(doc_file){
-      let subjectRepo = getManager().getRepository(Subject)
-      let subject = await subjectRepo.findOne(doc_file.subject_id)
+      let subject= await getManager()
+        .getRepository(Subject)
+        .findOne(doc_file.subject_id)
       if(subject){
         let title_en = subject.title_en
         const downloadPath = `${__dirname}/../../..`

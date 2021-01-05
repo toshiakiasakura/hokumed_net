@@ -40,15 +40,19 @@ export const TableRow = (props:{rowName:string,
  * editing or create new data.
  */
 type ButtonType= {
-  title:string
+  title: string
   url: string
+  onClick?: any
 }
 export const TransitionButton = (props: ButtonType) => {
   const history = useHistory()
   return(
     <button
       className="btn btn--sm btn--primary"
-      onClick={() => history.push(props.url)}
+      onClick={() => {
+        history.push(props.url)
+        typeof props.onClick === 'function' && props.onClick()
+      } }
     >
       {props.title}
     </button>

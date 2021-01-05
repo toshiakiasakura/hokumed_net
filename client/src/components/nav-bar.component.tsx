@@ -1,4 +1,3 @@
-import { SocialSentimentSatisfied } from 'material-ui/svg-icons';
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie'
@@ -15,7 +14,7 @@ const NavItem = function(
   const onClick = () => {
     props.setState(props.path)
   }
-  let active = props.path === props.state ? 'navbar__items__item--active' : ''
+  let active = props.path === '/'+ props.state ? 'navbar__items__item--active' : ''
   return (
     <div className={`navbar__items__item ${active}`} id={props.name}>
       <Link to={props.path} onClick={()=>onClick()}>
@@ -31,8 +30,8 @@ const NavItem = function(
  */
 function NavBar(){
   let urls = window.location.href.split('/')
-  let url = '/' + urls[urls.length -1]
-  url = url=== undefined ? '/' : url
+  let url = urls[3]
+  console.log(urls)
   let [state, setState] = useState('/')
   useEffect(() => {setState(url)}, [url])
 

@@ -2,7 +2,8 @@ import { Route, Switch, Link, Redirect} from 'react-router-dom'
 import Cookies from 'universal-cookie'
 
 import { StudyToggleMenus } from './study-toggle.component'
-import { StudySubjectPages } from './study-subject.component'
+import { StudySubjectBoard } from './study-subject.component'
+import { StudyNew } from './study-new.component'
 
 function StudyTop(){
   return(
@@ -23,7 +24,14 @@ function Study(){
       <div className="col--sm-12 col--md-9 col--xs-12 pull-right">
         <Switch>
           <Route exact path='/study' component={StudyTop} />
-          <Route path='/study' component={ StudySubjectPages } />
+          <Route 
+            path='/study/:title_en/:kind/new' 
+            component={ StudySubjectBoard } 
+          />
+          <Route 
+            path='/study/:title_en/:kind' 
+            component={ StudySubjectBoard } 
+          />
         </Switch>
       </div>
     </div>

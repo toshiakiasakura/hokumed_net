@@ -7,16 +7,18 @@ import {
   TableRow, FetchValidation, BackButton, TransitionButton, Loading
 } from '../../helpers/utils.component'
 import { UserService } from '../../services/user.service'
-import { Doc_File, Subject } from '../../entity/study.entity'
+import { Doc_File, Subject, Class_Year } from '../../entity/study.entity'
 import { StudySubjectBody } from './study-body.component'
-
+import { StudyNew } from './study-new.component'
 
 const TopNavItem = (props:{url:string, tabName:string} ) => {
   let last = props.url.split('/')
   let l1 = last[last.length -1]
   let cur_last = window.location.href.split('/')
   let l2 = cur_last[cur_last.length -1]
-  const tabActive = l1 === l2 ? "tab--active" : ""
+  let l3 = cur_last[cur_last.length -2 ] // for new and edit page.
+  let active_boolean = l1 === l2 || l1 === l3 
+  const tabActive = active_boolean ?  "tab--active" : ""
   return(
     <div className={`tab ${tabActive}`}>
         <Link to={`/study/${props.url}`}> {props.tabName} </Link>
@@ -44,29 +46,40 @@ type MatchStudyType = {match:{
 export type FilesSubjectStatus = {
   contents: {
     items: Doc_File[], 
-    subject: Subject
+    subject: Subject,
+    class_years: Class_Year[]
   },
   status:number,
-  msg: string
+  msg: string,
+  new: boolean
 }
 
-function StudySubjectBoard( props:MatchStudyType){
-  console.log('study subject pagegs process started.')
+/**
+ * This function is processing shared components of 
+ * study pages. For example, view list, edit and new pages 
+ * for documents. 
+ * Especially, navigation bar is same for these 3 pages.
+ */
+export function StudySubjectBoard( props:MatchStudyType){
   const history = useHistory()
   let title_en = props.match.params.title_en
   let kind = props.match.params.kind
-
   const PageArray = 'exam quiz summary personal'.split(' ') 
   if(!PageArray.includes(kind)){
     history.push('/error')
   }
 
   const [state, setState] = useState<
-      FilesSubjectStatus
+      FilesSubjectStatus 
       >({
-        contents:{items:[], subject: new Subject()}, 
+        contents:{
+          items:[], 
+          subject: new Subject(),
+          class_years:[]
+        }, 
         status:200, 
-        msg:''
+        msg:'',
+        new: false
      })
 
   /** 
@@ -84,14 +97,17 @@ function StudySubjectBoard( props:MatchStudyType){
       setState({
         contents: res.data.contents, 
         status: res.data.status,
-        msg: res.data.msg
+        msg: res.data.msg,
+        new: false
       })
     })
   },[title_en, kind])
 
+
   let files = state.contents.items
   let subject = state.contents.subject
   console.log('StudySubjectBoard contents.',files)
+
   return(
     <FetchValidation status={state.status}>
       {subject === undefined  || subject.id === undefined
@@ -102,36 +118,27 @@ function StudySubjectBoard( props:MatchStudyType){
             <div>
               <StudyNavVar title_en={title_en} />
             </div>
-            <p>
-              <TransitionButton title='新規アップロード' url={`/study/${title_en}/new`}/>
-            </p>
-            { files.length !== 0 
-            ? <StudySubjectBody 
-                files={files} kind={kind} subject={subject}
-               />
-            : '資料がまだ投稿されていません．'
-            }
+            <Switch>
+              <Route 
+                path='/study/:title_en/:kind/new' 
+                component={ () =>
+                <StudyNew
+                  files={files} kind={kind} 
+                  title_en={title_en} subject={subject} 
+                  years={state.contents.class_years}
+                />} 
+              />
+              <Route 
+                path='/study/:title_en/:kind' 
+                component={ () =>
+                <StudySubjectBody 
+                  files={files}  subject={subject} 
+                  title_en={title_en} kind={kind} 
+                />} 
+              />
+            </Switch>
           </div>
       }
     </FetchValidation>
   )
 }
-
-function Prepare(){
-  return(
-    <h1>準備中</h1>
-  )
-}
-
-function StudySubjectPages(){
-  return(
-    <Switch>
-      <Route path='/study/:title_en/new' component={ Prepare}/>
-      <Route 
-        path='/study/:title_en/:kind' 
-        component={ StudySubjectBoard } 
-       />
-    </Switch>
-  )
-}
-export { StudySubjectPages }

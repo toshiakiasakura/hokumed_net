@@ -51,6 +51,10 @@ class UserService {
       // fileDownload(blob, file.file_name,undefined ,'open()')
     }
   }
+
+  static async sendFiles(data:any){
+    return axios.post('/api/user/file/upload',data)
+  }
 }
 
 export { UserService }

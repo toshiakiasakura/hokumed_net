@@ -209,22 +209,45 @@ const SortFiles: SortFileFunc = function(
 
 
 export function StudySubjectBody(
-  props:{files: Doc_File[], kind:string, subject:Subject}
+  props:{
+    files: Doc_File[],  
+    subject:Subject, 
+    title_en:string,
+    kind:string
+
+  }
 ){
+  const history = useHistory()
   let files = props.files
   let kind = props.kind
+  let title_en = props.title_en
   const show1 = kind !== 'personal'
   const show2 = kind !== 'personal' && kind !== 'summary'
   return(
-    <table className="table table--condensed table--bordered">
-      <tr>
-        <th> 期 </th>
-        {show1 && <th> 回 </th>}
-        {show2 && <th> 種別 </th> }
-        <th> ファイル </th>
-      </tr>
-       { SortFiles(files, props.subject, show1, show2, kind) }
+    <React.Fragment>
+      <p>
+        <button 
+          className="btn btn--sm btn--primary"
+          onClick={() => history.push(`/study/${title_en}/${kind}/new`)}
+        > 
+          新規アップロード
+        </button>
 
-    </table>
+      </p>
+
+      {files.length 
+        ?
+          <table className="table table--condensed table--bordered">
+            <tr>
+              <th> 期 </th>
+              {show1 && <th> 回 </th>}
+              {show2 && <th> 種別 </th> }
+              <th> ファイル </th>
+            </tr>
+            { SortFiles(files, props.subject, show1, show2, kind) }
+          </table>
+        : "資料がまだ投稿されていません．"
+      }
+    </React.Fragment>
   )
 }

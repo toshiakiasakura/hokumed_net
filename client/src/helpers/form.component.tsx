@@ -83,6 +83,27 @@ export function SaveButton(props:{formState:any}){
 }
 
 /**
+ * Given class_year arrays, create class year options.
+ */
+export const createClassYearOptions = (contents:Class_Year[]) => {
+  let options= [
+    <option id={'learnYearDefault'} value='default'>
+      期を選択
+    </option>
+  ]
+  let sorts = sortValue(contents, 'year', true)
+  console.log("class year after sort",sorts)
+  for( let i = 0; i < sorts.length; i++){
+    let year = sorts[i].year
+    options.push(
+      <option id={"learnYear" + year} value={year}>
+        {year}期
+      </option>
+    )
+  }
+  return options
+}
+/**
  * Class year block of input form.
  */
 export const ClassYearBlock = (props:{register:any, name:string}) => {
@@ -94,24 +115,6 @@ export const ClassYearBlock = (props:{register:any, name:string}) => {
     AuthService.ClassYearBoard<Class_Year>(setState)
   }, [setState])
 
-  const makeOptions = (contents:Class_Year[]) =>{
-    let options= [
-      <option id={'learnYearDefault'} value='default'>
-        期を選択
-      </option>
-    ]
-    let sorts = sortValue(contents, 'year', true)
-    console.log("class year after sort",sorts)
-    for( let i = 0; i < sorts.length; i++){
-      let year = sorts[i].year
-      options.push(
-        <option id={"learnYear" + year} value={year}>
-          {year}年
-        </option>
-      )
-    }
-    return options
-  }
   let contents = state.contents
   return(
     <FetchValidation status={state.status}>
@@ -134,7 +137,7 @@ export const ClassYearBlock = (props:{register:any, name:string}) => {
                 }
               })}
             >
-              {makeOptions(contents)}
+              {createClassYearOptions(contents)}
             </select>
           </div>
         </div>

@@ -82,7 +82,7 @@ class EmailSender{
       subject: `承認確認メール: ${family} ${given} さん`,
       text: `${family} ${given} さんを管理者画面から承認しました．` +
       `${to_mail}に承認メールを送信しました．`  +
-      'もし，このユーザーにメールが届いて居ない場合は，受診設定を確認してみてください．'
+      'もし，このユーザーにメールが届いて居ない場合は，受信設定を確認してみてください．'
     }
     sendMail(adminMailOptions)
   }
