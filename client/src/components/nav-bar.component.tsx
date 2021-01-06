@@ -31,7 +31,6 @@ const NavItem = function(
 function NavBar(){
   let urls = window.location.href.split('/')
   let url = urls[3]
-  console.log(urls)
   let [state, setState] = useState('/')
   useEffect(() => {setState(url)}, [url])
 

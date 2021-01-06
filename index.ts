@@ -8,6 +8,8 @@ import 'reflect-metadata'
 import { createConnection } from 'typeorm'
 import path from 'path'
 import bodyParser from 'body-parser'
+let cookieParser = require('cookie-parser')
+
 import { testRouter } from './routes/tests'
 import { userRouter } from './routes/user.route'
 import { adminRouter } from './routes/admin.route'
@@ -35,7 +37,7 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
   res.setHeader("Access-Control-Allow-Methods", "POST, GET")
   res.setHeader("Access-Control-Max-Age", "3600")
-  res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, x-access-token, x-user-id,Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
+  res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
   next()
 })
 
@@ -49,6 +51,7 @@ app.use(express.static(path.join(__dirname, '/../client/build')))
  */
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 /**
  * Routing part.

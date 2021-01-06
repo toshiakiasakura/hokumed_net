@@ -98,7 +98,7 @@ export async function getOneFile(
  */
 export async function UserFromHeader(req:any){
   let userRepository = getManager().getRepository(User)
-  const userID = req.headers['x-user-id']
+  const userID = req.cookies['userID']
   let user = undefined
   if (typeof userID === 'string'){
     user = await userRepository.findOne(parseInt(userID))

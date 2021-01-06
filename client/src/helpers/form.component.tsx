@@ -92,7 +92,6 @@ export const createClassYearOptions = (contents:Class_Year[]) => {
     </option>
   ]
   let sorts = sortValue(contents, 'year', true)
-  console.log("class year after sort",sorts)
   for( let i = 0; i < sorts.length; i++){
     let year = sorts[i].year
     options.push(

@@ -56,7 +56,6 @@ function StudyToggleMenu(props:{semester: SemesterSubjects}){
 type SemestersStatus= MultiClassStatus<SemesterSubjects>
 
 export function StudyToggleMenus(){
-  console.log('study toggle menu process started.')
 
   const [state, setState] = useState<
       SemestersStatus

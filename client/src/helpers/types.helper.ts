@@ -13,3 +13,15 @@ export type OneClassStatus<T> = {
 export type MultiClassStatus<T> = {
   contents: T[], status:number, msg:string
 }
+
+/**
+ * File form data type.
+ */
+export type FileFormData = {
+  class_year: string,
+  comment: string,
+  code_radio: string,
+  files:File[],
+  no_doc: string,
+  test_kind: string
+}

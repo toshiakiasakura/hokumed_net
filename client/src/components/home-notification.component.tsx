@@ -34,7 +34,6 @@ function Home(){
   useEffect(()=> {
     UserService.getMultipleObjects<Notification>('notification')
     .then( res => {
-      console.log('result',res)
       setState({
         contents: res.data.contents, 
         status: res.data.status,
@@ -49,7 +48,6 @@ function Home(){
     return(disp)
   }
 
-  console.log('state',state)
   let contents = state.contents
   return(
     <FetchValidation status={state.status}>

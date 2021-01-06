@@ -103,10 +103,8 @@ export function StudySubjectBoard( props:MatchStudyType){
     })
   },[title_en, kind])
 
-
   let files = state.contents.items
   let subject = state.contents.subject
-  console.log('StudySubjectBoard contents.',files)
 
   return(
     <FetchValidation status={state.status}>

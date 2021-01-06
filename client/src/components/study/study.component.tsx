@@ -17,7 +17,6 @@ function StudyTop(){
 }
 
 function Study(){
-  console.log("Try to access study page.  ")
   return(
     <div className="topfix container v-spacer row">
       <StudyToggleMenus /> 

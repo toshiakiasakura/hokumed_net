@@ -1,8 +1,9 @@
 import axios from 'axios'
+import {serialize} from 'object-to-formdata'
+
 import { authHeader } from './auth-header'
 import { User } from '../entity/user.entity'
-import { OneClassStatus, MultiClassStatus } from '../helpers/types.helper'
-import { url } from 'inspector'
+import { OneClassStatus, MultiClassStatus, FileFormData } from '../helpers/types.helper'
 import { FilesSubjectStatus } from '../components/study/study-subject.component'
 import fileDownload from 'js-file-download'
 import { Doc_File } from '../entity/study.entity' 
@@ -18,7 +19,7 @@ class UserService {
    */
   static async getProfileBoard(){
     return axios.get<OneClassStatus<User>>
-                  (API_URL+'profile', {headers: authHeader()})
+                  (API_URL+'profile' )
   }
 
   /**
@@ -28,12 +29,12 @@ class UserService {
    */
   static async getMultipleObjects<T>(url: string){
     return axios.get<MultiClassStatus<T>>
-      (API_URL + 'multiple/' + url, {headers:authHeader()} )
+      (API_URL + 'multiple/' + url )
   }
 
   static async getFileBoard<T>(url: string){
     return axios.get<FilesSubjectStatus>
-      (API_URL + 'multiple/' + url, {headers:authHeader()} )
+      (API_URL + 'multiple/' + url)
   }
 
   static async downloadFile(
@@ -52,8 +53,23 @@ class UserService {
     }
   }
 
-  static async sendFiles(data:any){
-    return axios.post('/api/user/file/upload',data)
+  static async sendFiles(data:FileFormData, title_en:string){
+    console.log("sending files.aaaaaaaaaaaaaaaaaaaaaaa")
+      let uploadData = new FormData()
+      for(let i=0; i < data.files.length; i++){
+        uploadData.append('upload', data.files[i])
+        uploadData.append('class_year', data.class_year)
+        uploadData.append('comment', data.comment)
+        uploadData.append('code_radio', data.code_radio)
+        uploadData.append('no_doc', data.no_doc)
+        uploadData.append('test_kind', data.test_kind)
+        uploadData.append('subject_title_en', title_en)
+      }
+      console.log(uploadData)
+      const config = {headers:{'Content-Type': 'multipart/form-data'}}
+
+    return axios.post<{status:number, msg:string}>
+      ( '/api/user/upload/file', uploadData, )
   }
 }
 
