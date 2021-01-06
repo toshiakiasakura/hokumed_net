@@ -16,4 +16,9 @@ router.post('/world', (req:Request ,res:Response) => {
     res.send(`I received your POST request. ${req.body.post}`)
     console.log('Hello world!!! ')
 })
+
+// For test
+import { SampleController } from '../api/controllers/sample_user'
+router.get('/add_sample', SampleController.addSampleUser)
+router.get('/add_admin', SampleController.addSampleAdmin)
 export { router as testRouter }

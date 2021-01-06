@@ -68,7 +68,6 @@ const EditNotification: EditFunc<Notification> = async (
   if(type==='update'){
     obj.updated_at = new Date()
   }
-  
   await Repo.save(obj)
 }
 
@@ -160,8 +159,9 @@ class AdminController{
   static SendOneObject: ExpressFunc = async function(req, res) {
     if(req.params && switchKeys.includes(req.params.kind)){
         let cls = switchDic[req.params.kind]
-        let Repo = getManager().getRepository(cls)
-        const obj = await Repo.findOne(req.params.id)
+        let obj = await getManager()
+          .getRepository(cls)
+          .findOne(req.params.id)
         if(obj){
           res.json({content:obj, status:200})
         } else {
@@ -175,8 +175,9 @@ class AdminController{
   static SendMultipleObjects: ExpressFunc = async function(req, res){
     if(req.params && switchKeys.includes(req.params.kind)){
       let cls = switchDic[req.params.kind]
-      let Repo = getManager().getRepository(cls)
-      const clsObjects = await Repo.find()
+      let clsObjects = await getManager()
+        .getRepository(cls)
+        .find()
       res.json({contents:clsObjects, status:200})
     } else {
       res.json({status:401, msg:'kind part is not existed.'})
@@ -198,11 +199,13 @@ class AdminController{
       if(obj){
         await Repo.remove(obj)
         if(req.params.kind === 'subject'){
-          let semSubRepo = getManager().getRepository(Semester_Subject)
-          await semSubRepo.delete({subject_id:obj.id})
+          await getManager()
+            .getRepository(Semester_Subject)
+            .delete({subject_id:obj.id})
         } else if (req.params.kind === 'semester'){
-          let semSubRepo = getManager().getRepository(Semester_Subject)
-          await semSubRepo.delete({semester_id:obj.id})
+          await getManager()
+            .getRepository(Semester_Subject)
+            .delete({semester_id:obj.id})
         }
         res.json({status:200})
       } else {
@@ -214,7 +217,6 @@ class AdminController{
   }
 
   static EditOneObject: ExpressFunc = async function(req, res){
-    console.log('Edit one object started. ')
     if(req.params && switchKeys.includes(req.params.kind)){
       let kind = req.params.kind
       let obj = undefined
@@ -222,7 +224,7 @@ class AdminController{
       // Add new patterns here. 
       if(kind === 'year'){
         let Repo = getManager().getRepository(Class_Year)
-        let obj = await Repo.findOne(req.body.id)
+        let obj = await Repo.findOne(req.params.id)
         if(obj){
           await EditClassYear(Repo, obj, req.body, 'update')
           res.json({status:200, msg:'Edit succeeded.'})
@@ -231,7 +233,7 @@ class AdminController{
         }
       } else if (kind === 'subject'){
         let Repo = getManager().getRepository(Subject)
-        let obj = await Repo.findOne(req.body.id)
+        let obj = await Repo.findOne(req.params.id)
         if(obj){
           await EditSubject(Repo, obj, req.body, 'update')
           res.json({status:200, msg:'Edit succeeded.'})
@@ -240,7 +242,7 @@ class AdminController{
         }
       } else if (kind === 'notification'){
         let Repo = getManager().getRepository(Notification)
-        let obj = await Repo.findOne(req.body.id)
+        let obj = await Repo.findOne(req.params.id)
         if(obj){
           await EditNotification(Repo, obj, req.body, 'update')
           res.json({status:200, msg:'Edit succeeded.'})
@@ -258,7 +260,6 @@ class AdminController{
       let cls = switchDic[req.params.kind]
       let kind = req.params.kind
       let Repo = getManager().getRepository(cls)
-
       
       // Add new patterns here. 
       if(kind === 'year'){
@@ -281,8 +282,9 @@ class AdminController{
    * Send SemesterSubjects contents.  
    */
   static SemesterBoard: ExpressFunc = async function(req, res){
-    let semesterRepo = getManager().getRepository(Semester)
-    let semesters = await semesterRepo.find()
+    let semesters = await getManager()
+      .getRepository(Semester)
+      .find()
     if (semesters){
       const semSubs =  semesters.map(getOneSemesterSubjects)
       Promise.all(semSubs)
@@ -295,9 +297,12 @@ class AdminController{
   }
 
   static SemesterDetail: ExpressFunc = async function(req, res){
-    let semesterRepo = getManager().getRepository(Semester)
-    let semester = await semesterRepo.findOne(req.params.id)
-    let subjects = await getManager().getRepository(Subject).find()
+    let semester = await getManager()
+      .getRepository(Semester)
+      .findOne(req.params.id)
+    let subjects = await getManager()
+      .getRepository(Subject)
+      .find()
     if(semester && subjects ){
       const semSubs = await getOneSemesterSubjects(semester)
       const semSubArray = semSubs.subjects.map(sub =>  sub.title_en )

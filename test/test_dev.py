@@ -109,6 +109,6 @@ class TestSite(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    subprocess.check_call(["curl",f"{back_url}/api/user/add_sample"])
-    subprocess.check_call(["curl",f"{back_url}/api/user/add_admin"])
+    subprocess.check_call(["curl",f"{back_url}/api/test/add_sample"])
+    subprocess.check_call(["curl",f"{back_url}/api/test/add_admin"])
     unittest.main()

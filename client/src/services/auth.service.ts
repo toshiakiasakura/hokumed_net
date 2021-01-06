@@ -1,8 +1,9 @@
 import axios from "axios";
 import Cookies from 'universal-cookie'
+import { MultiClassStatus } from '../helpers/types.helper'
 
 // TO DO: change the api url. user to auth.
-const API_URL = '/api/user/'
+const API_URL = '/api/auth/'
 type Token = {accessToken:string,
               userID:number,
               status: number,
@@ -10,7 +11,9 @@ type Token = {accessToken:string,
               admin: boolean}
 
 class AuthService {
-  static async login(email: string, password: string) {
+  static async login(
+    email: string, password: string, keepLogin: boolean
+  ){
     return axios
       .post<Token>
           (API_URL + "login", { email, password })
@@ -21,11 +24,16 @@ class AuthService {
             && response.data.accessToken
             && response.data.userID){
           const cookies = new Cookies()
-          const options = {path:'/', maxAge:3600*3}
+          // maxAge undefined meaning while session.  
+          const options = {
+            path:'/', 
+            maxAge:keepLogin ? 3600*24*7: undefined
+          }
           cookies.set('accessToken', response.data.accessToken,options)
           cookies.set('userID', response.data.userID, options)
           cookies.set('isLogIn', 'true', options)
-          cookies.set('isAdmin', response.data.admin ? 'true' : 'false')
+          cookies.set('isAdmin', response.data.admin ? 'true' : 'false', options)
+          cookies.set('editFile', 'false', options)
           console.log(cookies.getAll())
         }
         return response.data
@@ -94,7 +102,7 @@ class AuthService {
         return(res.data.status === 200 ? true : res.data.msg)
       })
       .catch((err) => {
-        console.log('axios checkHnadle failure')
+        console.log('axios checkHandle failure')
         console.log(err)
       })
     return(data)
@@ -111,6 +119,17 @@ class AuthService {
         console.log(err)
       })
   }
+
+  static async ClassYearBoard<T>(setState:any){
+    return axios.get<MultiClassStatus<T>>(API_URL + 'multiple/year')
+      .then(res=>{
+        setState({
+          contents: res.data.contents,
+          status: res.data.status,
+          msg: res.data.msg
+        })
+      })
+  }
 }
 
-export {AuthService}
+export { AuthService }

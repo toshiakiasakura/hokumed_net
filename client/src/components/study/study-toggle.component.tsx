@@ -8,7 +8,6 @@ import { OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { UserService } from '../../services/user.service'
 import { SemesterSubjects } from '../../entity/study.entity'
 import { sortLearnYearTerm } from '../../helpers/sort.helper'
-import { NotFound } from '../404.component'
 import arrow from '../../img/arrow.svg'
 import { sortString } from '../../helpers/sort.helper'
 
@@ -57,21 +56,13 @@ function StudyToggleMenu(props:{semester: SemesterSubjects}){
 type SemestersStatus= MultiClassStatus<SemesterSubjects>
 
 export function StudyToggleMenus(){
-  console.log('study toggle menu process started.')
 
   const [state, setState] = useState<
       SemestersStatus
       >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
-    UserService.getMultipleObjects<SemesterSubjects>('semester')
-    .then( res => {
-      setState({
-        contents: res.data.contents, 
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
+    UserService.getMultipleObjects<SemesterSubjects>('semester', setState)
   },[setState])
 
   const makeSemesterToggles = () => {

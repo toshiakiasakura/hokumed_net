@@ -143,19 +143,24 @@ def file_code_migration():
     to_lis = ['id', 'code', 'kind',  'no_doc', 'type']
     fetch, insert = create_queries(from_lis, to_lis, 'user', 'file__code')
     n = 50 
+    j = 8
     data = [
         (1, 98, 'exam', '中間', '問題' ),
         (2, 99, 'exam', '期末', '問題'),
         (3, 1098, 'exam', '中間', '解答'),
         (4, 1099, 'exam', '期末', '解答'),
+        (5, 96, 'exam', '中間追試', '問題' ),
+        (6, 97, 'exam', '期末追試', '問題'),
+        (7, 1096, 'exam', '中間追試', '解答'),
+        (8, 1097, 'exam', '期末追試', '解答'),
          ] +\
-        [ (4 + i, i, 'exam', f'第{i}回', '問題') for i in range(1,n+1)] + \
-        [ (4 + n + i, 1000+i, 'exam', f'第{i}回', '解答') for i in range(1,n+1)] + \
-        [ (4 + 2*n + i, 2000+i, 'quiz', f'第{i}回', '問題') for i in range(1,n+1)] + \
-        [ (4 + 3*n + i, 3000+i, 'quiz', f'第{i}回', '解答') for i in range(1,n+1)] + \
-        [ (4 + 4*n + i, 4000+i, 'summary', f'第{i}回', None) for i in range(1,n+1)] + \
-        [ (4 + 5*n + 1, 4000, 'summary', None, None)] + \
-        [ (4 + 5*n + 2, 5000, 'personal', None, None)]  
+        [ (j + i, i, 'exam', f'第{i}回', '問題') for i in range(1,n+1)] + \
+        [ (j + n + i, 1000+i, 'exam', f'第{i}回', '解答') for i in range(1,n+1)] + \
+        [ (j + 2*n + i, 2000+i, 'quiz', f'第{i}回', '問題') for i in range(1,n+1)] + \
+        [ (j + 3*n + i, 3000+i, 'quiz', f'第{i}回', '解答') for i in range(1,n+1)] + \
+        [ (j + 4*n + i, 4000+i, 'summary', f'第{i}回', None) for i in range(1,n+1)] + \
+        [ (j + 5*n + 1, 4000, 'summary', None, None)] + \
+        [ (j + 5*n + 2, 5000, 'personal', None, None)]  
     insertCommand(insert, data)
 
 

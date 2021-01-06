@@ -5,7 +5,7 @@ export class User {
     salt: string
     created_at: Date
     updated_at: Date
-    approval_state: string
+    approval_state: 'waiting' | 'approved'
     last_login_at: Date
     last_logout_at: Date
     last_login_from_ip_address: string
@@ -16,4 +16,7 @@ export class User {
     email_mobile: string
     admin: boolean
     class_year: number 
+    activation_token: string
+    activation_status: 'active' | 'pending'
+    access_token: string
 }

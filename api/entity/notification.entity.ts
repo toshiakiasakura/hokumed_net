@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column,
   OneToOne, JoinColumn } from 'typeorm'
 
+const NULL = {nullable: true, default:null }
 @Entity()
 export class Notification {
 
@@ -13,9 +14,9 @@ export class Notification {
     @Column()
     text: string
 
-    @Column()
+    @Column({type:'datetime', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date
 
-    @Column()
+    @Column('datetime', NULL)
     updated_at: Date
 }

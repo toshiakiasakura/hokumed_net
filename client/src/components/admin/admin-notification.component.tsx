@@ -57,7 +57,7 @@ function NotificationBoard(props:NotificationsStatus){
   let contents = state.contents
   return(
     <FetchValidation status={state.status}>
-      {contents=== undefined || contents.length === 0
+      {contents=== undefined 
       ? <Loading/>
       : 
         <div>

@@ -19,12 +19,19 @@ export function sortArray(
 
 /**
  * no_doc and kind can be sorted using this function. 
+ * If you edit file_code table, Also you have to edit here.
+ * Note this number is for sort, not matched with code in 
+ * file_code table. 
  */
 function convert_no_doc_to_number(c:string){
   if(c === '中間'){
-    return 98
+    return 91
+  } else if( c === '中間追試'){
+    return 92
   } else if( c=== '期末'){
-    return 99
+    return 93
+  } else if( c === '期末追試'){
+    return 94
   } else if( c === undefined){
     return 0
   } else if( c === '問題'){

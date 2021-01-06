@@ -3,9 +3,6 @@ import {
   Route, Switch, Link, Redirect, useHistory 
 } from 'react-router-dom'
 import Cookies from 'universal-cookie'
-import { 
-  TableRow, FetchValidation, BackButton, TransitionButton, Loading
-} from '../../helpers/utils.component'
 import { UserService } from '../../services/user.service'
 import { Doc_File, Subject } from '../../entity/study.entity'
 import { 
@@ -20,11 +17,16 @@ function FileControl(props:{children:any}){
   )
 }
 
-function FileDownloadPart(props:{file: Doc_File, subject:Subject}){
+function FileDownloadPart(props:{
+  file: Doc_File, subject:Subject, kind:string
+}){
   let file = props.file
   let subject = props.subject
+  let kind = props.kind
   let cookie = new Cookies()
   let userID = cookie.get('userID')
+  let editFile = cookie.get('editFile')
+  let showEdit = userID === file.user_id || editFile === 'true'
 
   return(
     <td>
@@ -56,12 +58,16 @@ function FileDownloadPart(props:{file: Doc_File, subject:Subject}){
                 <span className="hidden-xs"> プレビュー</span>
               </a>
             </FileControl>
-            {userID === file.user_id &&
+            {showEdit &&
               <FileControl>
-                <a>
-                  <i className="fa fa-cog">
-                  </i>
-                  <span>編集</span>
+                <a
+                  href="javascript:;"
+                >
+                  <Link to={`/study/${subject.title_en}/${kind}/delete/${file.id}`} > 
+                    <i className="fa fa-cog">
+                    </i>
+                    <span>編集</span>
+                  </Link>
                 </a>
               </FileControl>
             }
@@ -93,7 +99,7 @@ function FileDownloadPart(props:{file: Doc_File, subject:Subject}){
  */
 function FileRow(
   props:{
-    file: Doc_File,
+    file: Doc_File, kind: string
     files_year: Doc_File[], index_year:number, 
     show1:boolean, show2:boolean, subject: Subject,
     files_no?: Doc_File[], index_no?: number,
@@ -127,7 +133,9 @@ function FileRow(
         <td className="text-center" rowSpan={KindRowSpan}> 
           {file.file_code.type} 
         </td>} 
-      <FileDownloadPart file={file} subject={props.subject} />
+      <FileDownloadPart 
+        file={file} subject={props.subject} kind={props.kind} 
+      />
     </tr>
   )
 
@@ -156,7 +164,7 @@ const SortFiles: SortFileFunc = function(
       files_year.forEach((file, index_year) => {
         content.push(
           <FileRow 
-            file={file} 
+            file={file} kind={kind}
             show1={show1} show2={show2} subject={subject}
             files_year ={files_year} index_year={index_year}
           />
@@ -173,7 +181,7 @@ const SortFiles: SortFileFunc = function(
         files_no.forEach( (file, index_no) =>{
           content.push(
             <FileRow 
-              file={file}
+              file={file} kind={kind}
               show1={show1} show2={show2} subject={subject}
               files_year={files_year} index_year={index_year + index_no}
               files_no={files_no} index_no={index_no}
@@ -190,7 +198,7 @@ const SortFiles: SortFileFunc = function(
         files_type.forEach((file, index_type) => {
           content.push(
             <FileRow 
-              file={file}
+              file={file} kind={kind}
               show1={show1} show2={show2} subject={subject}
               files_year={files_year} index_year={index_year + index_no + index_type}
               files_no={files_no} index_no={index_no + index_type}
@@ -209,22 +217,45 @@ const SortFiles: SortFileFunc = function(
 
 
 export function StudySubjectBody(
-  props:{files: Doc_File[], kind:string, subject:Subject}
+  props:{
+    files: Doc_File[],  
+    subject:Subject, 
+    title_en:string,
+    kind:string
+
+  }
 ){
+  const history = useHistory()
   let files = props.files
   let kind = props.kind
+  let title_en = props.title_en
   const show1 = kind !== 'personal'
   const show2 = kind !== 'personal' && kind !== 'summary'
   return(
-    <table className="table table--condensed table--bordered">
-      <tr>
-        <th> 期 </th>
-        {show1 && <th> 回 </th>}
-        {show2 && <th> 種別 </th> }
-        <th> ファイル </th>
-      </tr>
-       { SortFiles(files, props.subject, show1, show2, kind) }
+    <React.Fragment>
+      <p>
+        <button 
+          className="btn btn--sm btn--primary"
+          onClick={() => history.push(`/study/${title_en}/${kind}/new`)}
+        > 
+          新規アップロード
+        </button>
 
-    </table>
+      </p>
+
+      {files.length 
+        ?
+          <table className="table table--condensed table--bordered">
+            <tr>
+              <th> 期 </th>
+              {show1 && <th> 回 </th>}
+              {show2 && <th> 種別 </th> }
+              <th> ファイル </th>
+            </tr>
+            { SortFiles(files, props.subject, show1, show2, kind) }
+          </table>
+        : "資料がまだ投稿されていません．"
+      }
+    </React.Fragment>
   )
 }

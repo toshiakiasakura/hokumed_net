@@ -1,7 +1,6 @@
 import { getManager } from 'typeorm'
 import { ExpressMiddleFunc } from '../helpers/express_typing'
 import { User } from '../entity/user.entity'
-import jwt from 'jsonwebtoken'
 
 /**
  * User and admin validation is implemented here.
@@ -11,8 +10,8 @@ import jwt from 'jsonwebtoken'
 class ValidateController {
   static validateUser: ExpressMiddleFunc = async function(req, res, next){
     let userRepository = getManager().getRepository(User)
-    const userID = req.headers['x-user-id']
-    const accessToken = req.headers['x-access-token']
+    const userID = req.cookies['userID']
+    const accessToken = req.cookies['accessToken'] 
     if( typeof userID === 'string' && typeof accessToken === 'string' ){
       const user = await userRepository.findOne(parseInt(userID))
       if( user
@@ -25,19 +24,19 @@ class ValidateController {
       } else{
         const msg = 'Authentication error.'
         console.log(msg)
-        res.json({status:401, msg:msg })
+        res.json({status:401})
       }
     } else {
-      const msg = 'Headers are lack.'
+      const msg = 'User validation error. Headers are lack.'
       console.log(msg)
-      res.json({status:401, msg:msg})
+      res.json({status:401})
     }
   }
 
   static validateAdmin: ExpressMiddleFunc = async function(req, res, next){
     let userRepository = getManager().getRepository(User)
-    const userID = req.headers['x-user-id']
-    const accessToken = req.headers['x-access-token']
+    const userID = req.cookies['userID']
+    const accessToken = req.cookies['accessToken'] 
 
     if( typeof userID === 'string' && typeof accessToken === 'string' ){
       const user = await userRepository.findOne(parseInt(userID))
@@ -50,13 +49,13 @@ class ValidateController {
       } else{
         const msg = 'Authentication error.'
         console.log(msg)
-        res.json({status:401, msg:msg })
+        res.json({status:401})
       }
 
     } else {
-      const msg = 'Headers are lack.'
+      const msg = 'Admin validation error. Headers are lack.'
       console.log(msg)
-      res.json({status:401, msg:msg})
+      res.json({status:401})
     }
   }
 }

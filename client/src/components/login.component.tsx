@@ -10,8 +10,8 @@ import Cookies from 'universal-cookie'
 type FormData ={
   email: string
   password: string
+  keepLogin: boolean
 }
-
 
 /**
  * This is hook function for form.
@@ -23,7 +23,7 @@ const LoginForm = () => {
   const handleLogin = (data: FormData) => {
     /*login procedures. This should be written in other places.
     */
-    AuthService.login(data.email, data.password)
+    AuthService.login(data.email, data.password, data.keepLogin)
     .then( (res) => {
       console.log('login component process started.')
       console.log(res)
@@ -76,6 +76,7 @@ const LoginForm = () => {
             id="loginInputKeepLogin"
             className="form__control" // className should be edited.
             name="keepLogin"
+            ref={register}
           />
           <label htmlFor="loginInputKeepLogin"
             className="form__label" > ログイン状態を保存する </label>

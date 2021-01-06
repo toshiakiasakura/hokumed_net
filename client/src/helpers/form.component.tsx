@@ -1,4 +1,9 @@
-
+import React, { useEffect, useState } from 'react'
+import { Class_Year } from '../entity/study.entity'
+import { MultiClassStatus } from '../helpers/types.helper'
+import { AuthService } from '../services/auth.service'
+import { FetchValidation, Loading } from './utils.component'
+import { sortValue } from '../helpers/sort.helper'
 /**
  * One row desgine of a form is decorated with this function. 
  * @param props.title Title of the form.
@@ -78,48 +83,80 @@ export function SaveButton(props:{formState:any}){
 }
 
 /**
+ * Given class_year arrays, create class year options.
+ */
+export const createClassYearOptions = (contents:Class_Year[]) => {
+  let options= [
+    <option id={'learnYearDefault'} value='default'>
+      期を選択
+    </option>
+  ]
+  let sorts = sortValue(contents, 'year', true)
+  for( let i = 0; i < sorts.length; i++){
+    let year = sorts[i].year
+    options.push(
+      <option id={"learnYear" + year} value={year}>
+        {year}期
+      </option>
+    )
+  }
+  return options
+}
+/**
  * Class year block of input form.
  */
 export const ClassYearBlock = (props:{register:any, name:string}) => {
-  let content = [<option id="signupYearDefault" value="default"> 期を選択</option>]
-  for( var i = 94; i < 110; i++){
-    content.push( <option id={"signupYear"+i} value={i}> {i}期 </option> )
-  }
+  const [state, setState] = useState<
+        ClassYearsState
+      >( {contents:[], status:200, msg:''})
+
+  useEffect(()=>{
+    AuthService.ClassYearBoard<Class_Year>(setState)
+  }, [setState])
+
+  let contents = state.contents
   return(
-    <div className="form__group">
-      <div className="col--sm-4">
-        <label className="form__label">
-           期を選択
-        </label>
-      </div>
-      <div className="col--sm-8">
-        <select
-          className="form__control"
-          name={props.name}
-          ref={props.register({
-            validate: (v:string) =>{
-              return( !isNaN(parseInt(v)) || "入力必須項目です")
-            }
-          })}
-        >
-          {content}
-        </select>
-      </div>
-    </div>
-  )
+    <FetchValidation status={state.status}>
+      {contents=== undefined || contents.length === 0
+      ? <Loading />
+      : 
+        <div className="form__group">
+          <div className="col--sm-4">
+            <label className="form__label">
+              期を選択
+            </label>
+          </div>
+          <div className="col--sm-8">
+            <select
+              className="form__control"
+              name={props.name}
+              ref={props.register({
+                validate: (v:string) =>{
+                  return( !isNaN(parseInt(v)) || "入力必須項目です")
+                }
+              })}
+            >
+              {createClassYearOptions(contents)}
+            </select>
+          </div>
+        </div>
+      }
+    </FetchValidation>
+    )
 }
 
+type ClassYearsState = MultiClassStatus<Class_Year>
 export function LearnYearBlock(
     props:{errors:any, register:any, name:string}
   ){
   let content = [
-    <option id={'learnYearDefault'} value='default'>
+    <option id={'sginupYearDefault'} value='default'>
       学習年を選択
     </option>
   ]
   for( let i = 1; i <=6; i++){
     content.push(
-      <option id={"learnYear" + i} value={i}>
+      <option id={"signupYear" + i} value={i}>
         {i}年
       </option>
     )
@@ -129,7 +166,6 @@ export function LearnYearBlock(
         <select
           className="form__control"
           name={props.name}
-          placeholder="学習年を選択"
           ref={props.register({
             validate: (v:string) => {
               return( !isNaN(parseInt(v))　|| "入力必須項目です" )

@@ -1,4 +1,3 @@
-import { SocialSentimentSatisfied } from 'material-ui/svg-icons';
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie'
@@ -15,7 +14,7 @@ const NavItem = function(
   const onClick = () => {
     props.setState(props.path)
   }
-  let active = props.path === props.state ? 'navbar__items__item--active' : ''
+  let active = props.path === '/'+ props.state ? 'navbar__items__item--active' : ''
   return (
     <div className={`navbar__items__item ${active}`} id={props.name}>
       <Link to={props.path} onClick={()=>onClick()}>
@@ -31,8 +30,7 @@ const NavItem = function(
  */
 function NavBar(){
   let urls = window.location.href.split('/')
-  let url = '/' + urls[urls.length -1]
-  url = url=== undefined ? '/' : url
+  let url = urls[3]
   let [state, setState] = useState('/')
   useEffect(() => {setState(url)}, [url])
 
@@ -48,7 +46,6 @@ function NavBar(){
         </a>
       </Link>
 
-      {/*TO DO: Make page site for each link.*/}
       <div className="navbar__items">
         {isLogIn && <NavItem name="HOME" path="/home" state={state} setState={setState} /> }
         {isLogIn && <NavItem name="STUDY" path="/study" state={state} setState={setState}  /> }
@@ -57,7 +54,6 @@ function NavBar(){
         {isLogIn && <NavItem name="LOGOUT" path="/logout" state={state} setState={setState} /> }
         {!isLogIn && <NavItem name="LOGIN" path="/" state={state} setState={setState} /> }
         {!isLogIn && <NavItem name="SIGNUP" path="/signup" state={state} setState={setState}/> }
-        {/* <NavItem name="ERROR" path="/error" />  Later delete this line.*/}
       </div>
     </div>
   )

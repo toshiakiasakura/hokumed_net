@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 import express from 'express'
 
-const API_URL = 'http://ik1-419-41929.vs.sakura.ne.jp'
+const API_URL = 'http://hokumed.net'
 const API_MAIL = 'hokumed.net@gmail.com'
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -49,8 +49,7 @@ class EmailSender{
       '資料は管理者が削除する可能性があります．同意して北医ネットを使用する場合，以下の' +
       '以下のURLからクリックしてください．管理者チームで学部在籍を確認次第，北医ネット' +
       'がご利用いただけます．\n\n' +
-      `${API_URL}/api/user/activation/${userID}/${token}`
-      // TO DO: replace with the domain.
+      `${API_URL}/api/auth/activation/${userID}/${token}`
     }
     console.log(process.env.HOKUI_PW)
     sendMail(mailOptions)
@@ -83,7 +82,7 @@ class EmailSender{
       subject: `承認確認メール: ${family} ${given} さん`,
       text: `${family} ${given} さんを管理者画面から承認しました．` +
       `${to_mail}に承認メールを送信しました．`  +
-      'もし，このユーザーにメールが届いて居ない場合は，受診設定を確認してみてください．'
+      'もし，このユーザーにメールが届いて居ない場合は，受信設定を確認してみてください．'
     }
     sendMail(adminMailOptions)
   }
@@ -101,7 +100,7 @@ class EmailSender{
       '下記のurlをクリックするとパスワードの再設定が完了します．\n'  +
       'リンクを押すまでは変更がなされないため注意してください．\n' +
       '心当たりがない場合は無視してください．\n\n'+
-      `${API_URL}/api/user/verify-reset-password/${userID}/${token}`
+      `${API_URL}/api/auth/verify-reset-password/${userID}/${token}`
     }
     sendMail(mailOptions)
   }

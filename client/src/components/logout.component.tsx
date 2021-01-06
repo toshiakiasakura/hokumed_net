@@ -3,8 +3,7 @@ import { AuthService } from '../services/auth.service'
 
 export const Logout = () => {
     AuthService.logout()
-    // To realod the cookie..
-    window.setTimeout( () => window.location.reload(),500)
+    window.setTimeout( () => window.location.reload(),1000)
     return(
       <Redirect to="/" />
     )

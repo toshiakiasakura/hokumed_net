@@ -1,9 +1,12 @@
 import axios from 'axios'
-import { authHeader } from './auth-header'
+
 import { User } from '../entity/user.entity'
-import { OneClassStatus, MultiClassStatus } from '../helpers/types.helper'
-import { url } from 'inspector'
-import { FilesSubjectStatus } from '../components/study/study-subject.component'
+import { Subject } from '../entity/study.entity'
+import { 
+  OneClassStatus, MultiClassStatus, 
+  FileFormData, StatusMsg 
+} from '../helpers/types.helper'
+import { FilesSubjectStatus } from '../helpers/types.helper'
 import fileDownload from 'js-file-download'
 import { Doc_File } from '../entity/study.entity' 
 
@@ -18,7 +21,7 @@ class UserService {
    */
   static async getProfileBoard(){
     return axios.get<OneClassStatus<User>>
-                  (API_URL+'profile', {headers: authHeader()})
+                  (API_URL+'profile' )
   }
 
   /**
@@ -26,14 +29,24 @@ class UserService {
    * Expected return is filtered by userID.
    * @param url /api/user/multiple/${url} is inputted here.
    */
-  static async getMultipleObjects<T>(url: string){
+  static async getMultipleObjects<T>(url: string, setState?:any){
     return axios.get<MultiClassStatus<T>>
-      (API_URL + 'multiple/' + url, {headers:authHeader()} )
+      (API_URL + 'multiple/' + url )
+      .then( res => {
+        if(setState !== undefined){
+          setState({
+            contents: res.data.contents, 
+            status: res.data.status,
+            msg: res.data.msg
+          })
+        }
+        return res
+      })
   }
 
   static async getFileBoard<T>(url: string){
     return axios.get<FilesSubjectStatus>
-      (API_URL + 'multiple/' + url, {headers:authHeader()} )
+      (API_URL + 'multiple/' + url)
   }
 
   static async downloadFile(
@@ -50,6 +63,37 @@ class UserService {
       window.open(fileURL, '_blank')
       // fileDownload(blob, file.file_name,undefined ,'open()')
     }
+  }
+
+  static async sendFiles(
+    data:FileFormData, subject:Subject, 
+    page_kind:string,
+  ){
+    let uploadData = new FormData()
+    for(let i=0; i < data.files.length; i++){
+      uploadData.append('upload', data.files[i])
+      // userID is taken from cookie.
+      uploadData.append('subject_id', String(subject.id) )
+      uploadData.append('class_year', data.class_year)
+      uploadData.append('comment', data.comment)
+      uploadData.append('code_radio', data.code_radio)
+      uploadData.append('no_doc', data.no_doc)
+      uploadData.append('test_kind', data.test_kind)
+      uploadData.append('subject_title_en', subject.title_en)
+      uploadData.append('page_kind', page_kind)
+    }
+    console.log(uploadData)
+    const config = {headers:{'Content-Type': 'multipart/form-data'}}
+
+    return axios.post<StatusMsg>
+      ( '/api/user/upload/file', uploadData, config )
+  }
+
+  /**
+   * File deletion can do only userID matched person or admin. 
+   */
+  static async deleteFile(id: number){
+    return axios.get<StatusMsg>(`/api/user/delete/file/${id}`)
   }
 }
 

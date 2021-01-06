@@ -8,11 +8,12 @@ import {
   FetchValidation, changeDate, BackButton, Loading
 } from '../helpers/utils.component'
 import { sortDate } from '../helpers/sort.helper'
+import { UserService } from '../services/user.service'
 
 type NotificationsStatus = MultiClassStatus<Notification>
 
 const NotificationRow = (props:{notification: Notification}) => {
-  const create_date = changeDate(props.notification.updated_at)
+  const create_date = changeDate(props.notification.created_at)
   return(
     <tr>
       <th style={{width: "160px"}}> {create_date} </th>
@@ -31,15 +32,7 @@ function Home(){
       >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<Notification>('notification')
-    .then( res => {
-      console.log(res)
-      setState({
-        contents: res.data.contents, 
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
+    UserService.getMultipleObjects<Notification>('notification', setState)
   },[setState])
 
   const makeContents = (contents:Notification[]) => {

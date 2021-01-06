@@ -21,16 +21,16 @@ export class Document_File {
   @Column()
   file_name: string
 
-  @Column()
+  @Column('varchar', NULL_STRING)
   file_content_type: string
 
   @Column()
   code: number
 
-  @Column({nullable: true, default:null})
+  @Column('varchar', NULL_STRING)
   comment: string
 
-  @Column()
+  @Column({default: () => 0})
   download_count: number
 
   @Column({type:'datetime', default: () => 'CURRENT_TIMESTAMP'})

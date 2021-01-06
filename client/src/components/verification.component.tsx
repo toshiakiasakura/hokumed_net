@@ -2,8 +2,7 @@
  * Components of this moudle are used for email verification.
  * From internal site the can not reach here.
  */
-import { useHistory } from 'react-router-dom'
-import { Route, Switch } from 'react-router-dom'
+import { useHistory, Route, Switch } from 'react-router-dom'
 
 const TIME_OUT = 5000
 const EmailVerification = (props:{success: boolean }) => {
