@@ -12,5 +12,6 @@ router.post('/upload/file', UserController.UploadFile)
 router.get('/delete/file/:id', UserController.DeleteFile)
 router.get('/file/:id', UserController.DownloadFile)
 router.get('/multiple/notification', UserController.NotificationBoard )
+router.get('/multiple/subject', UserController.SubjectBoard)
 
 export { router as userRouter }

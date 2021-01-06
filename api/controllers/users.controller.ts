@@ -30,13 +30,23 @@ class UserController{
   }
 
   /**
-   * Return notification informations.  
+   * Return notification information.
    */
   static NotificationBoard: ExpressFunc = async function(req,res){
     let notifications= await getManager()
       .getRepository(Notification)
       .find()
     res.json({contents: notifications, status:200})
+  }
+
+  /**
+   * Return subject information. 
+   */
+  static SubjectBoard: ExpressFunc = async (req, res) =>{
+    let subjects = await getManager()
+      .getRepository(Subject)
+      .find()
+    res.json({contents: subjects, status:200})
   }
 
   /**

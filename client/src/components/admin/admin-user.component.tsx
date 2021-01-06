@@ -4,13 +4,13 @@ import ReactTooltip from 'react-tooltip'
 
 import { AdminService } from '../../services/admin.service'
 import { User } from '../../entity/user.entity'
+import { Class_Year } from '../../entity/study.entity'
 import {
    TableRow, FetchValidation, BackButton, Loading
 } from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { DeleteButton } from '../../helpers/admin-utils.component'
 
-type UsersState = MultiClassStatus<User>
 
 const UserRow = (props:{user:User}) => {
   let user = props.user
@@ -55,22 +55,103 @@ const UserRow = (props:{user:User}) => {
   )
 }
 
-function UserBoard(props:UsersState){
+type UsersState = {
+  contents: User[], status:number, msg:string, 
+  filtered: User[], fil_year: number
+} 
+type ClassYearsState = MultiClassStatus<Class_Year>
+
+function UserFilter(
+  props:{
+    userState:UsersState, setUserState:any
+  }
+){
   const [state, setState] = useState<
-        UsersState
+      ClassYearsState
       >( {contents:[], status:200, msg:''})
+
+  useEffect(()=> {
+    AdminService.getMultipleObjects<Class_Year>('year', setState)
+  },[setState])
+
+  let years = state.contents
+
+  const filtering = (v:string, kind:string) => {
+    let userState = props.userState
+    let filtered = userState.contents
+    if(v){
+      filtered = filtered.filter( user => 
+        user.class_year === parseInt(v)
+      )
+    }
+    props.setUserState({
+        contents: userState.contents, 
+        status: userState.status,
+        msg: userState.msg,
+        filtered: filtered,
+        fil_year: v
+      })
+  }
+  return(
+    <FetchValidation status={state.status}>
+      {years === undefined || years.length === 0
+      ? <div></div>
+      : 
+        <table className="table table--bordered table--condensed">
+          <tr>
+            <th className="text-small">
+              学年  
+            </th>
+            <td>
+              <ul className="tips tips--nomargin">
+                <li className="tip">
+                  <a 
+                    href="javascript:;" 
+                    onClick={()=>filtering('', 'year') }
+                   >
+                    すべて
+                  </a>
+                </li>
+                { years.map(year => 
+                  <li className="tip">
+                    <a 
+                      href="javascript:;"
+                      onClick={() => filtering(String(year.year),'year')}
+                    >
+                      {`${year.year}期`}
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </td>
+          </tr>
+        </table>
+      }
+    </FetchValidation>
+  )
+
+}
+
+
+function UserBoard(props:UsersState){
+  const [userState, setUserState] = useState<
+        UsersState
+      >( {contents:[], status:200, msg:'', 
+      filtered:[], fil_year:NaN})
 
   useEffect(()=> {
     AdminService.getMultipleObjects<User>('user')
     .then( res => {
       console.log(res)
-      setState({
+      setUserState({
         contents: res.data.contents, 
         status: res.data.status,
-        msg: res.data.msg
+        msg: res.data.msg,
+        filtered:res.data.contents,
+        fil_year:NaN
       })
     })
-  },[setState])
+  },[setUserState])
 
   console.log("/admin/user page started")
  
@@ -78,13 +159,17 @@ function UserBoard(props:UsersState){
     return contents.map( v=> <UserRow user={v} />)
   }
 
-  let contents = state.contents
+  let contents = userState.contents
   return(
-    <FetchValidation status={state.status}>
+    <FetchValidation status={userState.status}>
       {contents=== undefined || contents.length === 0
       ? <Loading />
       : 
       <div>
+        <UserFilter 
+          userState={userState} 
+          setUserState={setUserState}
+        />
         <table className="table table--condensed">
           <thead className="table__head">
             <tr>
@@ -97,7 +182,7 @@ function UserBoard(props:UsersState){
             </tr>
           </thead>
           <tbody className="table__body">
-            {makeContents(contents)}
+            {makeContents(userState.filtered)}
 
           </tbody>
         </table>

@@ -62,14 +62,7 @@ export function StudyToggleMenus(){
       >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
-    UserService.getMultipleObjects<SemesterSubjects>('semester')
-    .then( res => {
-      setState({
-        contents: res.data.contents, 
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
+    UserService.getMultipleObjects<SemesterSubjects>('semester', setState)
   },[setState])
 
   const makeSemesterToggles = () => {

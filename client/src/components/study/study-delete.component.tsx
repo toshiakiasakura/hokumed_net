@@ -1,12 +1,8 @@
 import { 
   Route, Switch, Link, Redirect, useHistory 
 } from 'react-router-dom'
-import Cookies from 'universal-cookie'
 
 import { Doc_File, Subject, Class_Year } from '../../entity/study.entity'
-import { StudyToggleMenus } from './study-toggle.component'
-import { StudySubjectBoard } from './study-subject.component'
-import { StudyNew } from './study-new.component'
 import { User } from '../../entity/user.entity'
 import { UserService } from '../../services/user.service'
 

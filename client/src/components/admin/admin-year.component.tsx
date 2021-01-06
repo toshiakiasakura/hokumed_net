@@ -39,15 +39,7 @@ function ClassYearBoard(props:ClassYearsState){
       >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<Class_Year>('year')
-    .then( res => {
-      console.log(res)
-      setState({
-        contents: res.data.contents, 
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
+    AdminService.getMultipleObjects<Class_Year>('year', setState)
   },[setState])
 
   console.log("/admin/year page started")

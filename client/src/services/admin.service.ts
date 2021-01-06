@@ -29,8 +29,18 @@ class AdminService {
    * Fetch multiple objects data.
    * @param url /api/admin/multiple/${url} is inputted here.
    */
-  static async getMultipleObjects<T>(url:string){
+  static async getMultipleObjects<T>(url:string, setState?:any){
     return axios.get<MultiClassStatus<T>> (API_URL +'multiple/'+  url)
+      .then( res => {
+        if(setState !== undefined){
+          setState({
+            contents: res.data.contents, 
+            status: res.data.status,
+            msg: res.data.msg
+          })
+        }
+        return res
+      })
   }
 
   /**

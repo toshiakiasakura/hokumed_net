@@ -3,9 +3,6 @@ import {
   Route, Switch, Link, Redirect, useHistory 
 } from 'react-router-dom'
 import Cookies from 'universal-cookie'
-import { 
-  TableRow, FetchValidation, BackButton, TransitionButton, Loading
-} from '../../helpers/utils.component'
 import { UserService } from '../../services/user.service'
 import { Doc_File, Subject } from '../../entity/study.entity'
 import { 

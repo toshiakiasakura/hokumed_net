@@ -1,6 +1,6 @@
 import { Doc_File, Subject, Class_Year } from '../entity/study.entity'
-export type MatchIDType = {match:{params:{id:number}}}
 
+export type MatchIDType = {match:{params:{id:number}}}
 
 export type StatusMsg = {
   status: number, msg: string

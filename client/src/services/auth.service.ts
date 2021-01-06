@@ -11,7 +11,9 @@ type Token = {accessToken:string,
               admin: boolean}
 
 class AuthService {
-  static async login(email: string, password: string) {
+  static async login(
+    email: string, password: string, keepLogin: boolean
+  ){
     return axios
       .post<Token>
           (API_URL + "login", { email, password })
@@ -22,12 +24,16 @@ class AuthService {
             && response.data.accessToken
             && response.data.userID){
           const cookies = new Cookies()
-          const options = {path:'/', maxAge:3600*3}
+          // maxAge undefined meaning while session.  
+          const options = {
+            path:'/', 
+            maxAge:keepLogin ? 3600*24*7: undefined
+          }
           cookies.set('accessToken', response.data.accessToken,options)
           cookies.set('userID', response.data.userID, options)
           cookies.set('isLogIn', 'true', options)
-          cookies.set('isAdmin', response.data.admin ? 'true' : 'false')
-          cookies.set('editFile', 'false')
+          cookies.set('isAdmin', response.data.admin ? 'true' : 'false', options)
+          cookies.set('editFile', 'false', options)
           console.log(cookies.getAll())
         }
         return response.data

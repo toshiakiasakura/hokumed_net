@@ -68,7 +68,6 @@ const EditNotification: EditFunc<Notification> = async (
   if(type==='update'){
     obj.updated_at = new Date()
   }
-  
   await Repo.save(obj)
 }
 
@@ -218,7 +217,6 @@ class AdminController{
   }
 
   static EditOneObject: ExpressFunc = async function(req, res){
-    console.log('Edit one object started. ')
     if(req.params && switchKeys.includes(req.params.kind)){
       let kind = req.params.kind
       let obj = undefined
@@ -226,7 +224,7 @@ class AdminController{
       // Add new patterns here. 
       if(kind === 'year'){
         let Repo = getManager().getRepository(Class_Year)
-        let obj = await Repo.findOne(req.body.id)
+        let obj = await Repo.findOne(req.params.id)
         if(obj){
           await EditClassYear(Repo, obj, req.body, 'update')
           res.json({status:200, msg:'Edit succeeded.'})
@@ -235,7 +233,7 @@ class AdminController{
         }
       } else if (kind === 'subject'){
         let Repo = getManager().getRepository(Subject)
-        let obj = await Repo.findOne(req.body.id)
+        let obj = await Repo.findOne(req.params.id)
         if(obj){
           await EditSubject(Repo, obj, req.body, 'update')
           res.json({status:200, msg:'Edit succeeded.'})
@@ -244,7 +242,7 @@ class AdminController{
         }
       } else if (kind === 'notification'){
         let Repo = getManager().getRepository(Notification)
-        let obj = await Repo.findOne(req.body.id)
+        let obj = await Repo.findOne(req.params.id)
         if(obj){
           await EditNotification(Repo, obj, req.body, 'update')
           res.json({status:200, msg:'Edit succeeded.'})
