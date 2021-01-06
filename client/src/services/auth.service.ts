@@ -27,6 +27,7 @@ class AuthService {
           cookies.set('userID', response.data.userID, options)
           cookies.set('isLogIn', 'true', options)
           cookies.set('isAdmin', response.data.admin ? 'true' : 'false')
+          cookies.set('editFile', 'false')
           console.log(cookies.getAll())
         }
         return response.data

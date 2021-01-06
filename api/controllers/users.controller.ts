@@ -1,4 +1,3 @@
-import { Express } from 'express'
 import { getManager } from 'typeorm'
 import fs from 'fs'
 import multer from 'multer'
@@ -7,11 +6,14 @@ import { ExpressFunc, ExpressMiddleFunc } from '../helpers/express_typing'
 import { Subject, Class_Year, Semester_Subject, Semester, Document_File } from '../entity/study.entity'
 import { Notification } from '../entity/notification.entity'
 import { 
-  getOneSemesterSubjects, Year2ClassID, UserFromHeader, 
+  getOneSemesterSubjects, Year2ClassID, UserFromCookies, 
   classID2Year, subjectsFromSemester, getOneFile
 } from '../helpers/connect.table.helper' 
 
 const DOWNLOAD_PATH = `${__dirname}/../../../downloads`
+let MulterFile: Express.Multer.File
+type TypeMulterFile = typeof MulterFile[]
+
 class UserController{
 
   /**
@@ -19,7 +21,7 @@ class UserController{
    * in individual profile page.
    */
   static ProfileBoard: ExpressFunc = async (req, res) => {
-    const user = await UserFromHeader(req)
+    const user = await UserFromCookies(req)
     if(user){
       res.json({content:user, status:200})
     } else{
@@ -41,7 +43,7 @@ class UserController{
    * Send data for toggle menus of "/semester" page. 
    */
   static SemesterBoard: ExpressFunc = async (req,res) => {
-    const user = await UserFromHeader(req)
+    const user = await UserFromCookies(req)
     if(user){
       const class_year_id = await Year2ClassID(user.class_year)
       if(class_year_id){
@@ -113,31 +115,33 @@ class UserController{
     }
   }
 
+  /**
+   * Upload file to /downloads/subject_title_en/file_name. 
+   * If one of the uploading files is duplicated, delete all the 
+   * uploading files. 
+   */
   static UploadFile: ExpressFunc = async (req, res) => {
     let storage = multer.diskStorage({
       destination: (req, file, cb) => {
         cb(null,'./downloads/')
       },
       filename: (req,file, cb)=>{
-        console.log('downloading ', file.originalname)
         cb(null, file.originalname)
       }
     })
     let upload = multer({storage:storage}).array('upload')
 
     upload(req, res, (err:any)=>{
-      console.log('file uploading', req.body)
-      console.log('file information', req.files, typeof req.files)
       let dirName = req.body.subject_title_en
       let dirPath = `${DOWNLOAD_PATH}/${dirName}` 
+      let files = req.files as unknown as TypeMulterFile
+
+      // subject directory.
       if(! fs.existsSync(dirPath)){
         fs.mkdir(dirPath, err=>{console.log(err)})
       }
-      let MulterFile: Express.Multer.File
-      let files = req.files as unknown as typeof MulterFile[]
+
       let flagDuplicate = false
-      
-      console.log("filepath",dirName)
       let msgDuplicate = ''
       files.forEach(f => {
         if(fs.existsSync(dirPath + '/' + f.originalname)){
@@ -149,17 +153,95 @@ class UserController{
         let msg = ''
         files.forEach(f => {
           fs.unlinkSync(DOWNLOAD_PATH + '/' + f.originalname)
-          
         })
         res.json({status:401, msg:'重複するファイルがありました．\n' + msgDuplicate})
       } else {
-        files.forEach(f => {
-          fs.renameSync(`${DOWNLOAD_PATH}/${f.originalname}`, `${dirPath}/${f.originalname}`,)
-        })
+        uploadProcessor(files,req.body,dirPath, req.cookies.userID)
         res.json({status:200, msg:'アップロードに成功しました．'})
       }
     })
   }
+
+  static DeleteFile: ExpressFunc = async (req, res) => {
+    let user = await UserFromCookies(req)
+    if(user && 
+      (user.admin || user.id === parseInt(req.params.id) )
+    ){
+      let fileRepo = getManager().getRepository(Document_File)
+      let file = await fileRepo.findOne(req.params.id)
+      let subject = await getManager()
+        .getRepository(Subject)
+        .findOne(file?.subject_id)
+      if(file && subject){
+        let filePath = `${DOWNLOAD_PATH}/${subject.title_en}/${file.file_name}`
+        await fileRepo.delete(req.params.id)
+        if(!fs.existsSync(filePath)){
+          res.send({status:401, msg:'データベースの削除のみ行いました．'})
+        } else {
+          fs.unlinkSync(filePath)
+          res.send({status:200,msg:'削除しました．'})
+        }
+      } else {
+        res.send({status:201, msg:'削除に失敗しました．'})
+      }
+    } else { 
+      res.send({status:401, msg:'削除権限がありません．\n削除出来るのはアップロードした人か管理者のみです．'})
+    } 
+  }
+}
+
+/**
+ * Save file information to database. 
+ */
+function uploadProcessor(
+  files: TypeMulterFile, body:any, 
+  dirPath: string, userID: string
+ ){
+  let fileRepo = getManager().getRepository(Document_File)
+  files.forEach(f => {
+    fs.renameSync(`${DOWNLOAD_PATH}/${f.originalname}`, `${dirPath}/${f.originalname}`,)
+    let newFile = new Document_File() 
+    newFile.subject_id = parseInt(body.subject_id)
+    newFile.user_id = parseInt(userID) 
+    newFile.class_year = parseInt(body.class_year)
+    newFile.file_name = f.originalname
+    newFile.file_content_type = f.mimetype
+    newFile.code = codeConverter(body)
+    newFile.comment = body.comment
+    fileRepo.save(newFile)
+  })
+}
+
+/**
+ * Convert string information to "code" in file__code table.
+ */
+function codeConverter(body:any){
+  let kind = body.page_kind
+  let no_doc = body.no_doc
+  let test_kind = body.test_kind 
+  let type = body.code_radio
+  const add_dict = { 
+    'exam':0, 'quiz':2000, 'summary':4000, 'personal':5000
+  }
+  let code = 0 
+  if(kind === 'exam'){
+    if(no_doc[0] === '第') code += parseInt(no_doc.slice(1, -1))
+    if(no_doc === '中間' && test_kind ==='本試' ) code += 98
+    if(no_doc === '期末' && test_kind ==='本試' ) code += 99
+    if(no_doc === '中間' && test_kind ==='追試' ) code += 96
+    if(no_doc === '期末' && test_kind ==='追試' ) code += 97
+    if(type === '解答') code += 1000
+  } else if(kind==='quiz'){
+    code =  2000 
+    code += parseInt(no_doc.slice(1,-1))
+    if(type === '解答') code += 1000
+  } else if(kind==='summary'){
+    code = 4000 
+    code += parseInt(no_doc.slice(1,-1))
+  } else if(kind==='personal'){
+    code = 5000
+  }
+  return code 
 }
 
 export { UserController }

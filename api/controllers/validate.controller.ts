@@ -12,9 +12,6 @@ class ValidateController {
     let userRepository = getManager().getRepository(User)
     const userID = req.cookies['userID']
     const accessToken = req.cookies['accessToken'] 
-    console.log("validate user process.")
-    console.log(req.cookies)
-    console.log(userID, accessToken, typeof userID, typeof accessToken)
     if( typeof userID === 'string' && typeof accessToken === 'string' ){
       const user = await userRepository.findOne(parseInt(userID))
       if( user

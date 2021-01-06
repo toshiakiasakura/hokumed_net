@@ -24,7 +24,7 @@ function Study(){
         <Switch>
           <Route exact path='/study' component={StudyTop} />
           <Route 
-            path='/study/:title_en/:kind/new' 
+            path='/study/:title_en/:kind/:any' 
             component={ StudySubjectBoard } 
           />
           <Route 

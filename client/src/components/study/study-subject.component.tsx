@@ -8,8 +8,10 @@ import {
 } from '../../helpers/utils.component'
 import { UserService } from '../../services/user.service'
 import { Doc_File, Subject, Class_Year } from '../../entity/study.entity'
+import { FilesSubjectStatus } from '../../helpers/types.helper' 
 import { StudySubjectBody } from './study-body.component'
 import { StudyNew } from './study-new.component'
+import { FileDelete } from './study-delete.component' 
 
 const TopNavItem = (props:{url:string, tabName:string} ) => {
   let last = props.url.split('/')
@@ -43,16 +45,6 @@ type MatchStudyType = {match:{
   params:{title_en:string, kind:string} 
 }}
 
-export type FilesSubjectStatus = {
-  contents: {
-    items: Doc_File[], 
-    subject: Subject,
-    class_years: Class_Year[]
-  },
-  status:number,
-  msg: string,
-  new: boolean
-}
 
 /**
  * This function is processing shared components of 
@@ -125,6 +117,14 @@ export function StudySubjectBoard( props:MatchStudyType){
                   title_en={title_en} subject={subject} 
                   years={state.contents.class_years}
                 />} 
+              />
+              <Route 
+                path='/study/:title_en/:kind/delete/:id'
+                component={ (props:{match:{params:{id:string}}}) => 
+                  <FileDelete 
+                  files={files} kind={kind}
+                  title_en={title_en} id={props.match.params.id}
+                  />}
               />
               <Route 
                 path='/study/:title_en/:kind' 

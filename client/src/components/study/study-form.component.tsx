@@ -82,7 +82,7 @@ export function CodeBlock(
     return(
       <div className="form__group">
         <label className="form__label">
-          本試 or 追試
+          中間または期末の際は，本試か追試を選択してください．
         </label>
         <select
           name="test_kind"
@@ -108,7 +108,7 @@ export function CodeBlock(
           <div className="panel__body">
             {kind !== "summary" && createTypeRadiobox()}
             {createNoDocOption()}
-            {kind !== "summary" && createRetestOption()}
+            {kind === "exam" && createRetestOption()}
           </div>
         </div>
         </React.Fragment>

@@ -1,3 +1,4 @@
+import { Request, Response } from 'express'
 import { getManager } from 'typeorm'
 import { User } from '../entity/user.entity'
 import { 
@@ -96,7 +97,7 @@ export async function getOneFile(
 /**
  * From header, user object is extracted. 
  */
-export async function UserFromHeader(req:any){
+export async function UserFromCookies(req:Request){
   let userRepository = getManager().getRepository(User)
   const userID = req.cookies['userID']
   let user = undefined

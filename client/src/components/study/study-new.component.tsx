@@ -31,7 +31,7 @@ function StudyFormBody(
       } = useForm<FileFormData>({
         mode:'onBlur', 
         defaultValues:{
-          class_year: `${years[0].year}`, 
+          class_year: String(years[0].year), 
           code_radio: '問題',
           test_kind:'本試'}
       })
@@ -51,11 +51,14 @@ function StudyFormBody(
     if(!data.files.length){
       alert('ファイルが選択されていません．')
     } else {
-      UserService.sendFiles(data, props.subject.title_en)
+      UserService.sendFiles(data, props.subject, props.kind)
       .then( res => {
         console.log('file sent')
         alert(res.data.msg)
-        history.push(`/study/${props.subject.title_en}/${props.kind}`)
+        if(res.data.status === 200){
+          history.push(`/study/${props.subject.title_en}/${props.kind}`)
+          window.setTimeout( () => window.location.reload(),500)
+        }
       })
       .catch(err => {console.log(err)})
     } 
