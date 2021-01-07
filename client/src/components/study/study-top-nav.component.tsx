@@ -16,17 +16,8 @@ export function StudyTop(){
       >( {contents:[], status:0, msg:'', searched:[], value:''})
 
   useEffect(()=> {
-    UserService.getMultipleObjects<Subject>('subject')
-    .then(res => {
-      setState({
-        contents: res.data.contents,
-        status: res.data.status,
-        msg: res.data.msg,
-        searched: state.searched,
-        value:state.value
-      })
-    })
-  },[setState])
+    UserService.getMultipleObjects<Subject>('subject', setState)
+    },[setState])
 
   /**
    * For input searching by onBlur. 
@@ -34,14 +25,10 @@ export function StudyTop(){
   const searchSubjects = (v:string) =>{
     let subjects = state.contents.filter(
       subject => subject.title_en.includes(v) || subject.title_ja.includes(v)
-    )
-    setState({
-      contents:state.contents,
-      status: state.status,
-      msg: state.msg,
-      searched:subjects,
-      value: v
-    })
+      )
+    setState((prev:any)=>({
+      ...prev, searched:subjects, value: v
+      }))
   }
 
   /**
@@ -68,8 +55,8 @@ export function StudyTop(){
         </div>
       )
     }
-  }
-  
+  } 
+
   return(
     <div>
       <h1> 資料トップ </h1>

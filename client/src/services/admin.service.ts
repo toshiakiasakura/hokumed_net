@@ -21,24 +21,32 @@ class AdminService {
    * Fetch one object data. 
    * @param url /api/admin/one/url is inputted here.
    */
-  static async getOneObject<T>(url:string){
+  static async getOneObject<T>(url:string, setState:any){
     return axios.get<OneClassStatus<T>> (API_URL + 'one/' + url)
+    .then(res =>{
+      setState((prev:any) => ({
+        ...prev,
+        content: res.data.content,
+        status: res.data.status,
+        msg: res.data.msg
+      }))
+    })
+    .catch(err => console.log(err))
   }
 
   /**
    * Fetch multiple objects data.
    * @param url /api/admin/multiple/${url} is inputted here.
    */
-  static async getMultipleObjects<T>(url:string, setState?:any){
+  static async getMultipleObjects<T>(url:string, setState:any){
     return axios.get<MultiClassStatus<T>> (API_URL +'multiple/'+  url)
       .then( res => {
-        if(setState !== undefined){
-          setState({
-            contents: res.data.contents, 
-            status: res.data.status,
-            msg: res.data.msg
-          })
-        }
+        setState((prev:any) => ({
+          ...prev,
+          contents: res.data.contents, 
+          status: res.data.status,
+          msg: res.data.msg
+        }))
         return res
       })
   }

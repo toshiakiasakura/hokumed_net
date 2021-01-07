@@ -13,7 +13,6 @@ import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-ut
 import { FormRow } from '../../helpers/form.component'
 
 
-type ClassYearsState = MultiClassStatus<Class_Year>
 
 const YearRow = (props:{year:Class_Year} ) => {
   return(
@@ -33,6 +32,7 @@ const YearRow = (props:{year:Class_Year} ) => {
   )
 }
 
+type ClassYearsState = MultiClassStatus<Class_Year>
 function ClassYearBoard(props:ClassYearsState){
   const [state, setState] = useState<
       ClassYearsState
@@ -183,16 +183,7 @@ function ClassYearDetail(props:MatchIDType){
        )
 
   useEffect(()=> {
-    AdminService.getOneObject<Class_Year>(`year/${id}`)
-    .then(res =>{
-      console.log(res.data)
-      setState({
-        content: res.data.content,
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
-    .catch(err => console.log(err))
+    AdminService.getOneObject<Class_Year>(`year/${id}`, setState)
   },[setState])
 
   console.log("ClassYearDetail page started. ")

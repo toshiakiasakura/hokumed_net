@@ -29,17 +29,16 @@ class UserService {
    * Expected return is filtered by userID.
    * @param url /api/user/multiple/${url} is inputted here.
    */
-  static async getMultipleObjects<T>(url: string, setState?:any){
+  static async getMultipleObjects<T>(url: string, setState:any){
     return axios.get<MultiClassStatus<T>>
       (API_URL + 'multiple/' + url )
       .then( res => {
-        if(setState !== undefined){
-          setState({
-            contents: res.data.contents, 
-            status: res.data.status,
-            msg: res.data.msg
-          })
-        }
+        setState((prev:any) => ({
+          ...prev,
+          contents: res.data.contents, 
+          status: res.data.status,
+          msg: res.data.msg
+        }))
         return res
       })
   }

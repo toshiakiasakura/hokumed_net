@@ -43,15 +43,7 @@ function SemesterBoard(props:SemestersStatus){
       >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<SemesterSubjects>('semester')
-    .then( res => {
-      console.log(res)
-      setState({
-        contents: res.data.contents, 
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
+    AdminService.getMultipleObjects<SemesterSubjects>('semester', setState)
   },[setState])
 
   console.log("/admin/semester page started")
@@ -211,15 +203,7 @@ function SemesterNew(){
       >( {contents: [], status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<Subject>(`subject`)
-    .then(res =>{
-      console.log(res.data)
-      setState({
-        contents: res.data.contents,
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
+    AdminService.getMultipleObjects<Subject>(`subject`, setState)
     .catch(err => console.log(err))
   },[setState])
 
@@ -279,15 +263,7 @@ function SemesterDetail(props:MatchIDType){
       >( {content:new SemesterSubjectsDetail(), status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getOneObject<SemesterSubjectsDetail>(`semester/${id}`)
-    .then(res =>{
-      setState({
-        content: res.data.content,
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
-    .catch(err => console.log(err))
+    AdminService.getOneObject<SemesterSubjectsDetail>(`semester/${id}`, setState)
   },[setState])
 
   const makeTitle = (content:SemesterSubjects) => {

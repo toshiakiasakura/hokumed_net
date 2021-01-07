@@ -36,15 +36,7 @@ function SubjectBoard(props:SubjectsStatus){
       >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<Subject>('subject')
-    .then( res => {
-      console.log(res)
-      setState({
-        contents: res.data.contents, 
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
+    AdminService.getMultipleObjects<Subject>('subject', setState)
   },[setState])
 
   console.log("/admin/subject page started")
@@ -197,16 +189,7 @@ function SubjectDetail(props:MatchIDType){
        )
 
   useEffect(()=> {
-    AdminService.getOneObject<Subject>(`subject/${id}`)
-    .then(res =>{
-      console.log(res.data)
-      setState({
-        content: res.data.content,
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
-    .catch(err => console.log(err))
+    AdminService.getOneObject<Subject>(`subject/${id}`, setState)
   },[setState])
 
   console.log("SubjectDetail page started. ")

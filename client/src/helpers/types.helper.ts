@@ -1,4 +1,5 @@
 import { Doc_File, Subject, Class_Year } from '../entity/study.entity'
+import { User } from '../entity/user.entity'
 
 export type MatchIDType = {match:{params:{id:number}}}
 
@@ -45,3 +46,12 @@ export type FilesSubjectStatus = {
   msg: string,
   new: boolean
 }
+
+/**
+ * Admin-user filtering function.
+ */
+export type UsersState = {
+  contents: User[], status:number, msg:string, 
+  filtered: User[], fil_year: number, fil_name:string,
+  fil_state: string, fil_mail:string
+} 

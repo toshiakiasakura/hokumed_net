@@ -78,15 +78,7 @@ function NotificationBoard(){
       >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<Notification>('notification')
-    .then( res => {
-      console.log(res)
-      setState({
-        contents: res.data.contents, 
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
+    AdminService.getMultipleObjects<Notification>('notification', setState )
   },[setState])
 
   const makeContents = (contents:Notification[]) => {
@@ -118,16 +110,7 @@ function NotificationDetail(props:MatchIDType){
        )
 
   useEffect(()=> {
-    AdminService.getOneObject<Notification>(`notification/${id}`)
-    .then(res =>{
-      console.log(res.data)
-      setState({
-        content: res.data.content,
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
-    .catch(err => console.log(err))
+    AdminService.getOneObject<Notification>(`notification/${id}`, setState)
   },[setState])
 
   console.log("NotificationDetail page started. ")
