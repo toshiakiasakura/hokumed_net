@@ -1,9 +1,11 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
+import moment from 'moment'
+
 import { AuthService } from '../services/auth.service'
 import { FormRow, ClassYearBlock } from '../helpers/form.component' 
-import moment from 'moment'
+import { Form } from '../helpers/types.helper'
 
 export const RequirePop = () => {
   // TO DO: convert it into pop up.
@@ -73,26 +75,6 @@ const DateBlock = (props:{register:any}) => {
 }
 
 /**
- * This type is data format for input.
- * @param birthday The combination of bith related parameters.
- *                 This value is used for database.
- */
-export type SignUpData = {
-  email: string
-  password: string
-  family_name: string
-  given_name: string
-  handle_name: string
-  birth_year: string
-  birth_month: string
-  birth_day: string
-  birthday: Date
-  email_mobile: string
-  class_year: number
-  reenteredPassword: string
-}
-
-/**
  * The main part of sing up form.
  * The each input form is set by othter react functions.
  * After input is completed, sign up process starts.
@@ -100,10 +82,10 @@ export type SignUpData = {
  */
 const SignUpForm = () => {
   const { register, handleSubmit, errors, formState, control, watch } =
-                            useForm<SignUpData>({mode:'onBlur'})
+                            useForm<Form['SignUp']>({mode:'onBlur'})
   const history = useHistory()
 
-  const handleSignUp = (data: SignUpData) =>{
+  const handleSignUp = (data: Form['SignUp']) =>{
     // date validation is done here. .
     console.log(data)
     const date_str = `${data.birth_year}-${data.birth_month}-${data.birth_day}`
@@ -177,6 +159,15 @@ const SignUpForm = () => {
                 },
                 validate: AuthService.checkEmail
               }}
+            />
+            <FormRow
+              title="携帯メール (空欄可)"
+              type="email"
+              name=""
+              id="signupBobileEmail"
+              placeholder="example@gmail.com"
+              errors={errors} register={register}
+              reg_json={{ }}
             />
             <ClassYearBlock register={register} name='class_year'/>
             <FormRow
