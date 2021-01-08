@@ -43,7 +43,7 @@ class UserService {
       })
   }
 
-  static async getFileBoard<T>(url: string){
+  static async getFileBoard(url: string){
     return axios.get<FilesSubjectStatus>
       (API_URL + 'multiple/' + url)
   }
