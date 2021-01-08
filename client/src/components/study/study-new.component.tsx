@@ -2,18 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Route, Switch, Link, useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
-import { AdminService } from '../../services/admin.service'
-import {
-   TableRow, FetchValidation, BackButton, 
-   Loading, TransitionButton
-} from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { FormRow, createClassYearOptions } from '../../helpers/form.component'
 import { Subject, Doc_File, Class_Year } from '../../entity/study.entity'
 import { sortValue } from '../../helpers/sort.helper'
 import { UserService } from '../../services/user.service'
 import { CodeBlock, FileForm } from './study-form.component' 
-import { FileFormData } from '../../helpers/types.helper'
+import { Form } from '../../helpers/types.helper'
 
 /**
  * Whole form component is defined here.  
@@ -28,7 +23,7 @@ function StudyFormBody(
   let years = sortValue(props.years, 'year', false) as Class_Year[]
   const { register, handleSubmit, errors, 
         formState, control, watch 
-      } = useForm<FileFormData>({
+      } = useForm<Form['File']>({
         mode:'onBlur', 
         defaultValues:{
           class_year: String(years[0].year), 
@@ -45,7 +40,7 @@ function StudyFormBody(
    * Send files to backend.  
    */
   const history = useHistory()
-  const sendFiles = (data: FileFormData) => {
+  const sendFiles = (data: Form['File']) => {
     console.log("##### send files", data)
     if(!state.files.length){
       alert('ファイルが選択されていません．')

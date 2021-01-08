@@ -8,10 +8,7 @@ import { User } from '../../entity/user.entity'
 import {
    TableRow, FetchValidation, BackButton, Loading
 } from '../../helpers/utils.component'
-import { 
-  MatchIDType, OneClassStatus, MultiClassStatus,
-  UsersState
- } from '../../helpers/types.helper'
+import { MatchIDType, State } from '../../helpers/types.helper'
 import { DeleteButton } from '../../helpers/admin-utils.component'
 
 
@@ -58,25 +55,22 @@ const UserRow = (props:{user:User}) => {
   )
 }
 
-
-
-
-function UserBoard(props:UsersState){
+function UserBoard(props:State['Admin']['User']){
   /**
    * Many arguments are for filtering function.
    */
-  const [userState, setUserState] = useState<
-        UsersState
+  const [state, setState] = useState<
+        State['Admin']['User']
       >( {contents:[], status:200, msg:'', 
       filtered:[], fil_year:NaN, fil_name:'', 
       fil_state:'', fil_mail:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<User>('user', setUserState)
+    AdminService.getMultipleObjects<User>('user', setState)
     .then( _ => {
-      setUserState((prev:any) => ({ ...prev, filtered:prev.contents }))
+      setState((prev:any) => ({ ...prev, filtered:prev.contents }))
     })
-  },[setUserState])
+  },[setState])
 
   console.log("/admin/user page started")
  
@@ -84,16 +78,16 @@ function UserBoard(props:UsersState){
     return contents.map( v=> <UserRow user={v} />)
   }
 
-  let contents = userState.contents
+  let contents = state.contents
   return(
-    <FetchValidation status={userState.status}>
+    <FetchValidation status={state.status}>
       {contents=== undefined || contents.length === 0
       ? <Loading />
       : 
       <div>
         <UserFilter 
-          userState={userState} 
-          setUserState={setUserState}
+          state={state} 
+          setState={setState}
         />
         <table className="table table--condensed">
           <thead className="table__head">
@@ -107,7 +101,7 @@ function UserBoard(props:UsersState){
             </tr>
           </thead>
           <tbody className="table__body">
-            {makeContents(userState.filtered)}
+            {makeContents(state.filtered)}
 
           </tbody>
         </table>
@@ -142,7 +136,7 @@ export function UserBody(props:{user:User}){
 
 function UserDetail(props:MatchIDType){
   const id = props.match.params.id
-  const [state, setState] = useState<OneClassStatus<User>>
+  const [state, setState] = useState<State['One']['User']>
     ({content:new User(), status:200, msg:''})
 
   useEffect(()=> {

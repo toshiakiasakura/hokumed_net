@@ -4,7 +4,7 @@ import { User } from '../entity/user.entity'
 import { Subject } from '../entity/study.entity'
 import { 
   OneClassStatus, MultiClassStatus, 
-  FileFormData, StatusMsg 
+  StatusMsg, Form
 } from '../helpers/types.helper'
 import { FilesSubjectStatus } from '../helpers/types.helper'
 import fileDownload from 'js-file-download'
@@ -65,7 +65,7 @@ class UserService {
   }
 
   static async sendFiles(
-    data:FileFormData, subject:Subject, 
+    data:Form['File'], subject:Subject, 
     page_kind:string, files: File[]
   ){
     let uploadData = new FormData()
