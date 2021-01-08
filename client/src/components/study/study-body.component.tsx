@@ -26,7 +26,7 @@ function FileDownloadPart(props:{
   let cookie = new Cookies()
   let userID = cookie.get('userID')
   let editFile = cookie.get('editFile')
-  let showEdit = userID === file.user_id || editFile === 'true'
+  let showEdit = parseInt(userID) === file.user_id || editFile === 'true'
 
   return(
     <td>
