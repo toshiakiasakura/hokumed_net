@@ -155,9 +155,7 @@ function UserDetail(props:MatchIDType){
     })}
 
   const changeAdminStatusButton = function(id:number, admin:boolean){
-    if(admin || 
-      (!admin && prompt('master PWを入力してください．') === 'masterPW')
-    ){
+    if( prompt('master PWを入力してください．') === 'masterPW'){
       AdminService.changeAdminStatus(id)
         .then( res =>{
           if (res.status === 200){
