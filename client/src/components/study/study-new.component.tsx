@@ -23,7 +23,7 @@ function StudyFormBody(
 ){
   // State is prepared for FileForm. 
   // When choicing name should be uploaded.
-  const [state, setState] = useState<File[]>([])
+  const [state, setState] = useState<{files:File[]}>({files:[]})
 
   let years = sortValue(props.years, 'year', false) as Class_Year[]
   const { register, handleSubmit, errors, 
@@ -37,7 +37,6 @@ function StudyFormBody(
       })
   
   // Create button title part.
-  let files = watch('files')
   let class_year = watch('class_year')
   let test_kind = watch('test_kind')
   let btn_title = `「${class_year}期の${props.subject.title_ja}の${test_kind}の問題をアップロード」`
@@ -48,21 +47,20 @@ function StudyFormBody(
   const history = useHistory()
   const sendFiles = (data: FileFormData) => {
     console.log("##### send files", data)
-    if(!data.files.length){
+    if(!state.files.length){
       alert('ファイルが選択されていません．')
     } else {
-      UserService.sendFiles(data, props.subject, props.kind)
-      .then( res => {
-        console.log('file sent')
-        alert(res.data.msg)
-        if(res.data.status === 200){
-          history.push(`/study/${props.subject.title_en}/${props.kind}`)
-          window.setTimeout( () => window.location.reload(),500)
-        }
-      })
-      .catch(err => {console.log(err)})
-    } 
-  }
+      UserService.sendFiles(data, props.subject, props.kind, state.files)
+        .then( res => {
+          console.log('file sent')
+          alert(res.data.msg)
+          if(res.data.status === 200){
+            history.push(`/study/${props.subject.title_en}/${props.kind}`)
+            window.setTimeout( () => window.location.reload(),500)
+          }
+        })
+        .catch(err => {console.log(err)})
+    }} 
 
   return(
     <form
@@ -81,8 +79,8 @@ function StudyFormBody(
             ref={register({
               validate: (v:string) =>{
                 return( !isNaN(parseInt(v)) || "入力必須項目です")
-              }
-            })}
+                }
+              })}
           >
             {createClassYearOptions(props.years)}
           </select>
@@ -104,7 +102,7 @@ function StudyFormBody(
           </input>
         </div>
         <CodeBlock kind={props.kind} register={register} />
-        <FileForm register={register} files={files} setState={setState}/>
+        <FileForm register={register} files={state.files} setState={setState}/>
       </div>
       <div className="panel__foot row">
         <button 
@@ -141,8 +139,7 @@ function StudyNew(
         <span className="text-secondary">{kind_ja}</span>
         をアップロード
       </h4>
-    )
-  }
+    )}
 
   const history = useHistory()
   return(

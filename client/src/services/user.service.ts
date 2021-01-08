@@ -66,11 +66,11 @@ class UserService {
 
   static async sendFiles(
     data:FileFormData, subject:Subject, 
-    page_kind:string,
+    page_kind:string, files: File[]
   ){
     let uploadData = new FormData()
-    for(let i=0; i < data.files.length; i++){
-      uploadData.append('upload', data.files[i])
+    for(let i=0; i < files.length; i++){
+      uploadData.append('upload', files[i])
       // userID is taken from cookie.
       uploadData.append('subject_id', String(subject.id) )
       uploadData.append('class_year', data.class_year)

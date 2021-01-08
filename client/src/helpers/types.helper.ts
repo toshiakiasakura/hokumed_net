@@ -28,7 +28,6 @@ export type FileFormData = {
   class_year: string,
   comment: string,
   code_radio: '問題' | '解答',
-  files:File[],
   no_doc: string,
   test_kind:'本試' | '追試' 
 }
