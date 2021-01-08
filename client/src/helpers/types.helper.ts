@@ -70,6 +70,25 @@ export type Form = {
     no_doc: string,
     test_kind:'本試' | '追試' 
   }
+  /**
+   * This type is data format for input.
+   * @param birthday The combination of bith related parameters.
+   *                 This value is used for database.
+   */
+  SignUp: {
+    email: string
+    password: string
+    family_name: string
+    given_name: string
+    handle_name: string
+    birth_year: string
+    birth_month: string
+    birth_day: string
+    birthday: Date
+    email_mobile: string
+    class_year: number
+    reenteredPassword: string
+  }
 }
 
 
