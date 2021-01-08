@@ -2,7 +2,7 @@
  * This module is for study-new and study-edit file. 
  * Partial form compoent is saved here.
  */
-import React from 'react'
+import React, { useRef, InputHTMLAttributes } from 'react'
 
 /**
  * Code Block. 
@@ -123,10 +123,33 @@ export function CodeBlock(
 export function FileForm(
   props:{register:any, files:File[], setState:any}
 ){
+
   let files = props.files
-  const handleFile = (e:any) => {
-    props.setState(e)
-  }
+  let inputFile = useRef<HTMLElement>(null)
+
+  const dragEmpty = (e:any ) => {
+    e.preventDefault()
+    }
+  const handleDiv = (e:any) => {
+    e.preventDefault()
+    let push_files = e.dataTransfer.files
+    
+    // check duplication. 
+    let flag = false
+    for(let f of push_files) for(let fr of files) flag = flag || fr.name === f.name
+    if(flag){
+      alert('同一名のファイルが選択されています．\n選択し直してください． ')
+      props.setState( () => ({files:[]}))
+    } else {
+      let new_files = files
+      props.setState( (prev:any) => {
+        for(let f of push_files){
+          new_files.push(f)
+        }
+        return {files:new_files}
+        })
+    }}
+      
   const createFileExp = () => {
     let contents= [<span></span>]
     if(files && files.length){
@@ -134,13 +157,13 @@ export function FileForm(
         let f = files[i]
         contents.push(
           <li>
-            {`${f.name} (${f.size} bytes)`}
+            {`${f.name}`} &nbsp;&nbsp; {`(${f.size} bytes)`}
           </li>
-        )
+          )
       }
     }
     return( <ul>{contents} </ul>)
-  }
+    }
   
   return(
     <div className="form__group">
@@ -150,20 +173,13 @@ export function FileForm(
       <div className="panel">
         <div className="panel__body">
             { createFileExp() }
-           <div className="droparea">
-            <label
-              htmlFor="fileUpload"
-              className="droparea clickable drop-box"
-            >
-              ファイルアップロード
-            </label>
-            <input
-              ref={props.register}
-              className="hidden droparea clickable drop-box"
-              type="file" id="fileUpload" name="files"
-              multiple drop-box
-              onChange={ handleFile}
-            />
+           <div className="droparea clickable" 
+            onDrop={handleDiv} 
+            onDragOver={dragEmpty}
+            onDragEnter={dragEmpty}
+            onDragLeave={dragEmpty}
+           >
+              ドラックしてファイルをアップロード
            </div>
         </div>
       </div>

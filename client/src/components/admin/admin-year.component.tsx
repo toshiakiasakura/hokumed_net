@@ -8,12 +8,11 @@ import { Class_Year } from '../../entity/study.entity'
 import {
    TableRow, FetchValidation, BackButton, Loading
 } from '../../helpers/utils.component'
-import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
+import { MatchIDType, OneClassStatus, State } from '../../helpers/types.helper'
 import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
 import { FormRow } from '../../helpers/form.component'
 
 
-type ClassYearsState = MultiClassStatus<Class_Year>
 
 const YearRow = (props:{year:Class_Year} ) => {
   return(
@@ -33,9 +32,9 @@ const YearRow = (props:{year:Class_Year} ) => {
   )
 }
 
-function ClassYearBoard(props:ClassYearsState){
+function ClassYearBoard(props:State['Multi']['Class_Year']){
   const [state, setState] = useState<
-      ClassYearsState
+      State['Multi']['Class_Year']
       >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
@@ -183,16 +182,7 @@ function ClassYearDetail(props:MatchIDType){
        )
 
   useEffect(()=> {
-    AdminService.getOneObject<Class_Year>(`year/${id}`)
-    .then(res =>{
-      console.log(res.data)
-      setState({
-        content: res.data.content,
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
-    .catch(err => console.log(err))
+    AdminService.getOneObject<Class_Year>(`year/${id}`, setState)
   },[setState])
 
   console.log("ClassYearDetail page started. ")

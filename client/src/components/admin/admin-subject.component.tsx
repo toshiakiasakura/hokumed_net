@@ -8,11 +8,11 @@ import {
   TableRow, FetchValidation, BackButton, 
   TransitionButton, Loading
 } from '../../helpers/utils.component'
-import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
+import { MatchIDType, State} from '../../helpers/types.helper'
 import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
 import { FormRow } from '../../helpers/form.component'
+import { SubjectFilter } from './admin-filter.component'
 
-type SubjectsStatus = MultiClassStatus<Subject>
 
 const SubjectRow = (props:{subject:Subject}) => {
   return(
@@ -30,20 +30,15 @@ const SubjectRow = (props:{subject:Subject}) => {
   )
 }
 
-function SubjectBoard(props:SubjectsStatus){
+function SubjectBoard(props:State['Multi']['Subject']){
   const [state, setState] = useState<
-      SubjectsStatus
-      >( {contents:[], status:200, msg:''})
+      State['Admin']['Subject']     
+      >( {contents:[], status:200, msg:'', filtered:[], fil_name:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<Subject>('subject')
-    .then( res => {
-      console.log(res)
-      setState({
-        contents: res.data.contents, 
-        status: res.data.status,
-        msg: res.data.msg
-      })
+    AdminService.getMultipleObjects<Subject>('subject', setState)
+    .then( _ => {
+      setState((prev:any) => ({ ...prev, filtered:prev.contents }))
     })
   },[setState])
 
@@ -63,6 +58,10 @@ function SubjectBoard(props:SubjectsStatus){
           <p>
             <TransitionButton title="新規作成" url='/admin/subject/new' />
           </p>
+          <SubjectFilter 
+            state={state}
+            setState={setState}
+          />
           <table className="table table--condensed">
             <thead className="table__head">
               {/*TO DO: sorting function.  */}
@@ -72,7 +71,7 @@ function SubjectBoard(props:SubjectsStatus){
               <th> 開講期 </th>
             </thead>
             <tbody className="table__body">
-                {makeContents(contents)}
+                {makeContents(state.filtered)}
             </tbody>
           </table>
         </div>
@@ -191,22 +190,13 @@ function SubjectNew(){
 function SubjectDetail(props:MatchIDType){
   const id = props.match.params.id
   const [state, setState] = useState<
-      OneClassStatus<Subject>
+      State['One']['Subject']
       >(
         {content:new Subject(), status:200, msg:''}
        )
 
   useEffect(()=> {
-    AdminService.getOneObject<Subject>(`subject/${id}`)
-    .then(res =>{
-      console.log(res.data)
-      setState({
-        content: res.data.content,
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
-    .catch(err => console.log(err))
+    AdminService.getOneObject<Subject>(`subject/${id}`, setState)
   },[setState])
 
   console.log("SubjectDetail page started. ")

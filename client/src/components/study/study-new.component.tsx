@@ -2,18 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Route, Switch, Link, useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
-import { AdminService } from '../../services/admin.service'
-import {
-   TableRow, FetchValidation, BackButton, 
-   Loading, TransitionButton
-} from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { FormRow, createClassYearOptions } from '../../helpers/form.component'
 import { Subject, Doc_File, Class_Year } from '../../entity/study.entity'
 import { sortValue } from '../../helpers/sort.helper'
 import { UserService } from '../../services/user.service'
 import { CodeBlock, FileForm } from './study-form.component' 
-import { FileFormData } from '../../helpers/types.helper'
+import { Form } from '../../helpers/types.helper'
 
 /**
  * Whole form component is defined here.  
@@ -23,12 +18,12 @@ function StudyFormBody(
 ){
   // State is prepared for FileForm. 
   // When choicing name should be uploaded.
-  const [state, setState] = useState<File[]>([])
+  const [state, setState] = useState<{files:File[]}>({files:[]})
 
   let years = sortValue(props.years, 'year', false) as Class_Year[]
   const { register, handleSubmit, errors, 
         formState, control, watch 
-      } = useForm<FileFormData>({
+      } = useForm<Form['File']>({
         mode:'onBlur', 
         defaultValues:{
           class_year: String(years[0].year), 
@@ -37,7 +32,6 @@ function StudyFormBody(
       })
   
   // Create button title part.
-  let files = watch('files')
   let class_year = watch('class_year')
   let test_kind = watch('test_kind')
   let btn_title = `「${class_year}期の${props.subject.title_ja}の${test_kind}の問題をアップロード」`
@@ -46,23 +40,22 @@ function StudyFormBody(
    * Send files to backend.  
    */
   const history = useHistory()
-  const sendFiles = (data: FileFormData) => {
+  const sendFiles = (data: Form['File']) => {
     console.log("##### send files", data)
-    if(!data.files.length){
+    if(!state.files.length){
       alert('ファイルが選択されていません．')
     } else {
-      UserService.sendFiles(data, props.subject, props.kind)
-      .then( res => {
-        console.log('file sent')
-        alert(res.data.msg)
-        if(res.data.status === 200){
-          history.push(`/study/${props.subject.title_en}/${props.kind}`)
-          window.setTimeout( () => window.location.reload(),500)
-        }
-      })
-      .catch(err => {console.log(err)})
-    } 
-  }
+      UserService.sendFiles(data, props.subject, props.kind, state.files)
+        .then( res => {
+          console.log('file sent')
+          alert(res.data.msg)
+          if(res.data.status === 200){
+            history.push(`/study/${props.subject.title_en}/${props.kind}`)
+            window.setTimeout( () => window.location.reload(),500)
+          }
+        })
+        .catch(err => {console.log(err)})
+    }} 
 
   return(
     <form
@@ -81,8 +74,8 @@ function StudyFormBody(
             ref={register({
               validate: (v:string) =>{
                 return( !isNaN(parseInt(v)) || "入力必須項目です")
-              }
-            })}
+                }
+              })}
           >
             {createClassYearOptions(props.years)}
           </select>
@@ -104,7 +97,7 @@ function StudyFormBody(
           </input>
         </div>
         <CodeBlock kind={props.kind} register={register} />
-        <FileForm register={register} files={files} setState={setState}/>
+        <FileForm register={register} files={state.files} setState={setState}/>
       </div>
       <div className="panel__foot row">
         <button 
@@ -141,8 +134,7 @@ function StudyNew(
         <span className="text-secondary">{kind_ja}</span>
         をアップロード
       </h4>
-    )
-  }
+    )}
 
   const history = useHistory()
   return(

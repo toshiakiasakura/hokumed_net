@@ -4,7 +4,7 @@ import { User } from '../entity/user.entity'
 import { Subject } from '../entity/study.entity'
 import { 
   OneClassStatus, MultiClassStatus, 
-  FileFormData, StatusMsg 
+  StatusMsg, Form
 } from '../helpers/types.helper'
 import { FilesSubjectStatus } from '../helpers/types.helper'
 import fileDownload from 'js-file-download'
@@ -29,22 +29,21 @@ class UserService {
    * Expected return is filtered by userID.
    * @param url /api/user/multiple/${url} is inputted here.
    */
-  static async getMultipleObjects<T>(url: string, setState?:any){
+  static async getMultipleObjects<T>(url: string, setState:any){
     return axios.get<MultiClassStatus<T>>
       (API_URL + 'multiple/' + url )
       .then( res => {
-        if(setState !== undefined){
-          setState({
-            contents: res.data.contents, 
-            status: res.data.status,
-            msg: res.data.msg
-          })
-        }
+        setState((prev:any) => ({
+          ...prev,
+          contents: res.data.contents, 
+          status: res.data.status,
+          msg: res.data.msg
+        }))
         return res
       })
   }
 
-  static async getFileBoard<T>(url: string){
+  static async getFileBoard(url: string){
     return axios.get<FilesSubjectStatus>
       (API_URL + 'multiple/' + url)
   }
@@ -66,12 +65,12 @@ class UserService {
   }
 
   static async sendFiles(
-    data:FileFormData, subject:Subject, 
-    page_kind:string,
+    data:Form['File'], subject:Subject, 
+    page_kind:string, files: File[]
   ){
     let uploadData = new FormData()
-    for(let i=0; i < data.files.length; i++){
-      uploadData.append('upload', data.files[i])
+    for(let i=0; i < files.length; i++){
+      uploadData.append('upload', files[i])
       // userID is taken from cookie.
       uploadData.append('subject_id', String(subject.id) )
       uploadData.append('class_year', data.class_year)

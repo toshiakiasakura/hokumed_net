@@ -8,13 +8,13 @@ import {
   TableRow, FetchValidation, BackButton, 
   TransitionButton, Loading
 } from '../../helpers/utils.component'
-import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
+import { MatchIDType, OneClassStatus, State } from '../../helpers/types.helper'
 import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
 import { 
   FormRow, ClassYearBlock, FormGroupContainer, LearnYearBlock, TermBlock
 } from '../../helpers/form.component'
+import { SemesterFilter } from './admin-filter.component'
 
-type SemestersStatus= MultiClassStatus<SemesterSubjects>
 
 const SemesterRow = (props:{semester:SemesterSubjects} ) => {
   const semester = props.semester
@@ -37,20 +37,18 @@ const SemesterRow = (props:{semester:SemesterSubjects} ) => {
   )
 }
 
-function SemesterBoard(props:SemestersStatus){
-  const [state, setState] = useState<
-      SemestersStatus
-      >( {contents:[], status:200, msg:''})
+function SemesterBoard(props:State['Multi']['SemesterSubjects']){
+  const [state, setState] = useState< 
+    State['Admin']['SemesterSubjects'] >({
+      contents:[], status:200, msg:'', filtered:[],
+      fil_year:NaN, fil_learn_year:NaN, fil_learn_term:'',
+      fil_subject:''
+      })
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<SemesterSubjects>('semester')
-    .then( res => {
-      console.log(res)
-      setState({
-        contents: res.data.contents, 
-        status: res.data.status,
-        msg: res.data.msg
-      })
+    AdminService.getMultipleObjects<SemesterSubjects>('semester', setState)
+    .then( _ => {
+      setState((prev:any) => ({...prev, filtered:prev.contents}))
     })
   },[setState])
 
@@ -70,6 +68,10 @@ function SemesterBoard(props:SemestersStatus){
           <p>
             <TransitionButton title="新規作成" url='/admin/semester/new' />
           </p>
+          <SemesterFilter 
+            state={state} 
+            setState={setState}
+          />
           <table className="table table--condensed">
             <thead className="table__head">
               {/*TO DO: sorting function.  */}
@@ -78,7 +80,7 @@ function SemesterBoard(props:SemestersStatus){
               <th> 教科 </th>
             </thead>
             <tbody className="table__body">
-              { makeContents(contents) }
+              { makeContents(state.filtered) }
             </tbody>
           </table>
         </div>
@@ -207,19 +209,11 @@ function SemesterEdit(props:{content:SemesterSubjectsDetail}){
 
 function SemesterNew(){
   const [state, setState] = useState<
-      MultiClassStatus<Subject>
+      State['Multi']['Subject']
       >( {contents: [], status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<Subject>(`subject`)
-    .then(res =>{
-      console.log(res.data)
-      setState({
-        contents: res.data.contents,
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
+    AdminService.getMultipleObjects<Subject>(`subject`, setState)
     .catch(err => console.log(err))
   },[setState])
 
@@ -279,22 +273,14 @@ function SemesterDetail(props:MatchIDType){
       >( {content:new SemesterSubjectsDetail(), status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getOneObject<SemesterSubjectsDetail>(`semester/${id}`)
-    .then(res =>{
-      setState({
-        content: res.data.content,
-        status: res.data.status,
-        msg: res.data.msg
-      })
-    })
-    .catch(err => console.log(err))
-  },[setState])
+    AdminService.getOneObject<SemesterSubjectsDetail>(`semester/${id}`, setState)
+    },[setState])
 
   const makeTitle = (content:SemesterSubjects) => {
     const jp_term = content.learn_term === 'pre' ? '前期' : '後期'
     const title = `${content.class_year}期 - ${content.learn_year}年 ${jp_term}`
     return (title)
-  }
+    }
 
   const wrapUpSubjects = (content:SemesterSubjects) => {
     const subjects = content.subjects.map(sub =>{
@@ -306,15 +292,17 @@ function SemesterDetail(props:MatchIDType){
               {`${sub.title_ja} `} <br />
             </Link>
           </span>        
-      )}
-    })
+        )
+      }
+      })
+    // return for wrapUpSubjects.
     return(
       <tr>
         <th>　教科 </th>
         <td> {subjects} </td>
       </tr>
       )
-  }
+    }
 
   console.log("SemesterDetail page started. ")
   let semester = state.content ? state.content.item : undefined
