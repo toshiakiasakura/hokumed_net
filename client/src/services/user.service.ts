@@ -19,9 +19,20 @@ class UserService {
    * user id information is extracted from the cookie, which is in 
    * return value of authHeader function. 
    */
-  static async getProfileBoard(){
-    return axios.get<OneClassStatus<User>>
-                  (API_URL+'profile' )
+  static async getProfileBoard(setState:any){
+    return axios.get<OneClassStatus<User>>(API_URL+'profile' )
+      .then( res => {
+        console.log(res)
+        setState({
+          content: res.data.content, 
+          status: res.data.status,
+          msg: res.data.msg
+        })
+      })
+  }
+
+  static async editProfile(data:any){
+    return axios.post<StatusMsg>(API_URL +'profile/edit', data)
   }
 
   /**

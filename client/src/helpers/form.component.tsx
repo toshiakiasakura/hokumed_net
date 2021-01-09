@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+
 import { Class_Year } from '../entity/study.entity'
 import { MultiClassStatus } from '../helpers/types.helper'
 import { AuthService } from '../services/auth.service'
@@ -35,6 +36,7 @@ export function FormRow(
     {
       // default value for optional arguments. condition will be good choice.
       type?: string,
+      disabled?: boolean,  
       title: string,
       name: string,
       id: string,
@@ -53,12 +55,13 @@ export function FormRow(
       </div>
       <div className="col--sm-8 tooltip tooltip--secondary">
         <input
-          className="form__control"
+          className={`form__control`}
           type={props.type || "text"}
           name={props.name}
           id={props.id}
           placeholder={props.placeholder}
           ref={props.register(props.reg_json)}
+          disabled ={props.disabled}
         />
         {props.errors[props.name] && props.errors[props.name].message}
       </div>
@@ -105,7 +108,9 @@ export const createClassYearOptions = (contents:Class_Year[]) => {
 /**
  * Class year block of input form.
  */
-export const ClassYearBlock = (props:{register:any, name:string}) => {
+export const ClassYearBlock = (props:{
+  register:any, name:string, disabled?:boolean
+}) => {
   const [state, setState] = useState<
         ClassYearsState
       >( {contents:[], status:200, msg:''})
@@ -135,6 +140,7 @@ export const ClassYearBlock = (props:{register:any, name:string}) => {
                   return( !isNaN(parseInt(v)) || "入力必須項目です")
                 }
               })}
+              disabled={props.disabled}
             >
               {createClassYearOptions(contents)}
             </select>
@@ -206,3 +212,83 @@ export function TermBlock(
     </FormGroupContainer>
   )
 } 
+
+
+/**
+ * Implement for birthday input form.
+ * Precisely to say, there are not valid input patten.
+ * Date validation is done when button is pushed in SingUpFrom.
+ */
+
+function DateContainer(
+    props:{name:string, content:any, register:any}
+){
+  return(
+    <div className="col--xs-4">
+      <select
+        className="form__control"
+        name={props.name}
+        ref={props.register}
+      >
+        {props.content}
+      </select>
+    </div>
+  )
+}
+
+export const DateBlock = (props:{register:any}) => {
+  let years = [<option id="birth_year_default" value="default"> 年を選択 </option>]
+  let months = [<option id="birth_month_default" value="default"> 月を選択 </option>]
+  let days = [<option id="birth_date_default" value="default"> 日を選択 </option>]
+
+  var i
+  for(i = 1980; i<= 2020 ; i++){
+    years.push( <option id={"birth_year" +i } value={i}> {i}年 </option>)
+  }
+  for(i = 1; i <= 12; i++){
+    months.push( <option id={"birth_month" +i } value={i}> {i}月 </option>)
+  }
+  for(i = 1; i <= 31; i++){
+    days.push( <option id={"birth_month" +i } value={i}> {i}日 </option>)
+  }
+  return(
+    <div className="form__group">
+      <div className="col--sm-4">
+        <label className="form__label">
+          生年月日
+        </label>
+      </div>
+        <div className="col--sm-8 col--no-gutter">
+          <DateContainer name="birth_year" 
+            content={years} register={props.register}
+            />
+          <DateContainer name="birth_month" 
+            content={months} register={props.register}
+          />
+          <DateContainer name="birth_day" 
+            content={days} register={props.register}
+          />
+        </div>
+    </div>
+
+  )
+}
+
+export function ProfileSubmitButton(props:{
+  formState: any, title:string
+}){
+  return(
+    <div className="panel_foot">
+      <div className="form__group">
+        <button
+          type="submit"
+          className="btn btn--primary"
+          disabled={!props.formState.isValid}
+        > 
+          {props.title}
+        </button>
+      </div>
+    </div>
+  )
+
+}

@@ -2,7 +2,6 @@ import axios from "axios";
 import Cookies from 'universal-cookie'
 import { MultiClassStatus } from '../helpers/types.helper'
 
-// TO DO: change the api url. user to auth.
 const API_URL = '/api/auth/'
 type Token = {accessToken:string,
               userID:number,

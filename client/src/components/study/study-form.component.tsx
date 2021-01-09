@@ -3,6 +3,7 @@
  * Partial form compoent is saved here.
  */
 import React, { useRef, InputHTMLAttributes } from 'react'
+import { humanFileSize } from '../../helpers/utils.component' 
 
 /**
  * Code Block. 
@@ -130,7 +131,7 @@ export function FileForm(
   const dragEmpty = (e:any ) => {
     e.preventDefault()
     }
-  const handleDiv = (e:any) => {
+  const uploadFiles = (e:any) => {
     e.preventDefault()
     let push_files = e.dataTransfer.files
     
@@ -157,7 +158,7 @@ export function FileForm(
         let f = files[i]
         contents.push(
           <li>
-            {`${f.name}`} &nbsp;&nbsp; {`(${f.size} bytes)`}
+            {`${f.name}`} &nbsp;&nbsp; {`(${humanFileSize(f.size) } )`}
           </li>
           )
       }
@@ -174,7 +175,7 @@ export function FileForm(
         <div className="panel__body">
             { createFileExp() }
            <div className="droparea clickable" 
-            onDrop={handleDiv} 
+            onDrop={uploadFiles} 
             onDragOver={dragEmpty}
             onDragEnter={dragEmpty}
             onDragLeave={dragEmpty}
@@ -185,5 +186,4 @@ export function FileForm(
       </div>
     </div>
   )
-
 }

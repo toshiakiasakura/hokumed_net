@@ -115,19 +115,25 @@ class AuthController {
 
   /**
    * onBlur duplication check for handle name.
+   * If request user is same as handle name, pass.
    */
   static checkHandle: ExpressFunc = async function(req, res){
     let userRepository = getManager().getRepository(User)
-    let handle_users = await userRepository.find({handle_name: req.body.handle})
-    if (handle_users.length ){
-      res.json({
-        status:401,
-        msg:'そのハンドルネームは既に用いられています．'
-      })
+    let handle_user = await userRepository
+      .findOne({where:{handle_name: req.body.handle}})
+    let userID = parseInt(req.cookies.userID)
+    if (handle_user){
+      let reqUser = await userRepository.findOne(userID)
+      if(reqUser && reqUser.id === handle_user.id){
+        res.json({ status:200, })
+      } else {
+        res.json({
+          status:401,
+          msg:'そのハンドルネームは既に用いられています．'
+        })
+      }
     } else {
-      res.json({
-        status:200,
-      })
+      res.json({ status:200, })
     }
   }
 
