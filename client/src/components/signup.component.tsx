@@ -4,7 +4,9 @@ import { useHistory } from 'react-router-dom'
 import moment from 'moment'
 
 import { AuthService } from '../services/auth.service'
-import { FormRow, ClassYearBlock } from '../helpers/form.component' 
+import { 
+  FormRow, ClassYearBlock, DateBlock, ProfileSubmitButton
+} from '../helpers/form.component' 
 import { Form } from '../helpers/types.helper'
 
 export const RequirePop = () => {
@@ -14,65 +16,6 @@ export const RequirePop = () => {
   )
 }
 
-/**
- * Implement for birthday input form.
- * Precisely to say, there are not valid input patten.
- * Date validation is done when button is pushed in SingUpFrom.
- */
-
-function DateContainer(
-    props:{name:string, content:any, register:any}
-){
-  return(
-    <div className="col--xs-4">
-      <select
-        className="form__control"
-        name={props.name}
-        ref={props.register}
-      >
-        {props.content}
-      </select>
-    </div>
-  )
-}
-
-const DateBlock = (props:{register:any}) => {
-  let years = [<option id="birth_year_default" value="default"> 年を選択 </option>]
-  let months = [<option id="birth_month_default" value="default"> 月を選択 </option>]
-  let days = [<option id="birth_date_default" value="default"> 日を選択 </option>]
-
-  var i
-  for(i = 1980; i<= 2020 ; i++){
-    years.push( <option id={"birth_year" +i } value={i}> {i}年 </option>)
-  }
-  for(i = 1; i <= 12; i++){
-    months.push( <option id={"birth_month" +i } value={i}> {i}月 </option>)
-  }
-  for(i = 1; i <= 31; i++){
-    days.push( <option id={"birth_month" +i } value={i}> {i}日 </option>)
-  }
-  return(
-    <div className="form__group">
-      <div className="col--sm-4">
-        <label className="form__label">
-          生年月日
-        </label>
-      </div>
-        <div className="col--sm-8 col--no-gutter">
-          <DateContainer name="birth_year" 
-            content={years} register={props.register}
-            />
-          <DateContainer name="birth_month" 
-            content={months} register={props.register}
-          />
-          <DateContainer name="birth_day" 
-            content={days} register={props.register}
-          />
-        </div>
-    </div>
-
-  )
-}
 
 /**
  * The main part of sing up form.
@@ -167,7 +110,7 @@ const SignUpForm = () => {
               id="signupBobileEmail"
               placeholder="example@gmail.com"
               errors={errors} register={register}
-              reg_json={{ }}
+              reg_json={{}}
             />
             <ClassYearBlock register={register} name='class_year'/>
             <FormRow
@@ -200,15 +143,7 @@ const SignUpForm = () => {
                   }
               }}
             />
-            <div className="panel_foot">
-              <div className="form__group">
-                <button
-                  type="submit"
-                  className="btn btn--primary"
-                  disabled={!formState.isValid}
-                > Sign UP </button>
-              </div>
-            </div>
+            <ProfileSubmitButton formState={formState} title='Sign UP' />
           </div>
         </div>
     </form>
@@ -231,7 +166,7 @@ const SignUp = () => {
                メール認証後、ログイン可能となるのは管理者の承認後になりますのでご注意ください。<br />
                不具合等ございましたら
                {/*TO DO: link new mail address. */}
-              <a href="'hokumed.net@gmail.com'">hokumed.net@gmail.com</a>
+              <a href='mailto:hokumed.net@gmail.com'>hokumed.net@gmail.com</a>
                までご連絡ください。
             </p>
             <SignUpForm />
