@@ -112,3 +112,8 @@ export function Loading(){
     <div>読み込み中</div>
   )
 }
+
+export function humanFileSize(size:number) {
+    var i = Math.floor( Math.log(size) / Math.log(1024) )
+    return `${( size / Math.pow(1024, i) ).toFixed(2)}`  + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i]
+}
