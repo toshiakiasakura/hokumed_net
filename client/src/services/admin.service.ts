@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { authHeader } from './auth-header'
 import { OneClassStatus, MultiClassStatus } from '../helpers/types.helper'
 
 const API_URL = '/api/admin/'

@@ -1,4 +1,4 @@
-import { getManager } from 'typeorm'
+import { getManager, getRepository } from 'typeorm'
 import fs from 'fs'
 import multer from 'multer'
 import { User } from '../entity/user.entity'
@@ -27,6 +27,21 @@ class UserController{
     } else{
       res.json({status:401})
     }
+  }
+
+  static EditProfile: ExpressFunc = async(req, res) => {
+    const userRepo = getManager().getRepository(User)
+    const user = await userRepo.findOne(req.cookies.userID)
+    if(user){
+      user.handle_name = req.body.handle_name
+      user.email_mobile = req.body.email_mobile
+      user.birthday = req.body.bitrhday
+      await userRepo.save(user)
+      res.json({status:200, msg:'編集しました．'})
+    } else {
+      res.json({status:401})
+    }
+
   }
 
   /**

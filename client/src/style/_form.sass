@@ -23,9 +23,10 @@
 
 
 
-.form__error
-    color: $brand-accent
-    font-size: 14px
+.form__error    
+    &[disabled]
+        color: $brand-accent
+        font-size: 14px
 
 
 
@@ -36,10 +37,10 @@
     display: block
     width: 100%
     border: 0
-//    &[disabled],
-//    &[readonly],
-//        cursor: $cursor-disabled
-//        opacity: $disabled-opacity
+    &[disabled]
+        cursor: $cursor-disabled
+        opacity: $disabled-opacity
+
 
 
 textbox.form__control
