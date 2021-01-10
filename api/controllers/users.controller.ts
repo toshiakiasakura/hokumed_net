@@ -163,7 +163,7 @@ class UserController{
 
       // subject directory.
       if(! fs.existsSync(dirPath)){
-        fs.mkdir(dirPath, err=>{console.log(err)})
+        fs.mkdirSync(dirPath, )
       }
 
       let flagDuplicate = false
