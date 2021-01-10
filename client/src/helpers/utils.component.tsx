@@ -1,7 +1,8 @@
-import { relativeTimeRounding } from 'moment'
+import moment from 'moment'
 import React, { Component } from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom'
 import { AdminService } from '../services/admin.service'
+
 /**
  * One element of TableRow. This component convert information to
  * specific format according to rowName or type of item.
@@ -43,12 +44,13 @@ type ButtonType= {
   title: string
   url: string
   onClick?: any
+  secondary?: boolean
 }
 export const TransitionButton = (props: ButtonType) => {
   const history = useHistory()
   return(
     <button
-      className="btn btn--sm btn--primary"
+      className={`btn btn--sm ${props.secondary ? "btn--secondary" : "btn--primary"}` }
       onClick={() => {
         history.push(props.url)
         typeof props.onClick === 'function' && props.onClick()
@@ -71,6 +73,17 @@ export function BackButton(props: ButtonType){
   )
 }
 
+export function TransitionText(props:ButtonType){
+  return(
+    <a 
+      href="javascript;:" 
+      onClick={typeof props.onClick === 'function' && props.onClick()} 
+    >
+      <Link to={props.url}>{props.title}</Link>
+    </a>
+  )
+}
+
 /**
  * Given the database date data, convert it to the formatted date. 
  */
@@ -83,6 +96,17 @@ export const changeDate = (date: string | Date) => {
   }
   const formatDate= `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`
   return formatDate
+}
+
+export function dateValidation(
+  year:string, month:string, day:string
+){
+  const date_str = `${year}-${month}-${day}`
+  const date_bool = moment(date_str, 'YYYY-M-D',true).isValid()
+  if (!date_bool){
+    return undefined
+  }
+  return new Date(date_str)
 }
 
 /**

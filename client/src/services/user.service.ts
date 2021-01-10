@@ -35,6 +35,10 @@ class UserService {
     return axios.post<StatusMsg>(API_URL +'profile/edit', data)
   }
 
+  static async ChangePassword(data:any){
+    return axios.post<StatusMsg>(API_URL +'profile/password', data)
+  }
+
   /**
    * User version of getMultipleObjects. 
    * Expected return is filtered by userID.

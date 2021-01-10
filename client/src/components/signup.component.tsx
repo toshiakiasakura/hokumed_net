@@ -30,7 +30,6 @@ const SignUpForm = () => {
 
   const handleSignUp = (data: Form['SignUp']) =>{
     // date validation is done here. .
-    console.log(data)
     const date_str = `${data.birth_year}-${data.birth_month}-${data.birth_day}`
     const date_bool = moment(date_str, 'YYYY-M-D',true).isValid()
     if (!date_bool){
@@ -40,10 +39,10 @@ const SignUpForm = () => {
     data.birthday = new Date(date_str)
     console.log(data.birthday)
     AuthService.signup(data)
-    .then((res) =>{
-      alert(res.msg)
-      history.push('/')
-    })
+      .then((res) =>{
+        alert(res.msg)
+        history.push('/')
+      })
   }
 
   const password = watch("password", "")

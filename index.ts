@@ -56,7 +56,7 @@ app.use(cookieParser())
 /**
  * Routing part.
  */
-app.use('/api/test', testRouter )
+app.use('/api/test', testRouter ) 
 app.use('/api/auth', authRouter)
 app.use('/api/user', ValidateController.validateUser,  userRouter)
 app.use('/api/admin',ValidateController.validateAdmin, adminRouter)

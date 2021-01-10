@@ -89,7 +89,6 @@ export type Form = {
     class_year: number
     reenteredPassword: string
   }
-
   Profile: {
     email: string
     family_name: string
@@ -101,6 +100,25 @@ export type Form = {
     birthday: Date 
     email_mobile: string
     class_year: number
+  }
+  Admin_User: {
+    family_name: string
+    given_name: string
+    handle_name: string
+    email: string
+    email_mobile: string
+    birth_year: string
+    birth_month: string
+    birth_day: string
+    birthday: Date
+    class_year: number
+  }
+  Password:{
+    password: string
+    reenteredPassword: string
+  }
+  Year: {
+    year:number
   }
 }
 

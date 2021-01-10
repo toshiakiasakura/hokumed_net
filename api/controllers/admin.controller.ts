@@ -9,6 +9,7 @@ import {
   getOneSemesterSubjects, Year2ClassID
 } from '../helpers/connect.table.helper' 
 
+
 const switchDic: {[index: string]: 
   typeof User |
   typeof Class_Year |
@@ -340,6 +341,25 @@ class AdminController{
       res.json({status:200})
     } else {
       (DataNotFound)
+    }
+  }
+
+  static checkHandle: ExpressFunc = async function(req,res){
+    const userRepo = getManager().getRepository(User)
+    let handle_user = await userRepo
+      .findOne({where:{handle_name: req.body.handle}})
+    if (handle_user){
+      let reqUser = await userRepo.findOne(req.body.editUserID)
+      if(reqUser && reqUser.id === handle_user.id){
+        res.json({ status:200, })
+      } else {
+        res.json({
+          status:401,
+          msg:'そのハンドルネームは既に用いられています．'
+        })
+      }
+    } else {
+      res.json({ status:200, })
     }
   }
 }

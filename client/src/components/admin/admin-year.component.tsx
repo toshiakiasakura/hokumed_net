@@ -3,14 +3,14 @@ import { Route, Switch, Link, useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import { AdminService } from '../../services/admin.service'
-import { TransitionButton } from '../../helpers/utils.component'
 import { Class_Year } from '../../entity/study.entity'
 import {
-   TableRow, FetchValidation, BackButton, Loading
+   TableRow, FetchValidation, BackButton, Loading,
+   TransitionButton
 } from '../../helpers/utils.component'
-import { MatchIDType, OneClassStatus, State } from '../../helpers/types.helper'
-import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
+import { MatchIDType, State, Form } from '../../helpers/types.helper'
 import { FormRow } from '../../helpers/form.component'
+import { DetailPageContainer, DetailFormContainer } from './admin-utils.component'
 
 
 
@@ -74,10 +74,9 @@ function ClassYearBoard(props:State['Multi']['Class_Year']){
   )
 }
 
-type YearFormData = {year:number}
 
 function YearFormBody(
-    props:{errors:any, register:any, content: YearFormData}
+    props:{errors:any, register:any, content: Form['Year']}
   ){
   return(
     <FormRow 
@@ -103,12 +102,12 @@ function YearFormBody(
  */
 function ClassYearEdit(props:{content:Class_Year}){
   const { register, handleSubmit, errors, formState 
-  } = useForm<YearFormData>({
+  } = useForm<Form['Year']>({
     mode:'onBlur',
     defaultValues: {year: props.content.year}
   })
   const content = props.content 
-  const editSubmit = (data:YearFormData)=>{
+  const editSubmit = (data:Form['Year'])=>{
     AdminService.editOneObject(`edit/year/${content.id}`, data)
     .then(res=>{
       window.location.reload()
@@ -136,9 +135,9 @@ function ClassYearEdit(props:{content:Class_Year}){
 
 function ClassYearNew(){
   const { register, handleSubmit, errors, formState } =
-                            useForm<YearFormData>({mode:'onBlur'})
+                            useForm<Form['Year']>({mode:'onBlur'})
   const history = useHistory()                        
-  const newSubmit = (data:YearFormData)=>{
+  const newSubmit = (data:Form['Year'])=>{
     AdminService.editOneObject(`new/year`, data)
     .then( res => {
       alert('期を追加しました．')
@@ -146,7 +145,7 @@ function ClassYearNew(){
     })
 
   }
-  const content: YearFormData = {year:NaN}
+  const content: Form['Year'] = {year:NaN}
   return(
     <div>
       <p>
@@ -175,11 +174,8 @@ function ClassYearNew(){
 
 function ClassYearDetail(props:MatchIDType){
   const id = props.match.params.id
-  const [state, setState] = useState<
-      OneClassStatus<Class_Year>
-      >(
-        {content:new Class_Year(), status:200, msg:''}
-       )
+  const [state, setState] = useState< State['One']['Class_Year']>
+    ( {content:new Class_Year(), status:200, msg:''})
 
   useEffect(()=> {
     AdminService.getOneObject<Class_Year>(`year/${id}`, setState)

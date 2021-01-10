@@ -1,19 +1,32 @@
 import axios from 'axios'
-import { OneClassStatus, MultiClassStatus } from '../helpers/types.helper'
+import { OneClassStatus, MultiClassStatus, StatusMsg } from '../helpers/types.helper'
 
 const API_URL = '/api/admin/'
 
 class AdminService {
   static async changeApproveStatus(id: number){
     return axios.get(API_URL + `user/approve/${id}`)
-    .then( res => {return(res.data)} )
-    .catch( err =>  console.log(err))
+      .then( res => {return(res.data)} )
+      .catch( err =>  console.log(err))
   }
 
   static async changeAdminStatus(id: number){
     return axios.get(API_URL + `user/change-admin/${id}`)
-    .then( res => {return(res.data)} )
-    .catch( err =>  console.log(err))
+      .then( res => {return(res.data)} )
+      .catch( err =>  console.log(err))
+  }
+
+  static async checkHandle(handle:string, id:number){
+    return axios.post<StatusMsg>
+      (API_URL + 'user/check-handle', {handle:handle,editUserID:id})
+      .then(res => {
+        console.log(res.data)
+        return(res.data.status === 200 ? true : res.data.msg)
+      })
+      .catch((err) => {
+        console.log('axios checkHandle failure')
+        console.log(err)
+      })
   }
 
   /**

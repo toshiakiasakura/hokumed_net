@@ -6,10 +6,13 @@ import { UserFilter } from './admin-filter.component'
 import { AdminService } from '../../services/admin.service'
 import { User } from '../../entity/user.entity'
 import {
-   TableRow, FetchValidation, BackButton, Loading
+   TableRow, FetchValidation, BackButton, Loading, TransitionButton,
+   dateValidation,
+   TransitionText
 } from '../../helpers/utils.component'
 import { MatchIDType, State } from '../../helpers/types.helper'
-import { DeleteButton } from '../../helpers/admin-utils.component'
+import { UserEditForm } from './admin-form.component'
+import { DeleteButton } from './admin-utils.component'
 
 
 const UserRow = (props:{user:User}) => {
@@ -111,25 +114,52 @@ function UserBoard(props:State['Admin']['User']){
   )
 }
 
+function UserEdit(props:MatchIDType){
+  const id = props.match.params.id
+  const [state, setState] = useState<State['One']['User']>
+    ({content:new User(), status:200, msg:''})
+  useEffect(()=> {
+    AdminService.getOneObject<User>(`user/${id}`, setState)
+    },[setState])
 
+  let user = state.content
+  return(
+    <FetchValidation status={state.status}>
+      {user === undefined || user.id === undefined 
+      ? <Loading />
+      : 
+        <React.Fragment>
+          <h1>{`${user.family_name} ${user.given_name} の登録情報の編集`}</h1>
+          <TransitionText url={`/admin/user/${id}`} title="ユーザー詳細に戻る"/>
+          <p>
+            ELMSメールを変更したい場合は登録し直してください．
+          </p>
+          <UserEditForm user={user} />
+        </React.Fragment>
+      }
+    </FetchValidation>
+  )
+}
 export function UserBody(props:{user:User}){
   let user = props.user
   return(
-    <tbody>
-      <TableRow rowName="ID" item={user.id} />
-      <TableRow rowName="ハンドルネーム" item={user.handle_name} />
-      <TableRow rowName="氏名" item={`${user.family_name} ${user.given_name}`} />
-      <TableRow rowName="期" item={user.class_year} />
-      <TableRow rowName="管理者" item={user.admin} />
-      <TableRow rowName="メールアクティベート" item={user.activation_status} />
-      <TableRow rowName="承認状態" item={user.approval_state} />
-      <TableRow rowName="メールアドレス" item={user.email} />
-      <TableRow rowName="携帯メールアドレス" item={user.email_mobile} />
-      <TableRow rowName="誕生日" item={user.birthday} />
-      <TableRow rowName="作成日" item={user.created_at} />
-      <TableRow rowName="更新日" item={user.updated_at} />
-      {/*// TO DO: Add last login, logout, ip address information.*/}
-    </tbody>
+    <table className="table table--bordered">
+      <tbody>
+        <TableRow rowName="ID" item={user.id} />
+        <TableRow rowName="ハンドルネーム" item={user.handle_name} />
+        <TableRow rowName="氏名" item={`${user.family_name} ${user.given_name}`} />
+        <TableRow rowName="期" item={user.class_year} />
+        <TableRow rowName="管理者" item={user.admin} />
+        <TableRow rowName="メールアクティベート" item={user.activation_status} />
+        <TableRow rowName="承認状態" item={user.approval_state} />
+        <TableRow rowName="メールアドレス" item={user.email} />
+        <TableRow rowName="携帯メールアドレス" item={user.email_mobile} />
+        <TableRow rowName="誕生日" item={user.birthday} />
+        <TableRow rowName="作成日" item={user.created_at} />
+        <TableRow rowName="更新日" item={user.updated_at} />
+        {/*// TO DO: Add last login, logout, ip address information.*/}
+      </tbody>
+    </table>
   )
 }
 
@@ -193,7 +223,7 @@ function UserDetail(props:MatchIDType){
             </li>
             <li>
               <button
-                className="btn btn--sm btn--primary"
+                className="btn btn--sm btn--secondary"
                 onClick={()=>changeAdminStatusButton(
                   props.match.params.id, user.admin
                   )}
@@ -201,10 +231,11 @@ function UserDetail(props:MatchIDType){
                 {user.admin ? '管理者から外す': '管理者にする' }
               </button>
             </li>
+            <li>
+              <TransitionButton url={`/admin/user/${id}/edit`} title="編集" />
+            </li>
           </ul>
-            <table className="table table--bordered">
-              <UserBody user={user} />
-            </table>
+          <UserBody user={user} />
         </div>
       }
     </FetchValidation>
@@ -215,6 +246,7 @@ function UserPages(){
   return(
     <Switch>
       <Route exact path='/admin/user' component={ UserBoard } />
+      <Route path='/admin/user/:id/edit' component={ UserEdit } />
       <Route path='/admin/user/:id' component={ UserDetail } />
     </Switch>
   )

@@ -9,7 +9,7 @@ import {
   TransitionButton, Loading
 } from '../../helpers/utils.component'
 import { MatchIDType, OneClassStatus, State } from '../../helpers/types.helper'
-import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
+import { DetailPageContainer, DetailFormContainer } from './admin-utils.component'
 import { 
   FormRow, ClassYearBlock, FormGroupContainer, LearnYearBlock, TermBlock
 } from '../../helpers/form.component'

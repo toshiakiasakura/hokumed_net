@@ -1,9 +1,13 @@
 import { getManager, getRepository } from 'typeorm'
 import fs from 'fs'
 import multer from 'multer'
+
 import { User } from '../entity/user.entity'
+import { newBCryptPassword} from '../helpers/bcrypt.helper'
 import { ExpressFunc, ExpressMiddleFunc } from '../helpers/express_typing'
-import { Subject, Class_Year, Semester_Subject, Semester, Document_File } from '../entity/study.entity'
+import { 
+  Subject, Class_Year, Semester_Subject, Semester, Document_File 
+} from '../entity/study.entity'
 import { Notification } from '../entity/notification.entity'
 import { 
   getOneSemesterSubjects, Year2ClassID, UserFromCookies, 
@@ -39,9 +43,22 @@ class UserController{
       await userRepo.save(user)
       res.json({status:200, msg:'編集しました．'})
     } else {
-      res.json({status:401})
+      res.json({status:401, msg:"ユーザーが見つかりませんでした．"})
     }
+  }
 
+  static ChangePassword: ExpressFunc = async(req, res) => {
+    const userRepo = getManager().getRepository(User)
+    const user = await userRepo.findOne(req.cookies.userID)
+    if(user){
+      const [ salt, crypted_password ] = newBCryptPassword(req.body.password)
+      user.salt = salt
+      user.crypted_password = crypted_password
+      await userRepo.save(user)
+      res.json({status:200, msg:'編集しました．'})
+    } else {
+      res.json({status:401, msg:'編集に失敗しました．'})
+    }
   }
 
   /**
@@ -163,7 +180,7 @@ class UserController{
 
       // subject directory.
       if(! fs.existsSync(dirPath)){
-        fs.mkdir(dirPath, err=>{console.log(err)})
+        fs.mkdirSync(dirPath, )
       }
 
       let flagDuplicate = false

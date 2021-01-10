@@ -4,6 +4,7 @@ import { AdminController } from '../api/controllers/admin.controller'
 
 router.get('/user/approve/:id', AdminController.changeApproveStatus)
 router.get('/user/change-admin/:id', AdminController.changeAdminStatus)
+router.post('/user/check-handle',AdminController.checkHandle)
 
 router.get('/multiple/semester', AdminController.SemesterBoard)
 router.get('/one/semester/:id', AdminController.SemesterDetail)
