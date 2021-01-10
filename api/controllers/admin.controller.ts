@@ -72,6 +72,21 @@ const EditNotification: EditFunc<Notification> = async (
   await Repo.save(obj)
 }
 
+const EditUser : EditFunc<User> = async (
+  Repo, obj, body, type 
+) => {
+  obj.family_name = body.family_name
+  obj.given_name = body.given_name
+  obj.handle_name = body.handle_name
+  obj.email_mobile = body.email_mobile
+  obj.birthday = body.birthday
+  obj.class_year = body.class_year
+  if(type==='update'){
+    obj.updated_at = new Date()
+  }
+  await Repo.save(obj)
+}
+
 /**
  * Delete all the appropriate semester_id from Semester_Subject,
  * and register all the subject_id with its semester_id.  
@@ -250,7 +265,16 @@ class AdminController{
         } else {
           res.json(DataNotFound)
         }
-      } 
+      } else if (kind === 'user'){
+        let Repo = getManager().getRepository(User)
+        let obj = await Repo.findOne(req.params.id)
+        if(obj){
+          await EditUser(Repo, obj, req.body, 'update')
+          res.json({status:200, msg:'Edit succeeded.'})
+        } else {
+          res.json(DataNotFound)
+        }
+      }
     } else {
       res.json({status:401, msg:'kind part is not existed.'})
     }

@@ -49,7 +49,7 @@ export function UserEditForm(props:{user:User}){
     AdminService.editOneObject(`edit/user/${user.id}`, data)
       .then((res) =>{
         alert(res.data.msg)
-        history.push('/profile')
+        history.push(`/admin/user/${user.id}`)
       })
     }
                             
