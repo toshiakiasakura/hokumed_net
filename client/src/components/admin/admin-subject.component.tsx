@@ -9,7 +9,7 @@ import {
   TransitionButton, Loading
 } from '../../helpers/utils.component'
 import { MatchIDType, State} from '../../helpers/types.helper'
-import { DetailPageContainer, DetailFormContainer } from '../../helpers/admin-utils.component'
+import { DetailPageContainer, DetailFormContainer } from './admin-utils.component'
 import { FormRow } from '../../helpers/form.component'
 import { SubjectFilter } from './admin-filter.component'
 

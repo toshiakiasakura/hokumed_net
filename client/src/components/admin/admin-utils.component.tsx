@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom'
-import { AdminService } from '../services/admin.service'
-import { BackButton } from './utils.component'
-import { SaveButton } from './form.component'
+import { AdminService } from '../../services/admin.service'
+import { BackButton } from '../../helpers/utils.component'
+import { SaveButton } from '../../helpers/form.component'
 
 
 type VoidFunc = () => void

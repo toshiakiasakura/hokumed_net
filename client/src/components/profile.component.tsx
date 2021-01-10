@@ -3,56 +3,89 @@ import { useForm } from 'react-hook-form'
 import { 
   Route, Switch, Redirect, Link, useHistory 
 } from 'react-router-dom'
-import moment from 'moment'
+import moment, { relativeTimeRounding } from 'moment'
 
 import { UserService } from '../services/user.service'
 import { AuthService } from '../services/auth.service'
 import { User } from '../entity/user.entity'
-import { FetchValidation, Loading, TransitionButton } from '../helpers/utils.component'
+import { 
+  FetchValidation, Loading, TransitionButton, TransitionText
+} from '../helpers/utils.component'
 import { 
   FormRow, ClassYearBlock, DateBlock, ProfileSubmitButton
 } from '../helpers/form.component' 
 import { UserBody } from './admin/admin-user.component'
 import { State, Form } from '../helpers/types.helper'
 
-/**
- * Unique id for user is sent via cookie.
- */
-function Profile(){
-  const [state, setState] = useState<State['One']['User']>
-    ({content:new User(), status:200, msg:''})
 
-  useEffect(()=> {
-    UserService.getProfileBoard(setState)
-    },[setState])
+function ChangePassword(){
+  const history = useHistory()
+  const { 
+    register, handleSubmit, errors, formState, control, watch
+    } = useForm<Form['Password']>({ mode:'onBlur', })
 
-  console.log('profile componenct access.')
-  let user= state.content
+  const handleChange = (data: Form['Password']) => {
+    UserService.ChangePassword(data)
+      .then((res) =>{
+        alert(res.data.msg)
+        history.push('/profile')
+      })
+  }
+  
+  const password = watch("password", "")
+  const require_str = "入力必須項目です．"
+  const require_json = {required: require_str}
   return(
-    <FetchValidation status={state.status}>
-      {user === undefined || user.id === undefined 
-      ? <Loading />
-      : 
-        <div className="topfix">
-          <div className="container">
-            <ul className="list-inline">
-              <li>
-                <h1>プロフィール </h1>
-              </li>
-              <li>
-                <TransitionButton title='編集' url='/profile/edit'/> 
-              </li>
-              <table className="table table--bordered no-mb">
-                <UserBody user={user} />
-              </table>
-            </ul>
+    <div className="topfix container">
+      <h1>パスワードの変更 </h1>
+      <TransitionText title="プロフィールに戻る" url="/profile"/>
+      <form
+        className="form row"
+        role="form"
+        name="signup"
+        onSubmit={handleSubmit(handleChange)}
+      >
+        <div className="panel">
+          <div className="panel__body">
+            <FormRow
+              title="パスワード"
+              type="password"
+              name="password"
+              id="signupPassword"
+              placeholder="パスワード"
+              errors={errors} register={register}
+              reg_json={{
+                required: require_str,
+                minLength: {
+                  value: 4,
+                  message: "パスワードは4文字以上で入力してください．"
+                }
+              }}
+            />
+            <FormRow
+              title="パスワードの確認"
+              type="password"
+              name="reenteredPassword"
+              id="signupReenteredPassword"
+              placeholder="もう一度パスワードを入力"
+              errors={errors} register={register}
+              reg_json = {{
+                  required: require_str,
+                  validate:
+                  (value:string) => {
+                    return(value === password || "パスワードが一致しません．")
+                  }
+              }}
+            />　　
+            <ProfileSubmitButton formState={formState} title="変更"/>
           </div>
         </div>
-      }
-    </FetchValidation >
-  )
-}
+      </form>
+    </div>
 
+  )
+
+}
 
 function EditForm(props:{user:User}){
   let user = props.user
@@ -92,8 +125,6 @@ function EditForm(props:{user:User}){
       })
 
   }
-
-        
                             
   const require_str = "入力必須項目です．"
   const require_json = {required: require_str}
@@ -151,7 +182,7 @@ function EditForm(props:{user:User}){
             <FormRow
               title="携帯メール (空欄可)"
               type="email"
-              name=""
+              name="email_mobile"
               id="signupBobileEmail"
               placeholder="example@gmail.com"
               errors={errors} register={register}
@@ -205,11 +236,55 @@ function ProfileEdit(){
   )
 }
 
+/**
+ * Unique id for user is sent via cookie.
+ */
+function Profile(){
+  const [state, setState] = useState<State['One']['User']>
+    ({content:new User(), status:200, msg:''})
+
+  useEffect(()=> {
+    UserService.getProfileBoard(setState)
+    },[setState])
+
+  console.log('profile componenct access.')
+  let user= state.content
+  return(
+    <FetchValidation status={state.status}>
+      {user === undefined || user.id === undefined 
+      ? <Loading />
+      : 
+        <div className="topfix">
+          <div className="container">
+            <ul className="list-inline">
+              <li>
+                <h1>プロフィール </h1>
+              </li>
+              <li>
+                <TransitionButton title='編集' url='/profile/edit'/> 
+              </li>
+              <li>
+                <TransitionButton 
+                  title='パスワードの変更' 
+                  url='/profile/password' 
+                  secondary={true}
+                /> 
+              </li>
+              <UserBody user={user} />
+            </ul>
+          </div>
+        </div>
+      }
+    </FetchValidation >
+  )
+}
+
 function ProfilePages(){
   return(
     <Switch>
       <Route exact path='/profile' component={ Profile } />
       <Route exact path='/profile/edit' component={ ProfileEdit }/> 
+      <Route exact path='/profile/password' component={ ChangePassword }/> 
       <Route component={ () => <Redirect to='/error'/>}/> 
     </Switch>
   )

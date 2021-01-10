@@ -11,7 +11,7 @@ import {
 import { MatchIDType, OneClassStatus, MultiClassStatus } from '../../helpers/types.helper'
 import { 
   DetailPageContainer, DetailFormContainer, 
-} from '../../helpers/admin-utils.component'
+} from './admin-utils.component'
 import { FormRow } from '../../helpers/form.component'
 
 type NotificationsStatus = MultiClassStatus<Notification>

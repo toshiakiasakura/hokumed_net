@@ -12,7 +12,7 @@ class SampleController{
       // This is for admin
       if( admin_check === undefined){
         let admin = new User()
-        admin.email = 'admin@eis.hokudai.ac.jp'
+        admin.email = 'admin_hokumednet@eis.hokudai.ac.jp'
         const [salt, crypted_password] = newBCryptPassword("admin")
         admin.crypted_password = crypted_password
         admin.salt = salt
@@ -41,7 +41,7 @@ class SampleController{
       // This is for test
       if( test_check === undefined){
         let test = new User()
-        test.email = 'test@eis.hokudai.ac.jp'
+        test.email = 'test_hokumednet@eis.hokudai.ac.jp'
         const [salt, crypted_password] = newBCryptPassword("test")
         test.crypted_password = crypted_password
         test.salt = salt

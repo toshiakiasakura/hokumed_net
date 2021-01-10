@@ -42,7 +42,7 @@ class TestSite(unittest.TestCase):
         password_input.send_keys(password)
         if click:
             self.browser.find_element_by_id("loginButton").click()
-        time.sleep(1)
+
     def logout(self):
         self.browser.get(self.url + "/logout")
 
@@ -85,7 +85,6 @@ class TestSite(unittest.TestCase):
         # keys are id tag name, values are links.
         check_dic = {"HOME":"/home",
                      "LOGIN":"/",
-                     "ERROR":"/error",
                      #"STUDY":"/study"
                      }
         self.browser.get(self.url + "/")
@@ -104,7 +103,7 @@ class TestSite(unittest.TestCase):
     def test_admin_authentication_failure(self):
         self.login("test@eis.hokudai.ac.jp", "test")
         self.browser.get(self.url + "/admin")
-        self.assertEqual(self.current_url(), "/error")
+        self.assertEqual(self.current_url(), "/error/401")
         self.logout()
 
 
