@@ -49,7 +49,7 @@ class SampleController{
         test.given_name = "名前"
         test.handle_name = 'ハンドルネーム'
         test.birthday = new Date(2020,11,1) // counts month from 0 to 11.
-        test.email_mobile = "test@gmail.com"
+        test.email_mobile = "test_hokumednet@gmail.com"
         test.class_year =  98
         test.approval_state = 'approved'
         test.activation_token = 'test'

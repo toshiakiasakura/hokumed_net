@@ -71,6 +71,13 @@ class UserController{
     res.json({contents: notifications, status:200})
   }
 
+  static OneNotification: ExpressFunc = async function (req, res){
+    let notification = await  getManager()
+      .getRepository(Notification)
+      .findOne(req.params.id)
+    res.json({content: notification, status:200})
+  }
+
   /**
    * Return subject information. 
    */

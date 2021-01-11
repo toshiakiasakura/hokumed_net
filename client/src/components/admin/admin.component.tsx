@@ -17,7 +17,7 @@ const TopNavItem = function(
 ){
   let active = props.url === props.state ? 'tab--active' : ''
   return(
-    <div className={`tab ${active}`}>
+    <div className={`tab ${active}`} id={props.tabName}>
       <Link to={`/admin/${props.url}`}> 
         {props.tabName} 
       </Link>

@@ -10,10 +10,11 @@ router.post('/profile/edit', UserController.EditProfile)
 router.post('/profile/password', UserController.ChangePassword)
 router.get('/multiple/semester', UserController.SemesterBoard)
 router.get('/multiple/file/:title_en/:kind', UserController.FileBoard)
+router.get('/multiple/notification/', UserController.NotificationBoard )
+router.get('/multiple/subject', UserController.SubjectBoard)
+router.get('/one/notification/:id', UserController.OneNotification)
 router.post('/upload/file', UserController.UploadFile)
 router.get('/delete/file/:id', UserController.DeleteFile)
 router.get('/file/:id', UserController.DownloadFile)
-router.get('/multiple/notification', UserController.NotificationBoard )
-router.get('/multiple/subject', UserController.SubjectBoard)
 
 export { router as userRouter }

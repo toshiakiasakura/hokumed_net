@@ -58,6 +58,25 @@ class UserService {
       })
   }
 
+
+  /**
+   * User version of getOneObject. 
+   * Expected return is filtered by userID.
+   * @param url /api/user/one/${url} is inputted here.
+   */
+  static async getOneObject<T>(url:string, setState:any){
+    return axios.get<OneClassStatus<T>> (API_URL + 'one/' + url)
+    .then(res =>{
+      setState((prev:any) => ({
+        ...prev,
+        content: res.data.content,
+        status: res.data.status,
+        msg: res.data.msg
+      }))
+    })
+    .catch(err => console.log(err))
+  }
+
   static async getFileBoard(url: string){
     return axios.get<FilesSubjectStatus>
       (API_URL + 'multiple/' + url)

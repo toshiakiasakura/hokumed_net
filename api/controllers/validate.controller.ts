@@ -27,7 +27,7 @@ class ValidateController {
         res.json({status:401})
       }
     } else {
-      const msg = 'User validation error. Headers are lack.'
+      const msg = 'User validation error. Cookies problem.'
       console.log(msg)
       res.json({status:401})
     }
@@ -53,7 +53,7 @@ class ValidateController {
       }
 
     } else {
-      const msg = 'Admin validation error. Headers are lack.'
+      const msg = 'Admin validation error. Cookies problem.'
       console.log(msg)
       res.json({status:401})
     }

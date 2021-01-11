@@ -78,7 +78,7 @@ function NotificationBoard(){
       >( {contents:[], status:200, msg:''})
 
   useEffect(()=> {
-    AdminService.getMultipleObjects<Notification>('notification', setState )
+    UserService.getMultipleObjects<Notification>('notification', setState )
   },[setState])
 
   const makeContents = (contents:Notification[]) => {
@@ -95,7 +95,6 @@ function NotificationBoard(){
           {makeContents(state.contents)}
         </tbody>
       </table>
-
     </div>
   )
 } 
@@ -110,7 +109,7 @@ function NotificationDetail(props:MatchIDType){
        )
 
   useEffect(()=> {
-    AdminService.getOneObject<Notification>(`notification/${id}`, setState)
+    UserService.getOneObject<Notification>(`notification/${id}`, setState)
   },[setState])
 
   console.log("NotificationDetail page started. ")
@@ -125,7 +124,7 @@ function NotificationDetail(props:MatchIDType){
           <p>
             <BackButton title="お知らせ一覧に戻る" url="/notification" />
           </p>
-          <h1>
+          <h1 id="notification_title">
             {content.title}
           </h1>
           <div className="text-right">
