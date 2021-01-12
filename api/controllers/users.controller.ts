@@ -13,10 +13,7 @@ import {
   getOneSemesterSubjects, Year2ClassID, UserFromCookies, 
   classID2Year, subjectsFromSemester, getOneFile
 } from '../helpers/connect.table.helper' 
-
-const DOWNLOAD_PATH = `${__dirname}/../../../downloads`
-let MulterFile: Express.Multer.File
-type TypeMulterFile = typeof MulterFile[]
+import { DOWNLOAD_PATH, TypeMulterFile } from '../helpers/files.helper'
 
 class UserController{
 

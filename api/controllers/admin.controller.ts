@@ -1,31 +1,17 @@
-import { ExpressFunc } from '../helpers/express_typing'
 import { getManager, getRepository } from 'typeorm'
+import fs, { fstatSync } from 'fs'
+
+import { ExpressFunc } from '../helpers/express_typing'
 import { User } from '../entity/user.entity'
-import { Subject, Class_Year, Semester_Subject, Semester } from '../entity/study.entity'
+import { Subject, Class_Year, Semester_Subject, Semester, Document_File } from '../entity/study.entity'
 import { Notification } from '../entity/notification.entity'
 import { EmailSender } from '../helpers/email.helper'
 import { SemesterSubjects, SemesterSubjectsDetail } from '../../client/src/entity/study.entity'
 import { 
   getOneSemesterSubjects, Year2ClassID
 } from '../helpers/connect.table.helper' 
+import { DOWNLOAD_PATH, TypeMulterFile } from '../helpers/files.helper'
 
-
-const switchDic: {[index: string]: 
-  typeof User |
-  typeof Class_Year |
-  typeof Subject | 
-  typeof Notification |
-  typeof Semester 
-  } = {
-  user: User,
-  year: Class_Year, 
-  subject: Subject,
-  notification:Notification,
-  semester: Semester
-
-}
-
-const switchKeys = Object.keys(switchDic)
 type UpdateOrNew = 'update' | 'new'
 
 type EditFunc<T> = (
@@ -53,11 +39,19 @@ const EditClassYear:EditFunc<Class_Year> =  async (
 const EditSubject: EditFunc<Subject> = async (
   Repo, obj, body, type 
 ) => {
-  obj.title_en = body.title_en
-  obj.title_ja = body.title_ja
+  let dir_old = `${DOWNLOAD_PATH}/${obj.title_en}`
+  let dir_new = `${DOWNLOAD_PATH}/${body.title_en}`
+  // Change the directory name.
   if(type === 'update'){
     obj.updated_at = new Date()
+    fs.renameSync(dir_old, dir_new)
+  } else {
+    if(! fs.existsSync(dir_new)){
+      fs.mkdirSync(dir_new)
+    }
   }
+  obj.title_en = body.title_en
+  obj.title_ja = body.title_ja
   await Repo.save(obj)
 }
 
@@ -174,38 +168,6 @@ class AdminController{
     }
   }
 
-  /**
-   * Delete One object. 
-   * @param req.kind Takes user, year, subject, semester, notification. 
-   *  If subject or semester, related Semester_Subject objects are 
-   *  also deleted. 
-   * @param res 
-   */
-  static DeleteOneObject: ExpressFunc = async function(req, res){
-    if(req.params && switchKeys.includes(req.params.kind)){
-      let cls = switchDic[req.params.kind]
-      let Repo = getManager().getRepository(cls)
-      const obj = await Repo.findOne(req.params.id)
-      if(obj){
-        await Repo.remove(obj)
-        if(req.params.kind === 'subject'){
-          await getManager()
-            .getRepository(Semester_Subject)
-            .delete({subject_id:obj.id})
-        } else if (req.params.kind === 'semester'){
-          await getManager()
-            .getRepository(Semester_Subject)
-            .delete({semester_id:obj.id})
-        }
-        res.json({status:200})
-      } else {
-        res.json(DataNotFound)
-      }
-    } else {
-      res.json({status:401, msg:'kind part is not existed.'})
-    }
-  }
-
   static EditClassYear: ExpressFunc = async (req, res) => {
     let Repo = getRepository(Class_Year)
     let obj = await Repo.findOne(req.params.id)
@@ -292,6 +254,65 @@ class AdminController{
       (DataNotFound)
     }
   }
+
+  static DeleteClassYear: ExpressFunc = async function(req, res){
+    let yearRepo = getRepository(Class_Year)
+    const year = await yearRepo.findOne(req.params.id)
+    if(year){
+      // delete user
+      await getRepository(User).delete({class_year:year.year})
+
+      // delete Semester and Semester_Subject.
+      let semesterRepo = getRepository(Semester)
+      let semesters =  await semesterRepo.find({class_year_id:year.id})
+      let SemSubRepo = getRepository(Semester_Subject)
+      for(let i = 0; i < semesters.length; i++){
+        await SemSubRepo.delete({semester_id:semesters[i].id})
+        await semesterRepo.remove(semesters[i])
+      }
+      await yearRepo.remove(year)
+      res.json({status:200})
+    } else {
+      res.json(DataNotFound)
+    }
+  }
+
+  static DeleteSemester: ExpressFunc = async function(req, res){
+    let semesterRepo = getRepository(Semester)
+    let semester = await semesterRepo.findOne(req.params.id)
+    if(semester){
+      await getRepository(Semester_Subject).delete({semester_id:semester.id})
+      await semesterRepo.remove(semester)
+      res.json({status:200})
+    } else {
+      res.json(DataNotFound)
+    }
+  }
+
+  static DeleteSubject: ExpressFunc = async (req, res) => {
+    let subjectRepo = getRepository(Subject)
+    let subject = await subjectRepo.findOne(req.params.id)
+    if(subject){
+      let dir = `${DOWNLOAD_PATH}/${subject.title_en}`
+      fs.rmdirSync(dir, {recursive:true})
+      await getRepository(Document_File).delete({subject_id:subject.id})
+      await subjectRepo.remove(subject)
+      res.json({status:200})
+    } else {
+      res.json(DataNotFound)
+    }
+  }
+
+  static DeleteUser: ExpressFunc = async (req, res) => {
+    await getRepository(User).delete(req.params.id)
+    res.json({status:200})
+  }
+
+  static DeleteNotification: ExpressFunc = async (req, res) => {
+    await getRepository(Notification).delete(req.params.id)
+    res.json({status:200})
+  }
+
   /**
    * Send SemesterSubjects contents. what's a different from 
    * SemesterBoard of UtilsController.  
@@ -310,9 +331,6 @@ class AdminController{
       res.json({status:401, msg:"データがありません．"})
     }
   }
-
-
-  
 
   static checkHandle: ExpressFunc = async function(req,res){
     const userRepo = getManager().getRepository(User)
