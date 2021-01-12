@@ -1,5 +1,5 @@
 import { ExpressFunc } from '../helpers/express_typing'
-import { getManager } from 'typeorm'
+import { getManager, getRepository } from 'typeorm'
 import { User } from '../entity/user.entity'
 import { Subject, Class_Year, Semester_Subject, Semester } from '../entity/study.entity'
 import { Notification } from '../entity/notification.entity'
@@ -103,9 +103,11 @@ async function EditSemesterCore(
     (v,i) => checkboxes[i] ? v : undefined 
   ).filter(v => v !== undefined ) as Subject[]
 
-  let semesterRepo = getManager().getRepository(Semester)
-  let semSubRepo = getManager().getRepository(Semester_Subject)
-  let semester = type === 'edit' ? await semesterRepo.findOne(id) : new Semester()
+  let semesterRepo = getRepository(Semester)
+  let semSubRepo = getRepository(Semester_Subject)
+  let semester = type === 'edit' 
+    ? await semesterRepo.findOne(id) 
+    : new Semester()
 
   if(semester){
     // Semester Register part 
@@ -204,79 +206,95 @@ class AdminController{
     }
   }
 
-  static EditOneObject: ExpressFunc = async function(req, res){
-    if(req.params && switchKeys.includes(req.params.kind)){
-      let kind = req.params.kind
-      let obj = undefined
-
-      // Add new patterns here. 
-      if(kind === 'year'){
-        let Repo = getManager().getRepository(Class_Year)
-        let obj = await Repo.findOne(req.params.id)
-        if(obj){
-          await EditClassYear(Repo, obj, req.body, 'update')
-          res.json({status:200, msg:'Edit succeeded.'})
-        } else {
-          res.json(DataNotFound)
-        }
-      } else if (kind === 'subject'){
-        let Repo = getManager().getRepository(Subject)
-        let obj = await Repo.findOne(req.params.id)
-        if(obj){
-          await EditSubject(Repo, obj, req.body, 'update')
-          res.json({status:200, msg:'Edit succeeded.'})
-        } else {
-          res.json(DataNotFound)
-        }
-      } else if (kind === 'notification'){
-        let Repo = getManager().getRepository(Notification)
-        let obj = await Repo.findOne(req.params.id)
-        if(obj){
-          await EditNotification(Repo, obj, req.body, 'update')
-          res.json({status:200, msg:'Edit succeeded.'})
-        } else {
-          res.json(DataNotFound)
-        }
-      } else if (kind === 'user'){
-        let Repo = getManager().getRepository(User)
-        let obj = await Repo.findOne(req.params.id)
-        if(obj){
-          await EditUser(Repo, obj, req.body, 'update')
-          res.json({status:200, msg:'Edit succeeded.'})
-        } else {
-          res.json(DataNotFound)
-        }
-      }
+  static EditClassYear: ExpressFunc = async (req, res) => {
+    let Repo = getRepository(Class_Year)
+    let obj = await Repo.findOne(req.params.id)
+    if(obj){
+      await EditClassYear(Repo, obj, req.body, 'update')
+      res.json({status:200, msg:'Edit succeeded.'})
     } else {
-      res.json({status:401, msg:'kind part is not existed.'})
+      res.json(DataNotFound)
     }
   }
 
-  static NewOneObject: ExpressFunc = async function(req,res){
-    if(req.params && switchKeys.includes(req.params.kind)){
-      let cls = switchDic[req.params.kind]
-      let kind = req.params.kind
-      let Repo = getManager().getRepository(cls)
-      
-      // Add new patterns here. 
-      if(kind === 'year'){
-        const obj = new Class_Year()
-        EditClassYear(Repo, obj, req.body, 'new')
-      } else if (kind === 'subject'){
-        const obj = new Subject()
-        EditSubject(Repo, obj, req.body, 'new')
-      } else if (kind === 'notification'){
-        const obj = new Notification()
-        EditNotification(Repo, obj, req.body, 'new')
-      }
-      res.json({status:200, msg:'new object was created.'})
+  static EditSubject: ExpressFunc = async (req, res) => {
+    let Repo = getRepository(Subject)
+    let obj = await Repo.findOne(req.params.id)
+    if(obj){
+      await EditSubject(Repo, obj, req.body, 'update')
+      res.json({status:200, msg:'Edit succeeded.'})
     } else {
-      res.json({status:401, msg:'kind part is not existed.'})
+      res.json(DataNotFound)
     }
+  }
 
+  static EditSemester:ExpressFunc = async function(req,res ){
+    console.log('Edit semester process started')
+    const result = await EditSemesterCore(req, 'edit', req.params.id)
+    console.log('Edit semester result log: ', result)
+    if(result==='finish'){
+      res.json({status:200})
+    } else {
+      (DataNotFound)
+    }
+  }
+
+  static EditNotification: ExpressFunc = async (req, res) => {
+    let Repo = getRepository(Notification)
+    let obj = await Repo.findOne(req.params.id)
+    if(obj){
+      await EditNotification(Repo, obj, req.body, 'update')
+      res.json({status:200, msg:'Edit succeeded.'})
+    } else {
+      res.json(DataNotFound)
+    }
+  }
+
+  static EditUser: ExpressFunc = async (req, res) => {
+    let Repo = getRepository(User)
+    let obj = await Repo.findOne(req.params.id)
+    if(obj){
+      await EditUser(Repo, obj, req.body, 'update')
+      res.json({status:200, msg:'Edit succeeded.'})
+    } else {
+      res.json(DataNotFound)
+    }
+  }
+
+  static NewClassYear: ExpressFunc = async (req, res) => {
+    let Repo = await getRepository(Class_Year)
+    const obj = new Class_Year()
+    EditClassYear(Repo, obj, req.body, 'new')
+    res.json({status:200, msg:'new object was created.'})
+  }
+
+  static NewSubject: ExpressFunc = async (req, res) => {
+    let Repo = await getRepository(Subject)
+    const obj = new Subject()
+    EditSubject(Repo, obj, req.body, 'new')
+    res.json({status:200, msg:'new object was created.'})
+  }
+
+  static NewNotification: ExpressFunc = async (req, res) => {
+    let Repo = await getRepository(Notification)
+    const obj = new Notification()
+    EditNotification(Repo, obj, req.body, 'new')
+    res.json({status:200, msg:'new object was created.'})
+  }
+
+  static NewSemester:ExpressFunc = async function(req,res){
+    console.log('New semester process started')
+    const result = await EditSemesterCore(req, 'new')
+    console.log('New semester result log: ', result)
+    if(result==='finish'){
+      res.json({status:200})
+    } else {
+      (DataNotFound)
+    }
   }
   /**
-   * Send SemesterSubjects contents.  
+   * Send SemesterSubjects contents. what's a different from 
+   * SemesterBoard of UtilsController.  
    */
   static SemesterBoard: ExpressFunc = async function(req, res){
     let semesters = await getManager()
@@ -294,27 +312,7 @@ class AdminController{
   }
 
 
-  static EditSemester:ExpressFunc = async function(req,res ){
-    console.log('Edit semester process started')
-    const result = await EditSemesterCore(req, 'edit', req.params.id)
-    console.log('Edit semester result log: ', result)
-    if(result==='finish'){
-      res.json({status:200})
-    } else {
-      (DataNotFound)
-    }
-  }
   
-  static NewSemester:ExpressFunc = async function(req,res){
-    console.log('New semester process started')
-    const result = await EditSemesterCore(req, 'new')
-    console.log('New semester result log: ', result)
-    if(result==='finish'){
-      res.json({status:200})
-    } else {
-      (DataNotFound)
-    }
-  }
 
   static checkHandle: ExpressFunc = async function(req,res){
     const userRepo = getManager().getRepository(User)
