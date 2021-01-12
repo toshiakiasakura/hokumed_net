@@ -124,7 +124,11 @@ function SubjectEdit(props:{content:Subject}){
   const editSubmit = (data:SubjectFormData)=>{
     AdminService.editOneObject(`edit/subject/${content.id}`, data)
     .then(res=>{
-      window.location.reload()
+      if(res.data.status === 200){
+        window.location.reload()
+      } else {
+        alert(res.data.msg)
+      }
     })
   }
   return(

@@ -65,17 +65,13 @@ class UserController{
    * @param req.params.kind Take exam, quiz, summary or personal.
    */
   static FileBoard: ExpressFunc = async (req, res) => {
-    let subject = await getManager()
-      .getRepository(Subject)
+    let subject = await getRepository(Subject)
       .findOne( {where:{title_en:req.params.title_en}} )
     if(subject){
-      let doc_files = await getManager()
-        .getRepository(Document_File)
+      let doc_files = await getRepository(Document_File)
         .find({subject_id:subject.id})
       let files = doc_files.map(getOneFile)
-      let class_years = await getManager()
-        .getRepository(Class_Year)
-        .find()
+      let class_years = await getRepository(Class_Year).find()
 
       Promise.all(files)
       .then(result =>{
@@ -105,10 +101,15 @@ class UserController{
       if(subject){
         let title_en = subject.title_en
         const filePath = `${DOWNLOAD_PATH}/${title_en}/${doc_file.file_name}`
-        res.download(filePath)
+        if(! fs.existsSync(filePath)){
+          //res.json({status:401, msg:"ファイルがありません．"})
+          res.sendStatus(401) 
+        }　else {
+          res.download(filePath)
+          doc_file.download_count += 1 
+          docRepo.save(doc_file)
 
-        doc_file.download_count += 1 
-        docRepo.save(doc_file)
+        }
       }
     }
   }

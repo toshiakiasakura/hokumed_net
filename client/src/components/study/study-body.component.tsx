@@ -81,7 +81,7 @@ function FileDownloadPart(props:{
           </FileControl>
           <FileControl>
             <span className="text-gray">
-              {file.user.handle_name}
+              {file.user.handle_name ? file.user.handle_name : "deleted user"}
             </span>
           </FileControl>
 

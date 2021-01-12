@@ -65,13 +65,16 @@ export async function getOneFile(
 ){
   let userRepository = getManager().getRepository(User)
   let user = await userRepository.findOne(doc_file.user_id) 
+  if(!user){
+    user = new User() 
+  }
   let codeRepository = getManager().getRepository(File_Code)
   let file_code = await codeRepository.findOne(
         {where: {code:doc_file.code}}
         )
   let subjectRepo = getManager().getRepository(Subject)
   let subject = await subjectRepo.findOne(doc_file.subject_id)
-  if(user && file_code && subject ){
+  if(file_code && subject ){
     const file: Doc_File = {
       id: doc_file.id,
       subject_id: doc_file.subject_id,

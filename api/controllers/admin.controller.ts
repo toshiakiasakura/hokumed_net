@@ -45,6 +45,7 @@ const EditSubject: EditFunc<Subject> = async (
   if(type === 'update'){
     obj.updated_at = new Date()
     fs.renameSync(dir_old, dir_new)
+    
   } else {
     if(! fs.existsSync(dir_new)){
       fs.mkdirSync(dir_new)
@@ -53,6 +54,8 @@ const EditSubject: EditFunc<Subject> = async (
   obj.title_en = body.title_en
   obj.title_ja = body.title_ja
   await Repo.save(obj)
+
+  return "finished"
 }
 
 const EditNotification: EditFunc<Notification> = async (
@@ -121,8 +124,8 @@ async function EditSemesterCore(
     const promise = semSubs.subjects.map(async v => {
       let new_semSub = new Semester_Subject()
 
-      // This 999999 is to avoid undefined semeseter.
-      new_semSub.semester_id = semester ? semester.id : 999999 
+      // This NaN is to avoid undefined semeseter.
+      new_semSub.semester_id = semester ? semester.id : NaN
       new_semSub.subject_id = v.id
       await semSubRepo.save(new_semSub)
       return 'finish'
@@ -183,8 +186,13 @@ class AdminController{
     let Repo = getRepository(Subject)
     let obj = await Repo.findOne(req.params.id)
     if(obj){
-      await EditSubject(Repo, obj, req.body, 'update')
-      res.json({status:200, msg:'Edit succeeded.'})
+      let dir_name = `${DOWNLOAD_PATH}/${obj.title_en}`
+      if(! fs.existsSync(dir_name)){
+        res.json({status:401, msg:"データベースの登録がありますがディレクトリーがありません．\n削除して登録し直してください．"})
+      } else {
+        EditSubject(Repo, obj, req.body, 'update')
+        res.json({status:200})
+      }
     } else {
       res.json(DataNotFound)
     }
@@ -233,8 +241,13 @@ class AdminController{
   static NewSubject: ExpressFunc = async (req, res) => {
     let Repo = await getRepository(Subject)
     const obj = new Subject()
-    EditSubject(Repo, obj, req.body, 'new')
-    res.json({status:200, msg:'new object was created.'})
+    try{
+      EditSubject(Repo, obj, req.body, 'new')
+      res.json({status:200})
+    }
+    catch(err){
+      res.send({status:401, msg:err})
+    }
   }
 
   static NewNotification: ExpressFunc = async (req, res) => {
