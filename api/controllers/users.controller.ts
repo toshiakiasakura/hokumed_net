@@ -13,10 +13,7 @@ import {
   getOneSemesterSubjects, Year2ClassID, UserFromCookies, 
   classID2Year, subjectsFromSemester, getOneFile
 } from '../helpers/connect.table.helper' 
-
-const DOWNLOAD_PATH = `${__dirname}/../../../downloads`
-let MulterFile: Express.Multer.File
-type TypeMulterFile = typeof MulterFile[]
+import { DOWNLOAD_PATH, TypeMulterFile } from '../helpers/files.helper'
 
 class UserController{
 
@@ -62,71 +59,19 @@ class UserController{
   }
 
   /**
-   * Return notification information.
-   */
-  static NotificationBoard: ExpressFunc = async function(req,res){
-    let notifications= await getManager()
-      .getRepository(Notification)
-      .find()
-    res.json({contents: notifications, status:200})
-  }
-
-  static OneNotification: ExpressFunc = async function (req, res){
-    let notification = await  getManager()
-      .getRepository(Notification)
-      .findOne(req.params.id)
-    res.json({content: notification, status:200})
-  }
-
-  /**
-   * Return subject information. 
-   */
-  static SubjectBoard: ExpressFunc = async (req, res) =>{
-    let subjects = await getManager()
-      .getRepository(Subject)
-      .find()
-    res.json({contents: subjects, status:200})
-  }
-
-  /**
-   * Send data for toggle menus of "/semester" page. 
-   */
-  static SemesterBoard: ExpressFunc = async (req,res) => {
-    const user = await UserFromCookies(req)
-    if(user){
-      const class_year_id = await Year2ClassID(user.class_year)
-      if(class_year_id){
-        const semesters= await getManager().getRepository(Semester)
-          .find({class_year_id:class_year_id})
-
-        if(semesters){
-          const semSubs = semesters.map(getOneSemesterSubjects)
-          Promise.all(semSubs)
-          .then(result =>{
-            res.json({contents: result, status:200})
-          })
-        }
-      }
-    }
-  }
-  /**
    * Document_File[] with File_Code, Subject, User is created. 
    * Based on req.params.kind value 
    * @param req.params.title_en subject english title. 
    * @param req.params.kind Take exam, quiz, summary or personal.
    */
   static FileBoard: ExpressFunc = async (req, res) => {
-    let subject = await getManager()
-      .getRepository(Subject)
+    let subject = await getRepository(Subject)
       .findOne( {where:{title_en:req.params.title_en}} )
     if(subject){
-      let doc_files = await getManager()
-        .getRepository(Document_File)
+      let doc_files = await getRepository(Document_File)
         .find({subject_id:subject.id})
       let files = doc_files.map(getOneFile)
-      let class_years = await getManager()
-        .getRepository(Class_Year)
-        .find()
+      let class_years = await getRepository(Class_Year).find()
 
       Promise.all(files)
       .then(result =>{
@@ -156,10 +101,15 @@ class UserController{
       if(subject){
         let title_en = subject.title_en
         const filePath = `${DOWNLOAD_PATH}/${title_en}/${doc_file.file_name}`
-        res.download(filePath)
+        if(! fs.existsSync(filePath)){
+          //res.json({status:401, msg:"ファイルがありません．"})
+          res.sendStatus(401) 
+        }　else {
+          res.download(filePath)
+          doc_file.download_count += 1 
+          docRepo.save(doc_file)
 
-        doc_file.download_count += 1 
-        docRepo.save(doc_file)
+        }
       }
     }
   }

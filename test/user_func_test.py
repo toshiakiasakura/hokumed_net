@@ -4,7 +4,6 @@ import subprocess
 import utils_test
 
 class TestHome(utils_test.TestSetUp):
-
     def test_move_to_notification(self):
         self.util.test_user_login()
         self.util.browser.find_element_by_xpath("//a[@href='/notification']").click()

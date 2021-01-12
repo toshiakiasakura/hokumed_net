@@ -87,6 +87,11 @@ class UserService {
   ){
     console.log("download file.")
     const res = await fetch(`/api/user/file/${file.id}`)
+    // check file exists or not.
+    if(res.status !== 200){
+      alert('ファイルがありません．')
+      return 
+    }
     const blob = await res.blob()
     if(type === 'download'){
       fileDownload(blob, file.file_name)
