@@ -21,14 +21,14 @@ import utils_test
 import login_test
 import navbar_test
 import error_test
-import home_test
+import user_func_test
 
 def append_test_module(suite:list, test_module):
     suite.append( unittest.TestLoader().loadTestsFromModule(test_module) )
     return( suite ) 
 
 if __name__ == '__main__':
-    modules = [login_test, navbar_test, error_test, home_test]
+    modules = [login_test, navbar_test, error_test, user_func_test]
 
     suite = []
     print("test module list:")
