@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getManager } from 'typeorm'
+import { getManager, getRepository } from 'typeorm'
 import { User } from '../entity/user.entity'
 import { 
   Subject, Class_Year, Semester_Subject, 

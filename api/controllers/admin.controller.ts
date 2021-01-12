@@ -172,34 +172,6 @@ class AdminController{
     }
   }
 
-  static SendOneObject: ExpressFunc = async function(req, res) {
-    if(req.params && switchKeys.includes(req.params.kind)){
-        let cls = switchDic[req.params.kind]
-        let obj = await getManager()
-          .getRepository(cls)
-          .findOne(req.params.id)
-        if(obj){
-          res.json({content:obj, status:200})
-        } else {
-          res.json({status:401, msg:'There is no matched id.'})
-        }
-    } else {
-      res.json({status:401, msg:'kind part is not existed.'})
-    }
-  }
-
-  static SendMultipleObjects: ExpressFunc = async function(req, res){
-    if(req.params && switchKeys.includes(req.params.kind)){
-      let cls = switchDic[req.params.kind]
-      let clsObjects = await getManager()
-        .getRepository(cls)
-        .find()
-      res.json({contents:clsObjects, status:200})
-    } else {
-      res.json({status:401, msg:'kind part is not existed.'})
-    }
-  }
-
   /**
    * Delete One object. 
    * @param req.kind Takes user, year, subject, semester, notification. 
@@ -321,30 +293,6 @@ class AdminController{
     }
   }
 
-  static SemesterDetail: ExpressFunc = async function(req, res){
-    let semester = await getManager()
-      .getRepository(Semester)
-      .findOne(req.params.id)
-    let subjects = await getManager()
-      .getRepository(Subject)
-      .find()
-    if(semester && subjects ){
-      const semSubs = await getOneSemesterSubjects(semester)
-      const semSubArray = semSubs.subjects.map(sub =>  sub.title_en )
-      const checkboxes = subjects.map(
-        sub => semSubArray.includes(sub.title_en)
-      )
-      res.json({
-        content:{
-          item: semSubs,
-          subjects: subjects,
-          checkboxes : checkboxes
-        },
-        status:200
-        })
-
-    }
-  }
 
   static EditSemester:ExpressFunc = async function(req,res ){
     console.log('Edit semester process started')

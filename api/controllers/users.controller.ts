@@ -62,54 +62,6 @@ class UserController{
   }
 
   /**
-   * Return notification information.
-   */
-  static NotificationBoard: ExpressFunc = async function(req,res){
-    let notifications= await getManager()
-      .getRepository(Notification)
-      .find()
-    res.json({contents: notifications, status:200})
-  }
-
-  static OneNotification: ExpressFunc = async function (req, res){
-    let notification = await  getManager()
-      .getRepository(Notification)
-      .findOne(req.params.id)
-    res.json({content: notification, status:200})
-  }
-
-  /**
-   * Return subject information. 
-   */
-  static SubjectBoard: ExpressFunc = async (req, res) =>{
-    let subjects = await getManager()
-      .getRepository(Subject)
-      .find()
-    res.json({contents: subjects, status:200})
-  }
-
-  /**
-   * Send data for toggle menus of "/semester" page. 
-   */
-  static SemesterBoard: ExpressFunc = async (req,res) => {
-    const user = await UserFromCookies(req)
-    if(user){
-      const class_year_id = await Year2ClassID(user.class_year)
-      if(class_year_id){
-        const semesters= await getManager().getRepository(Semester)
-          .find({class_year_id:class_year_id})
-
-        if(semesters){
-          const semSubs = semesters.map(getOneSemesterSubjects)
-          Promise.all(semSubs)
-          .then(result =>{
-            res.json({contents: result, status:200})
-          })
-        }
-      }
-    }
-  }
-  /**
    * Document_File[] with File_Code, Subject, User is created. 
    * Based on req.params.kind value 
    * @param req.params.title_en subject english title. 
