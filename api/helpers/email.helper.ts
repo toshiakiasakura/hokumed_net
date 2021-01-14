@@ -68,7 +68,7 @@ class EmailSender{
 
     const signUpAdminMailOptions = {
       from: API_MAIL,
-      to: to_mail,
+      to: API_MAIL,
       subject: `新規ユーザー申込み ${family} ${given} さん`,
       text: `${family} ${given} さんから新規ユーザー申込みがありました．\n\n` 
     }
