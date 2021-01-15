@@ -134,6 +134,7 @@ class UserController{
       let dirName = req.body.subject_title_en
       let dirPath = `${DOWNLOAD_PATH}/${dirName}` 
       let files = req.files as unknown as TypeMulterFile
+      console.log(files)
 
       // subject directory.
       if(! fs.existsSync(dirPath)){
