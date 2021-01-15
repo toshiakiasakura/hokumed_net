@@ -110,16 +110,16 @@ class UserService {
     let uploadData = new FormData()
     for(let i=0; i < files.length; i++){
       uploadData.append('upload', files[i])
-      // userID is taken from cookie.
-      uploadData.append('subject_id', String(subject.id) )
-      uploadData.append('class_year', data.class_year)
-      uploadData.append('comment', data.comment)
-      uploadData.append('code_radio', data.code_radio)
-      uploadData.append('no_doc', data.no_doc)
-      uploadData.append('test_kind', data.test_kind)
-      uploadData.append('subject_title_en', subject.title_en)
-      uploadData.append('page_kind', page_kind)
     }
+    // userID is taken from cookie.
+    uploadData.append('subject_id', String(subject.id) )
+    uploadData.append('class_year', data.class_year)
+    uploadData.append('comment', data.comment)
+    uploadData.append('code_radio', data.code_radio)
+    uploadData.append('no_doc', data.no_doc)
+    uploadData.append('test_kind', data.test_kind)
+    uploadData.append('subject_title_en', subject.title_en)
+    uploadData.append('page_kind', page_kind)
     console.log(uploadData)
     const config = {headers:{'Content-Type': 'multipart/form-data'}}
 
