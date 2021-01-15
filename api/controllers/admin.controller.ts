@@ -327,8 +327,8 @@ class AdminController{
   }
 
   /**
-   * Send SemesterSubjects contents. what's a different from 
-   * SemesterBoard of UtilsController.  
+   * Send SemesterSubjects contents.  
+   * This semesterboard returns the all.
    */
   static SemesterBoard: ExpressFunc = async function(req, res){
     let semesters = await getManager()
