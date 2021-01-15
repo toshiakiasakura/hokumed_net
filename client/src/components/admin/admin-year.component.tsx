@@ -141,7 +141,7 @@ function ClassYearNew(){
     AdminService.editOneObject(`new/year`, data)
     .then( res => {
       alert('期を追加しました．')
-      history.push(`/admin/subject`)
+      history.push(`/admin/year`)
     })
 
   }
