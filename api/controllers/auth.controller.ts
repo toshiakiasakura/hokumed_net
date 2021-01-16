@@ -171,7 +171,7 @@ class AuthController {
       res.send({status:200})
 
     } else {
-      res.json({status:204})
+      res.json({status:204, msg:"ユーザーが見つかりませんでした．"})
     }
   }
 
