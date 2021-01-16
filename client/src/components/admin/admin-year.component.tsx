@@ -54,6 +54,7 @@ function ClassYearBoard(props:State['Multi']['Class_Year']){
       ? <Loading />
       : 
         <div>
+          <p>！！注意！！学期を消すと，関連するユーザー情報，学期情報も削除されます．</p>
           <p>
             <TransitionButton title="新規作成" url='/admin/year/new' />
           </p>

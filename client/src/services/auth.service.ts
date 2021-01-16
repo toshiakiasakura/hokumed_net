@@ -111,7 +111,7 @@ class AuthService {
     return axios.post<{status:number, msg:string}>
               (API_URL + "reset-password", {email, password})
       .then(res=>{
-        return(res.data)
+        return(res)
       })
       .catch((err) => {
         console.log('axios ResetPassword failure')

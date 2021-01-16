@@ -23,9 +23,11 @@ const ResetForm = () => {
     */
     AuthService.resetPassword(data.email, data.password)
     .then( (res) => {
-      if(res && res.status === 200){
+      if(res && res.data.status === 200){
         alert("確認メールを送信しました．\nまだパスワードは再設定されていません．")
         history.push("/")
+      } else if (res && res.data.status === 204) {
+        alert(res.data.msg)
       } else {
         alert("エラーが発生しました．再度，実行してください．")
       }
