@@ -6,7 +6,7 @@ import Cookies from 'universal-cookie'
 import { UserService } from '../../services/user.service'
 import { Doc_File, Subject } from '../../entity/study.entity'
 import { 
-  sortValue, groupby, groupbyDeep, sortArray, sortNoDoc 
+  sortValue, groupby, groupbyDeep, sortArray, sortNoDoc, sortString 
 } from '../../helpers/sort.helper'
 
 function FileControl(props:{children:any}){
@@ -161,6 +161,7 @@ const SortFiles: SortFileFunc = function(
   year_keys.forEach((year_key) => {
     let files_year: Doc_File[] = group_year[year_key]
     if(kind === 'personal'){
+      files_year = sortString(files_year, 'file_name', true)
       files_year.forEach((file, index_year) => {
         content.push(
           <FileRow 
@@ -178,6 +179,7 @@ const SortFiles: SortFileFunc = function(
 
       let files_no: Doc_File[] = group_no[no_key]
       if(kind === 'summary'){
+        files_no = sortString(files_no, 'file_name', true)
         files_no.forEach( (file, index_no) =>{
           content.push(
             <FileRow 
@@ -195,6 +197,7 @@ const SortFiles: SortFileFunc = function(
       let type_keys = sortNoDoc(Object.keys(group_type), true)
       type_keys.forEach( (type_key, index_no ) => {
         let files_type: Doc_File[] = group_type[type_key]
+        files_type = sortString(files_type, 'file_name',true)
         files_type.forEach((file, index_type) => {
           content.push(
             <FileRow 
