@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { BrowserRouter as Router,
   Route,
   Switch,
   Redirect
-} from 'react-router-dom';
+} from 'react-router-dom'
+import { Helmet } from 'react-helmet'
+
 import { Login } from './components/login.component'
 import { Home, NotificationPages } from './components/home-notification.component'
 import { Admin } from './components/admin/admin.component'
@@ -18,11 +20,18 @@ import { VerificationPage } from './components/verification.component'
 import './style/_index.sass'
 
 
+const site_description = "旧北医ネット(hokui.net)からの移行先の北医ネット(hokumed.net)です．"
+
 class App extends Component{
   render() {
     return (
     <Router>
+      <Helmet >
+        <title> 北医ネット - HOKUMED.NET </title>
+        <meta name="description" content={site_description} />
+      </Helmet>
       <NavBar />
+
       <Switch>
         <Route exact path='/' component={ Login } />
         <Route exact path='/login' component= {() => <Redirect to='/' />} />
