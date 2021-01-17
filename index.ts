@@ -1,6 +1,7 @@
-/*This moduel works as router for backend.
-  If the address is not /api/*, this router passes the connection
-  to react application.
+/** 
+ * This moduel works as router for backend.
+ * If the address is not /api/*, this router passes the connection
+ * to react application.
  */
 import express from 'express'
 import { Request, Response} from "express"
@@ -17,8 +18,6 @@ import { authRouter } from './routes/auth.route'
 import { ValidateController } from './api/controllers/validate.controller'
 
 /**
- * TO DO: Replace hogehoge with environmental variable. ]
- * All environmental vairables used in this application is declared here.
  * secretKey is used in jwt authentication encryption.
  */
 const app = express()
