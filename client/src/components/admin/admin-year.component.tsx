@@ -21,7 +21,7 @@ const YearRow = (props:{year:Class_Year} ) => {
         {props.year.id} 
       </td>
       <td> 
-        <Link to={`/admin/year/${props.year.id}`}>
+        <Link to={`/admin/year/${props.year.id}`} id={`yearRows`}>
           {props.year.year}期 
         </Link>
       </td>
