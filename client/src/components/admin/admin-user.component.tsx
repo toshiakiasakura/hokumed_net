@@ -13,9 +13,63 @@ import {
 import { MatchIDType, State } from '../../helpers/types.helper'
 import { UserEditForm } from './admin-form.component'
 import { DeleteButton } from './admin-utils.component'
+import { FetchMultiUsers, FetchOneUser } from '../../helpers/fetch_data'
 
 
+/**
+ * Approval Button for UserBoard. 
+ * Only approve can be done here.
+ */
+const ApproveButtonForBoard = (props:{ user:User }) => {
+  // State for approve
+  const [state, setState] = useState({confirm:false,approved:false})
+  let user = props.user
+  let confirm = state.confirm
+  let approved = state.approved
+  const changeAdminStatusButton = () => {
+    if(confirm){
+      AdminService.changeApproveStatus(user.id)
+      .then( res =>{
+          if (res.status === 200){
+            alert('承認しました．承認メールを送信しました．')
+          }
+      })
+      setState({confirm:true, approved:true})
+    } else {
+      setState({confirm:true, approved:false})
+    }
+  }
+  
+  const ButtonPart = () => {
+    if(user.approval_state=== 'approved' || user.activation_status === 'pending'){
+      return ''
+    } else if (approved){
+      return '承認済'
+    } else {
+      return(
+        <button
+          className={`btn btn--sm  ${confirm ? "btn--secondary" : "btn--primary"}`}
+          onClick={()=>changeAdminStatusButton()}
+          
+        >
+          {confirm ? "本当に？" : "承認"}
+        </button>
+      )
+    }
+  }
+
+  return(
+    <React.Fragment>
+      {ButtonPart()}
+    </React.Fragment>
+  )
+}
+/**
+ * User row compoent. 
+ * TO DO: Approval function from userBoard page. 
+ */
 const UserRow = (props:{user:User}) => {
+
   let user = props.user
   let bariconClass = 'baricon--question'
   let approval = user.approval_state === 'approved' 
@@ -54,29 +108,20 @@ const UserRow = (props:{user:User}) => {
           </button>
         </div>
       </td>
+      <td>
+        <div className="text-center">
+          <ApproveButtonForBoard user={user}/>
+        </div>
+      </td>
     </tr>
   )
 }
 
-function UserBoard(props:State['Admin']['User']){
-  /**
-   * Many arguments are for filtering function.
-   */
-  const [state, setState] = useState<
-        State['Admin']['User']
-      >( {contents:[], status:200, msg:'', 
-      filtered:[], fil_year:NaN, fil_name:'', 
-      fil_state:'', fil_mail:''})
-
-  useEffect(()=> {
-    AdminService.getMultipleObjects<User>('user', setState)
-    .then( _ => {
-      setState((prev:any) => ({ ...prev, filtered:prev.contents }))
-    })
-  },[setState])
+function UserBoard(){
+  // TO DO: divide filter state and fetching data related state.
+  const {state, setState } = FetchMultiUsers()
 
   console.log("/admin/user page started")
- 
   const makeContents = (contents:User[]) => {
     return contents.map( v=> <UserRow user={v} />)
   }
@@ -101,6 +146,7 @@ function UserBoard(props:State['Admin']['User']){
               <th> 氏名 </th>
               <th> メールアドレス </th>
               <th> 状態 </th>
+              <th> 承認 </th>
             </tr>
           </thead>
           <tbody className="table__body">
@@ -116,11 +162,7 @@ function UserBoard(props:State['Admin']['User']){
 
 function UserEdit(props:MatchIDType){
   const id = props.match.params.id
-  const [state, setState] = useState<State['One']['User']>
-    ({content:new User(), status:200, msg:''})
-  useEffect(()=> {
-    AdminService.getOneObject<User>(`user/${id}`, setState)
-    },[setState])
+  const {state, setState } = FetchOneUser(id)
 
   let user = state.content
   return(
@@ -140,6 +182,7 @@ function UserEdit(props:MatchIDType){
     </FetchValidation>
   )
 }
+
 export function UserBody(props:{user:User}){
   let user = props.user
   return(
@@ -166,12 +209,7 @@ export function UserBody(props:{user:User}){
 
 function UserDetail(props:MatchIDType){
   const id = props.match.params.id
-  const [state, setState] = useState<State['One']['User']>
-    ({content:new User(), status:200, msg:''})
-
-  useEffect(()=> {
-    AdminService.getOneObject<User>(`user/${id}`, setState)
-    },[setState])
+  const {state, setState} = FetchOneUser(id)
 
   const approveButton= function(id: number,approval_state: string){
     AdminService.changeApproveStatus(id)

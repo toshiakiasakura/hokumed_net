@@ -20,7 +20,7 @@ const SubjectRow = (props:{subject:Subject}) => {
       {/* TO DO: add link to the part.*/}
       <td> {props.subject.id} </td>
       <td> 
-        <Link to={`/admin/subject/${props.subject.id}`} >
+        <Link to={`/admin/subject/${props.subject.id}`} id='subjectRows' >
           {props.subject.title_ja}
         </Link> 
       </td>

@@ -23,12 +23,13 @@
     "reflect-metadata": "^0.1.13",
     "sha1": "^1.1.1",
     "sqlite3": "^5.0.0",
-    "typeorm": "^0.2.29"
+    "typeorm": "^0.2.29",
+    "typescript": "^4.1.3"
   },
   "scripts": {
     "start": "rm -rf dist && tsc && node dist/index.js",
     "dev": "cd client && yarn dev",
-    "test": "cd client && yarn test",
+    "test": "cd test && python all_test.py",
     "deploy": "rm -rf dist && tsc && forever start dist/index.js && cd client && yarn build"
   },
   "name": "2_hokui_net_ver2",

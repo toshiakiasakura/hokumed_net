@@ -22,7 +22,7 @@ class ValidateController {
         next()
 
       } else{
-        const msg = 'Authentication error.'
+        const msg = 'User Authentication error.'
         console.log(msg)
         res.json({status:401})
       }
@@ -47,7 +47,7 @@ class ValidateController {
         req.body.userID = userID
         next()
       } else{
-        const msg = 'Authentication error.'
+        const msg = 'Admin Authentication error.'
         console.log(msg)
         res.json({status:401})
       }

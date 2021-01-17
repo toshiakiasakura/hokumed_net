@@ -11,7 +11,7 @@ import {
 import { MatchIDType, State, Form } from '../../helpers/types.helper'
 import { FormRow } from '../../helpers/form.component'
 import { DetailPageContainer, DetailFormContainer } from './admin-utils.component'
-
+import { FetchOneClassYear, FetchMultiClassYears } from '../../helpers/fetch_data'
 
 
 const YearRow = (props:{year:Class_Year} ) => {
@@ -21,7 +21,7 @@ const YearRow = (props:{year:Class_Year} ) => {
         {props.year.id} 
       </td>
       <td> 
-        <Link to={`/admin/year/${props.year.id}`}>
+        <Link to={`/admin/year/${props.year.id}`} id={`yearRows`}>
           {props.year.year}期 
         </Link>
       </td>
@@ -33,13 +33,7 @@ const YearRow = (props:{year:Class_Year} ) => {
 }
 
 function ClassYearBoard(props:State['Multi']['Class_Year']){
-  const [state, setState] = useState<
-      State['Multi']['Class_Year']
-      >( {contents:[], status:200, msg:''})
-
-  useEffect(()=> {
-    AdminService.getMultipleObjects<Class_Year>('year', setState)
-  },[setState])
+  const {state, setState} = FetchMultiClassYears()
 
   console.log("/admin/year page started")
  
@@ -175,12 +169,7 @@ function ClassYearNew(){
 
 function ClassYearDetail(props:MatchIDType){
   const id = props.match.params.id
-  const [state, setState] = useState< State['One']['Class_Year']>
-    ( {content:new Class_Year(), status:200, msg:''})
-
-  useEffect(()=> {
-    AdminService.getOneObject<Class_Year>(`year/${id}`, setState)
-  },[setState])
+  const {state, setState} = FetchOneClassYear(id)
 
   console.log("ClassYearDetail page started. ")
   let content = state.content

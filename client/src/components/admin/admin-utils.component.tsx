@@ -10,6 +10,7 @@ export function EditButton(props:{func:VoidFunc}){
   return(
     <button 
       className='btn btn--sm btn--primary'
+      id="editButton"
       onClick={() => props.func()}
     >
       編集
@@ -40,6 +41,7 @@ export const DeleteButton = (props:{kind:string,id: number}) => {
   return(
     <button
       className="btn btn--sm btn--accent"
+      id="deleteButton"
       onClick={() => deleteHandle()}
     >
       削除
