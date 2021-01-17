@@ -3,16 +3,18 @@ import { User } from '../entity/user.entity'
 import { newBCryptPassword } from '../helpers/bcrypt.helper'
 import { ExpressFunc } from '../helpers/express_typing'
 
+const ADMIN_EMAIL = 'admin_hokumednet@eis.hokudai.ac.jp'
+const USER_EMAIL = 'test_hokumednet@eis.hokudai.ac.jp'
 class SampleController{
   static addSampleAdmin: ExpressFunc = async function(req, res){
 
       console.log('Inserting sample users into the database')
       let userRepository = getManager().getRepository(User)
-      const admin_check = await userRepository.findOne({where:{email:'admin@eis.hokudai.ac.jp'}})
+      const admin_check = await userRepository.findOne({where:{email:ADMIN_EMAIL}})
       // This is for admin
       if( admin_check === undefined){
         let admin = new User()
-        admin.email = 'admin_hokumednet@eis.hokudai.ac.jp'
+        admin.email = ADMIN_EMAIL
         const [salt, crypted_password] = newBCryptPassword("admin")
         admin.crypted_password = crypted_password
         admin.salt = salt
@@ -37,11 +39,11 @@ class SampleController{
   static addSampleUser: ExpressFunc = async function(req, res){
       console.log('Inserting sample users into the database')
       let userRepository = getManager().getRepository(User)
-      const test_check = await userRepository.findOne({where:{email:'test@eis.hokudai.ac.jp'}})
+      const test_check = await userRepository.findOne({where:{email:USER_EMAIL}})
       // This is for test
       if( test_check === undefined){
         let test = new User()
-        test.email = 'test_hokumednet@eis.hokudai.ac.jp'
+        test.email = USER_EMAIL
         const [salt, crypted_password] = newBCryptPassword("test")
         test.crypted_password = crypted_password
         test.salt = salt

@@ -63,7 +63,7 @@
   "scripts": {
     "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
-    "test": "cd ../test && python test_dev.py",
+    "test": "cd .. && yarn test",
     "eject": "react-scripts eject",
     "dev": "concurrently \"yarn start\" \"cd .. && yarn start\" "
   },
