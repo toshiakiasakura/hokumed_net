@@ -132,7 +132,7 @@ function NotificationDetail(props:MatchIDType){
           </div>
           <hr />
           <div>
-            {content.text}
+            <div dangerouslySetInnerHTML={{__html:content.text}}/>
           </div>
 
         </div>
