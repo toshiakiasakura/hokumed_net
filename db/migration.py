@@ -10,11 +10,11 @@ def sqlConnect(path):
             try:
                 con = sqlite3.connect(path)
                 res = func(con,*args,**kargs)
-                print(func.__name__)
+                #print(func.__name__)
             except Exception as e:
                 print("!!!! Error occurs !!!!: ",e)
             finally:
-                print("finish!")
+                # print("finish!")
                 con.close()
             return(res)
         return(_decorator)

@@ -36,7 +36,7 @@ class UserController{
     if(user){
       user.handle_name = req.body.handle_name
       user.email_mobile = req.body.email_mobile
-      user.birthday = req.body.bitrhday
+      user.birthday = req.body.birthday
       await userRepo.save(user)
       res.json({status:200, msg:'編集しました．'})
     } else {
