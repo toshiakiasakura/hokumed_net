@@ -14,6 +14,7 @@ import {
   FormRow, ClassYearBlock, FormGroupContainer, LearnYearBlock, TermBlock
 } from '../../helpers/form.component'
 import { SemesterFilter } from './admin-filter.component'
+import { SortTHeader } from '../../helpers/sort.helper'
 
 
 const SemesterRow = (props:{semester:SemesterSubjects} ) => {
@@ -74,8 +75,7 @@ function SemesterBoard(props:State['Multi']['SemesterSubjects']){
           />
           <table className="table table--condensed">
             <thead className="table__head">
-              {/*TO DO: sorting function.  */}
-              <th> ID </th>
+              <SortTHeader title="ID"  index="id" contents={state.filtered} setState={setState} />
               <th> 学年 - 学期 </th>
               <th> 教科 </th>
             </thead>

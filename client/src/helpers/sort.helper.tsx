@@ -1,3 +1,4 @@
+import React, {useState} from 'react'
 /**
  * sort string array. 
  */
@@ -164,4 +165,32 @@ export function sortLearnYearTerm(
     }
   }
   return c
+}
+/**
+ * Sort contents based on key. 
+ * Wrap table header by this function for each column. 
+ */
+export function SortTHeader(props:{
+  title:string, contents:any[], index:string, setState:any
+}){
+  const [Bool, setBool] = useState(false)
+  const clickSort = () =>{
+    let fil_sorted = sortString(props.contents, props.index, Bool)
+    setBool(!Bool)
+    props.setState( (prev:any) =>({
+      filtered: fil_sorted,
+      ...prev 
+    }))
+  }
+
+  return(
+    <th>
+      <a 
+        href="javascript:;" 
+        onClick={() => clickSort()}
+      >
+        {props.title}
+      </a>
+    </th>
+  )
 }
