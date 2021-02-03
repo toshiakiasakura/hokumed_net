@@ -76,7 +76,11 @@ function NotificationBoard(props:NotificationsStatus){
 type NotificationFormData = {title:string, text: string}
 
 function NotificationFormBody(
-    props:{errors:any, register:any, content: NotificationFormData}
+    props:{
+      errors:any, register:any, 
+      content: NotificationFormData,
+      text: string
+    }
   ){
   return(
     <div>
@@ -94,20 +98,30 @@ function NotificationFormBody(
         title="テキスト"
         name="text"
         id="NotificationPageEditText"
-        placeholder="テキスト"
+        placeholder="テキスト. htmlを直接埋め込むことが出来ます．"
         errors={props.errors} register={props.register}
         reg_json={{
           required:"入力必須項目です",
         }}
       />
+      <div className="form__group">
+        <div className="col--sm-4">
+          <label className="form__label">
+            Preview
+          </label>
+        </div>
+        <div className="col--sm-8">
+          <div dangerouslySetInnerHTML={{__html:props.text}}/>
+        </div>
+      </div>
     </div>
   )
 }
 
 function NotificationEdit(props:{content:Notification}){
-  const { register, handleSubmit, errors, formState 
+  const { register, handleSubmit, errors, formState, watch
   } = useForm<NotificationFormData>({
-    mode:'onBlur',
+    mode:'onChange',
     defaultValues: {
       title: props.content.title,
       text: props.content.text
@@ -120,28 +134,32 @@ function NotificationEdit(props:{content:Notification}){
       window.location.reload()
     })
   }
+  let text = watch("text", "")
   return(
-    <form 
-      className="form row"
-      role="form"
-      name="notificationForm"
-      onSubmit={handleSubmit(editSubmit)}
-    >
-      <DetailFormContainer 
-        title="編集"
-        formState={formState}
-        body={<NotificationFormBody
-                register={register} 
-                errors={errors}
-                content={props.content}
-              />}
-      />
-    </form>
+    <React.Fragment>
+      <form 
+        className="form row"
+        role="form"
+        name="notificationForm"
+        onSubmit={handleSubmit(editSubmit)}
+      >
+        <DetailFormContainer 
+          title="編集"
+          formState={formState}
+          body={<NotificationFormBody
+                  register={register} 
+                  errors={errors}
+                  content={props.content}
+                  text={text}
+                />}
+        />
+      </form>
+    </React.Fragment>
   )
 }
 
 function NotificationNew(){
-  const { register, handleSubmit, errors, formState } =
+  const { register, handleSubmit, errors, formState, watch } =
                             useForm<NotificationFormData>({mode:'onBlur'})
   const history = useHistory()                         
   const newSubmit = (data:NotificationFormData)=>{
@@ -152,6 +170,7 @@ function NotificationNew(){
     })
   }
   const content: NotificationFormData = {title:'', text:''}
+  let text = watch("text", "")
   return(
     <div>
       <p>
@@ -170,6 +189,7 @@ function NotificationNew(){
                   register={register} 
                   errors={errors}
                   content={content}
+                  text={text}
                 />}
           
         />
