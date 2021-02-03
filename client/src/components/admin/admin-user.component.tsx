@@ -30,8 +30,8 @@ const ApproveButtonForBoard = (props:{ user:User }) => {
     if(confirm){
       AdminService.changeApproveStatus(user.id)
       .then( res =>{
-          if (res.status === 200){
-            alert('承認しました．承認メールを送信しました．')
+          if (res.status !== 200){
+            alert('何らかの問題が発生しました．')
           }
       })
       setState({confirm:true, approved:true})
