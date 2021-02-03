@@ -14,6 +14,7 @@ import { MatchIDType, State } from '../../helpers/types.helper'
 import { UserEditForm } from './admin-form.component'
 import { DeleteButton } from './admin-utils.component'
 import { FetchMultiUsers, FetchOneUser } from '../../helpers/fetch_data'
+import { SortTHeader } from '../../helpers/sort.helper'
 
 
 /**
@@ -30,8 +31,8 @@ const ApproveButtonForBoard = (props:{ user:User }) => {
     if(confirm){
       AdminService.changeApproveStatus(user.id)
       .then( res =>{
-          if (res.status === 200){
-            alert('承認しました．承認メールを送信しました．')
+          if (res.status !== 200){
+            alert('何らかの問題が発生しました．')
           }
       })
       setState({confirm:true, approved:true})
@@ -140,11 +141,11 @@ function UserBoard(){
         <table className="table table--condensed">
           <thead className="table__head">
             <tr>
-              <th className="text-small"> ID </th>
-              <th> 期 </th>
-              <th> ハンドルネーム </th>
-              <th> 氏名 </th>
-              <th> メールアドレス </th>
+              <SortTHeader title="ID"  index="id" contents={state.filtered} setState={setState} />
+              <SortTHeader title="期"  index="class_year" contents={state.filtered} setState={setState} />
+              <SortTHeader title="ハンドルネーム"  index="handle_name" contents={state.filtered} setState={setState} />
+              <SortTHeader title="氏名"  index="family_name" contents={state.filtered} setState={setState} />
+              <SortTHeader title="メールアドレス"  index="email" contents={state.filtered} setState={setState} />
               <th> 状態 </th>
               <th> 承認 </th>
             </tr>

@@ -12,7 +12,7 @@ import { MatchIDType, State, Form } from '../../helpers/types.helper'
 import { FormRow } from '../../helpers/form.component'
 import { DetailPageContainer, DetailFormContainer } from './admin-utils.component'
 import { FetchOneClassYear, FetchMultiClassYears } from '../../helpers/fetch_data'
-
+import { SortTHeader } from '../../helpers/sort.helper'
 
 const YearRow = (props:{year:Class_Year} ) => {
   return(
@@ -32,11 +32,11 @@ const YearRow = (props:{year:Class_Year} ) => {
   )
 }
 
-function ClassYearBoard(props:State['Multi']['Class_Year']){
+
+function ClassYearBoard(){
   const {state, setState} = FetchMultiClassYears()
 
   console.log("/admin/year page started")
- 
   const makeContents = (contents:Class_Year[]) => {
     return contents.map( v=> <YearRow year={v} />)
   }
@@ -54,10 +54,9 @@ function ClassYearBoard(props:State['Multi']['Class_Year']){
           </p>
           <table className="table table--condensed">
             <thead className="table__head">
-              {/*TO DO: sorting function.  */}
-              <th> ID </th>
-              <th> 期 </th>
-              <th> カリキュラム </th>
+              <SortTHeader title="ID" index="id" contents={contents} setState={setState} />
+              <SortTHeader title="期" index="year" contents={contents} setState={setState} />
+              <SortTHeader title="カリキュラム" index="year" contents={contents} setState={setState} />
             </thead>
             <tbody className="table__body">
               {makeContents(contents)}
