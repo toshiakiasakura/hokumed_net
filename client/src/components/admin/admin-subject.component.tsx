@@ -12,6 +12,7 @@ import { MatchIDType, State} from '../../helpers/types.helper'
 import { DetailPageContainer, DetailFormContainer } from './admin-utils.component'
 import { FormRow } from '../../helpers/form.component'
 import { SubjectFilter } from './admin-filter.component'
+import { SortTHeader } from '../../helpers/sort.helper'
 
 
 const SubjectRow = (props:{subject:Subject}) => {
@@ -64,11 +65,10 @@ function SubjectBoard(props:State['Multi']['Subject']){
           />
           <table className="table table--condensed">
             <thead className="table__head">
-              {/*TO DO: sorting function.  */}
-              <th> ID </th>
-              <th> 名前 </th>
-              <th> 名前(英語) </th>
-              <th> 開講期 </th>
+              <SortTHeader title="ID"  index="id" contents={state.filtered} setState={setState} />
+              <SortTHeader title="名前"  index="title_ja" contents={state.filtered} setState={setState} />
+              <SortTHeader title="名前(英語)"  index="title_en" contents={state.filtered} setState={setState} />
+              <SortTHeader title="開講期"  index="title_ja" contents={state.filtered} setState={setState} />
             </thead>
             <tbody className="table__body">
                 {makeContents(state.filtered)}

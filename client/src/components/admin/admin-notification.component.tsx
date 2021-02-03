@@ -13,6 +13,7 @@ import {
   DetailPageContainer, DetailFormContainer, 
 } from './admin-utils.component'
 import { FormRow } from '../../helpers/form.component'
+import { SortTHeader } from '../../helpers/sort.helper'
 
 type NotificationsStatus = MultiClassStatus<Notification>
 
@@ -58,10 +59,9 @@ function NotificationBoard(props:NotificationsStatus){
           </p>
           <table className="table table--condensed">
             <thead className="table__head">
-              {/*TO DO: sorting function.  */}
-              <th> ID </th>
-              <th> タイトル </th>
-              <th> 作成日時</th>
+              <SortTHeader title="ID"  index="id" contents={state.contents} setState={setState} />
+              <SortTHeader title="タイトル"  index="title" contents={state.contents} setState={setState} />
+              <SortTHeader title="作成日時"  index="created_at" contents={state.contents} setState={setState} />
             </thead>
             <tbody className="table__body">
               {makeContents(contents)}
