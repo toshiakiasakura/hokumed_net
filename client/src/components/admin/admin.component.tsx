@@ -47,7 +47,6 @@ const TopNavVar = () => {
 function Admin(){
   console.log("Try to access admin page.  ")
   const cookies = new Cookies()
-  console.log(cookies.getAll())
   if (cookies.get('isLogIn') !== 'true' || cookies.get('isAdmin') !== 'true'){
     return( <Redirect to='/error/401' />)
   }

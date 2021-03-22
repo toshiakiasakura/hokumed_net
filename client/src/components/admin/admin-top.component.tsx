@@ -32,6 +32,7 @@ export const Top = () => {
       '教科のページのURLに使われるので慎重に設定しましょう．' }/>
     <TopItem href="/admin/semester" col1="学期" col2="各学年のセメスター(前期・後期)ごとの履修科目のマップです．" />
     <TopItem href="/admin/notification" col1="お知らせ" col2="お知らせの編集が出来ます．" />
+    <TopItem href="https://www.notion.so/063d625a87594218b6e558d49947ede3" col1="管理会ページ" col2="Notionの管理会用のページです．別サイトに動きます．" />
   </table>
   )
 }
