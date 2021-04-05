@@ -95,18 +95,15 @@ const SignUpForm = () => {
               errors={errors} register={register}
               reg_json={{
                 required: require_str,
-                pattern:{
-                  value: !/^[A-Z0-9._%+-]+@(eis|elms).hokudai.ac.jp$/i,
-                  message:"@以下は(elms or eis).hokudai.ac.jpのみ有効です．"
-                },
-                validate: AuthService.checkEmail
+                validate: AuthService.checkEmail, 
+                // regular expression validation was done in checkEmail function.
               }}
             />
             <FormRow
               title="携帯メール (空欄可)"
               type="email"
-              name=""
-              id="signupBobileEmail"
+              name="emailMobile"
+              id="signupMobileEmail"
               placeholder="example@gmail.com"
               errors={errors} register={register}
               reg_json={{}}
