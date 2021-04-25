@@ -17,6 +17,7 @@ import { Logout } from './components/logout.component'
 import { ProfilePages } from './components/profile.component'
 import { ResetPassword } from './components/reset-password.component'
 import { VerificationPage } from './components/verification.component'
+import { DonationPage } from './components/donation.component'
 import './style/_index.sass'
 
 
@@ -29,6 +30,8 @@ class App extends Component{
       <Helmet >
         <title> 北医ネット - HOKUMED.NET </title>
         <meta name="description" content={site_description} />
+        {/* codoc script */}
+        <script src="https://codoc.jp/js/cms.js" data-css="blue" data-usercode="k9Em5JC4Ew" charSet="UTF-8" defer></script>
       </Helmet>
       <NavBar />
 
@@ -45,6 +48,7 @@ class App extends Component{
         <Route exact path='/reset-password' component= { ResetPassword } />
         <Route path='/verify' component= { VerificationPage } />
         <Route path='/error' component={ ErrorPages } />
+        <Route exact path='/donation' component={ DonationPage } />
         <Route component={() => <Redirect to='/error/404' />}/>
       </Switch>
     </Router>

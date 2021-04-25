@@ -225,7 +225,7 @@ function ProfileEdit(){
           <p>
             <br />
             ELMSメール，期を変更希望の方は &nbsp;
-            <a href="mailto:hokumed.net@gmail.com">hokumed.net@gmail.com</a>
+            <a href="mailto:hokumed.net@outlook.com">hokumed.net@outlook.com</a>
              &nbsp; までご連絡ください．
           </p>
           <EditForm user={user}/>
