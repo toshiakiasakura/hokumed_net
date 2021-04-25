@@ -3,11 +3,13 @@ import express from 'express'
 
 const API_URL = 'http://hokumed.net'
 const API_MAIL = 'hokumed.net@gmail.com'
+const API_MAIL_NEW = 'hokumed.net@outlook.com'
 const SIGNATURE = '\n\n----------------\n' +
 '北医ネット (hokumed.net)\n' + 
-`お問い合わせ先: ${API_MAIL}\n` +
+`お問い合わせ先: ${API_MAIL_NEW}\n` +
 `サイトURL: ${API_URL}\n` + 
 '注: 旧北医ネット(hokui.net)からの移行サイトです．\n' + 
+'本メールへ返信されても、対応でき兼ねますのでご了承ください.' +      
 '---------------'
 
 const transporter = nodemailer.createTransport({
@@ -44,6 +46,7 @@ class EmailSender{
     const mailOptions = {
       from: API_MAIL,
       to: to_mail,
+      cc: API_MAIL_NEW,
       subject: "北医ネットへようこそ！",
       text: `${family} ${given} さん\n\n` +
       '北大医学科生専用ポータルサイト，"北医ネット"へようこそ．' +
@@ -60,7 +63,7 @@ class EmailSender{
       '以下のURLをクリックしてください．クリックをもって上記に記載した内容については同意したものとします．\n' + 
       '管理者チームで学部在籍を確認次第，北医ネットをご利用いただけます．\n' +
        'なお，上記内容のほかの利用上の注意については，利用中サイト内でいつでもご確認いただけます．' + 
-       '登録前に詳細を把握したい場合は，hokumed.net@gmail.comへご連絡ください。\n\n' +
+       '登録前に詳細を把握したい場合は，hokumed.net@outlook.comへご連絡ください。\n\n' +
       `${API_URL}/api/auth/activation/${userID}/${token}` + 
       SIGNATURE
     }
@@ -90,7 +93,7 @@ class EmailSender{
       'なお，利用中に本利用上の注意を改定することがあります．その場合はサイト上のお知らせをもって通達しますので， 必ず確認してください．' +
       '本サイトの利用をもって，利用上の注意については了承したものと判断します．\n\n' +
       'ログインは以下のURLから行うことができます．' +
-      'なにか不明な点がございましたら，hokumed.net@gmail.comへご連絡ください．\n\n' + 
+      'なにか不明な点がございましたら，hokumed.net@outlook.comへご連絡ください．\n\n' + 
       '利用上の注意を守った上で，北医ネットを使って有意義な学生生活を送りましょう．\n\n' +
       `${API_URL}` + SIGNATURE
     }
@@ -122,12 +125,13 @@ class EmailSender{
     const mailOptions = {
       from: API_MAIL,
       to: to_mail,
+      cc: API_MAIL_NEW,
       subject: '北医ネット．パスワードの変更．',
       text: 'パスワードの変更を受け付けました． ' +
       '下記のurlをクリックするとパスワードの再設定が完了します．\n'  +
       'リンクを押すまでは変更がなされないため注意してください．\n\n' +
       'このメールに心当たりがない場合は，下記のurlは絶対にクリックせずに無視してください．\n' + 
-      'なにか不明な点があれば，hokumed.net@gmail.comへご連絡ください．\n\n'+
+      'なにか不明な点があれば，hokumed.net@outlook.comへご連絡ください．\n\n'+
       `${API_URL}/api/auth/verify-reset-password/${userID}/${token}` +
       SIGNATURE
     }

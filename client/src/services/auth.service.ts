@@ -78,6 +78,10 @@ class AuthService {
    */
   static async checkEmail(email: string){
     console.log("AdminService.checkEmail process starts.")
+    const reg = /^[A-Z0-9._%+-]+@(eis|elms).hokudai.ac.jp$/i
+    if (!reg.test(email)){
+      return("@以下は(elms or eis).hokudai.ac.jpのみ有効です．")
+    }
     const data = await axios.post(API_URL + "check-email", {email} )
         .then(res => {
           return(res.data.status === 200 ? true : res.data.msg)

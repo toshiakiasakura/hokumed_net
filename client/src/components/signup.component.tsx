@@ -95,18 +95,15 @@ const SignUpForm = () => {
               errors={errors} register={register}
               reg_json={{
                 required: require_str,
-                pattern:{
-                  value: !/^[A-Z0-9._%+-]+@(eis|elms).hokudai.ac.jp$/i,
-                  message:"@以下は(elms or eis).hokudai.ac.jpのみ有効です．"
-                },
-                validate: AuthService.checkEmail
+                validate: AuthService.checkEmail, 
+                // regular expression validation was done in checkEmail function.
               }}
             />
             <FormRow
               title="携帯メール (空欄可)"
               type="email"
-              name=""
-              id="signupBobileEmail"
+              name="emailMobile"
+              id="signupMobileEmail"
               placeholder="example@gmail.com"
               errors={errors} register={register}
               reg_json={{}}
@@ -164,8 +161,7 @@ const SignUp = () => {
                認証確認メールはELMSメールアドレス宛に送信されます． <br />
                メール認証後，ログイン可能となるのは管理者の承認後になりますのでご注意ください．<br />
                不具合等ございましたら
-               {/*TO DO: link new mail address. */}
-              <a href='mailto:hokumed.net@gmail.com'>hokumed.net@gmail.com</a>
+              <a href='mailto:hokumed.net@outlook.com'>hokumed.net@outlook.com</a>
                までご連絡ください． <br /> 
                メールアドレスを正しく入力出来たか確認したい方は，パスワードの再設定機能をお使いください．
             </p>
