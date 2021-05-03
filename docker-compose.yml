@@ -8,8 +8,9 @@ services:
       
 
     # 環境変数を設定
-    #environment:
-    #  - DEBUG=app:*
+    environment:
+      - HOKUI_SECRET=${HOKUI_SECRET}
+      - HOKUI_PW=${HOKUI_PW}
 
     tty: true
 
