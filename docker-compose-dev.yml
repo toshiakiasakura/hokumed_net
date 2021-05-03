@@ -1,3 +1,4 @@
+# run command docker-compose -f docker-compose-dev.yml up
 version: '3'
 services:
   app:
@@ -11,23 +12,14 @@ services:
     environment:
       - HOKUI_SECRET=${HOKUI_SECRET}
       - HOKUI_PW=${HOKUI_PW}
-      - EXPL_SMTP_ENABLED=true
-      - EXPL_SMTP_FROM_ADDRESS=hokumed.net@gmail.com
-      - EXPL_SMTP_FROM_NAME=hokumed.net
-      - EXPL_SMTP_HOST=smtp.hokumed.net
-      - EXPL_SMTP_PORT=587
-      - EXPL_SMTP_USERNAME=hokumed.net
-      - EXPL_SMTP_PASSWORD=${HOKUI_PW}
-      - EXPL_SMTP_TLS_ENABLED=true
-
-    env_file:
-      - mail.env # prepare this file.
+    # mailhog docker image should be needed for test environment. 
 
     tty: true
 
     # ホスト側のポート:コンテナのポート
     ports:
       - '3000:3000'
+      - '3001:3001'
 
     # ソースコードを格納するフォルダをマウント
     #（ホスト側の./srcをコンテナの/appにマウント）
@@ -38,4 +30,4 @@ services:
     working_dir: /app
 
     # 起動後に実行するコマンドを指定
-    command: /bin/bash -c "rm -rf dist && tsc && cd client && yarn build && cd .. && node dist/index.js" 
+    command: /bin/bash -c "yarn dev" 
