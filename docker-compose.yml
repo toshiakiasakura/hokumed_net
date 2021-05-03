@@ -20,9 +20,6 @@ services:
       - EXPL_SMTP_PASSWORD=${HOKUI_PW}
       - EXPL_SMTP_TLS_ENABLED=true
 
-    env_file:
-      - mail.env # prepare this file.
-
     tty: true
 
     # ホスト側のポート:コンテナのポート
