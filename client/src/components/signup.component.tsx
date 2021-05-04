@@ -159,6 +159,9 @@ const SignUp = () => {
             <p>
                氏名は本名を入力してください． <br />
                認証確認メールはELMSメールアドレス宛に送信されます． <br />
+               <span style={{color:"red"}}>
+                 no-reply@hokume.net からメールが送られ，恐らく迷惑メールに振り分けられるのでそちらを確認してください．
+               </span> <br />
                メール認証後，ログイン可能となるのは管理者の承認後になりますのでご注意ください．<br />
                不具合等ございましたら
               <a href='mailto:hokumed.net@outlook.com'>hokumed.net@outlook.com</a>
