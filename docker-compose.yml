@@ -28,3 +28,7 @@ services:
 
     # 起動後に実行するコマンドを指定
     command: /bin/bash -c "rm -rf dist && tsc && cd client && yarn build && cd .. && node dist/index.js" 
+
+  mail:
+    image: bytemark/smtp
+    restart: always

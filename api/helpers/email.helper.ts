@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 import express from 'express'
 
 const API_URL = 'http://hokumed.net'
-const API_MAIL = 'hokumed.net@gmail.com'
+const API_MAIL = 'no-reply@hokumed.net'
 const API_MAIL_NEW = 'hokumed.net@outlook.com'
 const SIGNATURE = '\n\n----------------\n' +
 '北医ネット (hokumed.net)\n' + 
@@ -13,12 +13,12 @@ const SIGNATURE = '\n\n----------------\n' +
 '---------------'
 
 const transporter = nodemailer.createTransport({
-  service : "gmail",
+  host : "mail",
   auth: {
     user: API_MAIL,
     pass: process.env.HOKUI_PW
   },
-  port: 587,
+  port: 25,
   //tls: {ciphers:'SSLv3'},
 })
 
@@ -73,7 +73,7 @@ class EmailSender{
 
     const signUpAdminMailOptions = {
       from: API_MAIL,
-      to: API_MAIL,
+      to: API_MAIL_NEW,
       subject: `新規ユーザー申込み ${family} ${given} さん`,
       text: `${family} ${given} さんから新規ユーザー申込みがありました．\n\n` 
     }
@@ -109,7 +109,7 @@ class EmailSender{
 
     const adminMailOptions = {
       from: API_MAIL,
-      to: API_MAIL,
+      to: API_MAIL_NEW,
       subject: `承認確認メール: ${family} ${given} さん`,
       text: `${family} ${given} さんを管理者画面から承認しました．` +
       `${to_mail}に承認メールを送信しました．`  +
