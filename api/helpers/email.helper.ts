@@ -3,7 +3,7 @@ import express from 'express'
 
 const API_URL = 'http://hokumed.net'
 const API_MAIL = 'no-reply@hokumed.net'
-const API_MAIL_NEW = 'hokumed.net@outlook.com'
+const API_MAIL_NEW = 'hokumed.net@gmail.com' //'hokumed.net@outlook.com'
 const SIGNATURE = '\n\n----------------\n' +
 '北医ネット (hokumed.net)\n' + 
 `お問い合わせ先: ${API_MAIL_NEW}\n` +
