@@ -11,14 +11,6 @@ services:
     environment:
       - HOKUI_SECRET=${HOKUI_SECRET}
       - HOKUI_PW=${HOKUI_PW}
-      - EXPL_SMTP_ENABLED=true
-      - EXPL_SMTP_FROM_ADDRESS=hokumed.net@gmail.com
-      - EXPL_SMTP_FROM_NAME=hokumed.net
-      - EXPL_SMTP_HOST=smtp.hokumed.net
-      - EXPL_SMTP_PORT=587
-      - EXPL_SMTP_USERNAME=hokumed.net
-      - EXPL_SMTP_PASSWORD=${HOKUI_PW}
-      - EXPL_SMTP_TLS_ENABLED=true
 
     tty: true
 

@@ -13,13 +13,13 @@ const SIGNATURE = '\n\n----------------\n' +
 '---------------'
 
 const transporter = nodemailer.createTransport({
-  host: "smtp-mail.outlook.com",
+  service : "gmail",
   auth: {
-    user: API_MAIL_NEW,
+    user: API_MAIL,
     pass: process.env.HOKUI_PW
   },
   port: 587,
-  tls: {ciphers:'SSLv3'},
+  //tls: {ciphers:'SSLv3'},
 })
 
 type Options = {from: string, to: string, subject: string, text: string}
@@ -46,9 +46,9 @@ class EmailSender{
 
     ){
     const mailOptions = {
-      from: API_MAIL_NEW,
+      from: API_MAIL,
       to: to_mail,
-      cc: API_MAIL,
+      cc: API_MAIL_NEW,
       subject: "北医ネットへようこそ！",
       text: `${family} ${given} さん\n\n` +
       '北大医学科生専用ポータルサイト，"北医ネット"へようこそ．' +
@@ -72,7 +72,7 @@ class EmailSender{
     sendMail(mailOptions)
 
     const signUpAdminMailOptions = {
-      from: API_MAIL_NEW,
+      from: API_MAIL,
       to: API_MAIL,
       subject: `新規ユーザー申込み ${family} ${given} さん`,
       text: `${family} ${given} さんから新規ユーザー申込みがありました．\n\n` 
@@ -86,7 +86,7 @@ class EmailSender{
     given: string,
   ){
     const mailOptions = {
-      from: API_MAIL_NEW,
+      from: API_MAIL,
       to: to_mail,
       subject: '北医ネットへようこそ!',
       text: `${family} ${given} さん\n\n` +
@@ -108,7 +108,7 @@ class EmailSender{
     })
 
     const adminMailOptions = {
-      from: API_MAIL_NEW,
+      from: API_MAIL,
       to: API_MAIL,
       subject: `承認確認メール: ${family} ${given} さん`,
       text: `${family} ${given} さんを管理者画面から承認しました．` +
@@ -125,9 +125,9 @@ class EmailSender{
     token: string
   ){
     const mailOptions = {
-      from: API_MAIL_NEW,
+      from: API_MAIL,
       to: to_mail,
-      cc: API_MAIL,
+      cc: API_MAIL_NEW,
       subject: '北医ネット．パスワードの変更．',
       text: 'パスワードの変更を受け付けました． ' +
       '下記のurlをクリックするとパスワードの再設定が完了します．\n'  +
