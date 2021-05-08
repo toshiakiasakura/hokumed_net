@@ -1,0 +1,34 @@
+version: '3'
+services:
+  app:
+    image: node:14
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      
+
+    # 環境変数を設定
+    environment:
+      - HOKUI_SECRET=${HOKUI_SECRET}
+      - HOKUI_PW=${HOKUI_PW}
+
+    tty: true
+
+    # ホスト側のポート:コンテナのポート
+    ports:
+      - '3000:3000'
+
+    # ソースコードを格納するフォルダをマウント
+    #（ホスト側の./srcをコンテナの/appにマウント）
+    volumes:
+      - .:/app
+
+    # 起動時のカレントフォルダを指定
+    working_dir: /app
+
+    # 起動後に実行するコマンドを指定
+    command: /bin/bash -c "rm -rf dist && tsc && cd client && yarn build && cd .. && node dist/index.js" 
+
+  mail:
+    image: bytemark/smtp
+    restart: always
