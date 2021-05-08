@@ -17,7 +17,7 @@ import { Logout } from './components/logout.component'
 import { ProfilePages } from './components/profile.component'
 import { ResetPassword } from './components/reset-password.component'
 import { VerificationPage } from './components/verification.component'
-import { DonationPage } from './components/donation.component'
+import { DonationPage, DonationValueChangePage } from './components/donation.component'
 import './style/_index.sass'
 
 
@@ -49,6 +49,7 @@ class App extends Component{
         <Route path='/verify' component= { VerificationPage } />
         <Route path='/error' component={ ErrorPages } />
         <Route exact path='/donation' component={ DonationPage } />
+        <Route exact path='/donation_edit' component={ DonationValueChangePage } />
         <Route component={() => <Redirect to='/error/404' />}/>
       </Switch>
     </Router>
