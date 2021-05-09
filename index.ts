@@ -44,6 +44,7 @@ app.use(function(req, res, next) {
 /**
  * Serve the static files from the React app
  */
+app.use(express.static(path.join(__dirname, '/../donation_html')))
 app.use(express.static(path.join(__dirname, '/../client/build')))
 
 /**
@@ -64,6 +65,12 @@ app.get('/api/*', (req:Request, res:Response) => {
     res.json({status:404})
 })
 
+/**
+ * Serve donation page for hokumed.net
+ */
+app.get('/donation', (req:Request,res:Response) =>{
+    res.sendFile(path.join(__dirname, '/../donation_html/index.html'))
+})
 /**
  * Handles any requests that don't match the ones above
  */
