@@ -58,14 +58,6 @@ class ValidateController {
       res.json({status:401})
     }
   }
-
-  static validateGraduate: ExpressMiddleFunc = async function(req, res, next){
-    if(req.query.sha1 === "34149F8241ED0D69C747D409AE79D572EF73267A"){
-      next()
-    } else {
-      res.json({status:404})
-    }
-  }
 }
 
 export { ValidateController }
