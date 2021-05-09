@@ -68,7 +68,7 @@ app.get('/api/*', (req:Request, res:Response) => {
 /**
  * Serve donation page for hokumed.net
  */
-app.get('/donation', (req:Request,res:Response) =>{
+app.get('/donation', ValidateController.validateGraduate,  (req:Request,res:Response) =>{
     res.sendFile(path.join(__dirname, '/../donation_html/index.html'))
 })
 /**

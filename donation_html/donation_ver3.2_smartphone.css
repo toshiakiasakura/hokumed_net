@@ -65,7 +65,7 @@ font-weight: 700;
 }
 
 div#message{
-	width: 100%
+	width: 100%;
 	height: auto;
 	padding: 0.8em 0.8em;
 	margin: 0.5em 1em;
@@ -89,14 +89,14 @@ div#thanks{
 /*画像用code*/
 div#figure1 img{
 	width: 100%;
-	max-width: 100%
+	max-width: 100%;
 	height: auto;
 	margin: 1rem auto;
 }
 
 div#testfig1 img{
 	width: 60%;
-	max-width: 60%
+	max-width: 60%;
 	height: auto;
 	text-align: center;
 	margin: 0 auto;
@@ -105,7 +105,7 @@ div#testfig1 img{
 
 div#testfig2 img{
 	width: 90%;
-	max-width: 90%
+	max-width: 90%;
 	height: auto;
 	text-align: center;
 	margin: 0 auto;
@@ -114,7 +114,7 @@ div#testfig2 img{
 
 div#figure2 img{
 	width: 90%;
-	max-width: 90%
+	max-width: 90%;
 	height: auto;
 	text-align: center;
 	margin: 1rem auto;
@@ -275,7 +275,7 @@ font-weight: 600;
 @media only screen and (max-width: 736px){
 div#figure3 img{
 	width: 100%;
-	max-width: 100%
+	max-width: 100%;
 	height: auto;
 	text-align: center;
 	margin: 1rem auto;
