@@ -32,9 +32,23 @@ class App extends Component{
         <meta name="description" content={site_description} />
         {/* codoc script */}
         <script src="https://codoc.jp/js/cms.js" data-css="blue" data-usercode="k9Em5JC4Ew" charSet="UTF-8" defer></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Helmet>
-      <NavBar />
 
+      <Switch>
+        {/* For excluding NavBar for donation page. */}
+        <Route exact path='/donation' component={ DonationPage } />
+        <Route exact path='/donation_edit' component={ DonationValueChangePage } />
+        <Route component={NavBarPages}/>
+      </Switch>
+    </Router>
+  )}
+}
+
+const NavBarPages = () => {
+  return(
+    <React.Fragment>
+      <NavBar />
       <Switch>
         <Route exact path='/' component={ Login } />
         <Route exact path='/login' component= {() => <Redirect to='/' />} />
@@ -48,12 +62,10 @@ class App extends Component{
         <Route exact path='/reset-password' component= { ResetPassword } />
         <Route path='/verify' component= { VerificationPage } />
         <Route path='/error' component={ ErrorPages } />
-        <Route exact path='/donation' component={ DonationPage } />
-        <Route exact path='/donation_edit' component={ DonationValueChangePage } />
         <Route component={() => <Redirect to='/error/404' />}/>
       </Switch>
-    </Router>
-  )}
+    </React.Fragment>
+  )
 }
 
 export default App
