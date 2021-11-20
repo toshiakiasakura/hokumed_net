@@ -164,11 +164,11 @@ class UserController{
 
   static DeleteFile: ExpressFunc = async (req, res) => {
     let user = await UserFromCookies(req)
-    if(user && 
-      (user.admin || user.id === parseInt(req.params.id) )
+    let fileRepo = getManager().getRepository(Document_File)
+    let file = await fileRepo.findOne(req.params.id)
+    if(user && file != undefined &&
+      (user.admin || user.id === file.user_id )
     ){
-      let fileRepo = getManager().getRepository(Document_File)
-      let file = await fileRepo.findOne(req.params.id)
       let subject = await getManager()
         .getRepository(Subject)
         .findOne(file?.subject_id)
